@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "550490890912",
+    "firebase_url": "https://hali-ca190.firebaseio.com",
+    "project_id": "hali-ca190",
+    "storage_bucket": "hali-ca190.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:550490890912:android:92c15f58ad17eca9f41fc5",
+        "android_client_info": {
+          "package_name": "vn.happylife.hali"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "550490890912-vppn6ea9atrqjdnvil4qtk5luglo015b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vn.happylife.hali",
+            "certificate_hash": "2e32d2ccc2f8c7175e1619c3a5a55705d547db77"
+          }
+        },
+        {
+          "client_id": "550490890912-8p8ob8i1jn2dfsgt0bt3mdoslctod2ad.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvPwfQVq2o1WajgR1efR77vUj5aEEOZ5o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "550490890912-8p8ob8i1jn2dfsgt0bt3mdoslctod2ad.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hali</string>    
+    <string name="facebook_app_id">494602661400151</string>
+    <!--      
+      **NOTE**: The scheme needs to start with `fb` and then your ID.
+    -->
+    <string name="fb_login_protocol_scheme">fb494602661400151</string>
+</resources>
