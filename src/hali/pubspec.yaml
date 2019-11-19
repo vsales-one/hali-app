@@ -31,6 +31,8 @@ dependencies:
   equatable: ^0.6.1
   meta: ^1.1.7
   font_awesome_flutter: ^8.5.0
+  material_design_icons_flutter: ^3.2.4495
+  bubble_bottom_bar: ^1.2.0
 
 dev_dependencies:
   flutter_test:

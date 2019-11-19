@@ -8,6 +8,8 @@ import 'package:hali/login/login.dart';
 import 'package:hali/splash_screen.dart';
 import 'package:hali/simple_bloc_delegate.dart';
 
+import 'main/main_tab_screen.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
@@ -39,7 +41,7 @@ class App extends StatelessWidget {
             return LoginScreen(userRepository: _userRepository);
           }
           if (state is Authenticated) {
-            return HomeScreen(name: state.displayName);
+            return MainScreen(title: "",);
           }
           return SplashScreen();
         },
