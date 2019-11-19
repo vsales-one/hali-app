@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
 import 'package:hali/repositories/user_repository.dart';
-import 'package:hali/home_screen.dart';
+import 'package:hali/home/home_screen.dart';
 import 'package:hali/login/login.dart';
 import 'package:hali/splash_screen.dart';
 import 'package:hali/simple_bloc_delegate.dart';
