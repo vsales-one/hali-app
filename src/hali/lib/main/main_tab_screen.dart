@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hali/commons/color_utils.dart';
+import 'package:hali/utils/color_utils.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../home/home_screen.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'color_utils.dart';
+import 'package:hali/utils/color_utils.dart';
 
 abstract class Styles {
 
