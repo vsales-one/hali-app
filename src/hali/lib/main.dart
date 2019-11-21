@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
+import 'package:hali/config/application.dart';
+import 'package:hali/di/appModule.dart';
 import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/home/home_screen.dart';
 import 'package:hali/login/login.dart';
@@ -10,8 +12,10 @@ import 'package:hali/simple_bloc_delegate.dart';
 
 import 'main/main_tab_screen.dart';
 
-void main() {
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await init();
+
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final UserRepository userRepository = UserRepository();
   runApp(
@@ -46,6 +50,7 @@ class App extends StatelessWidget {
           return SplashScreen();
         },
       ),
+      onGenerateRoute: Application.router.generator,
     );
   }
 }

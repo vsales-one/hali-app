@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hali/constants/constants.dart';
+import 'package:hali/commons/color_utils.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../home/home_screen.dart';
@@ -49,7 +49,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title, style: TextStyle(fontSize: 20, color: hexToColor(black1D1D1D)),),
+          title: Text(widget.title, style: TextStyle(fontSize: 20, color: ColorUtils.hexToColor(color1D1D1D)),),
           backgroundColor: Colors.white,
           actions: <Widget>[
             _renderNotify(),
@@ -97,7 +97,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: hexToColor(redPrimary),
+          selectedItemColor: ColorUtils.hexToColor(colorD92c27),
           unselectedItemColor: Colors.grey,
           showSelectedLabels: false,
           showUnselectedLabels: false,
