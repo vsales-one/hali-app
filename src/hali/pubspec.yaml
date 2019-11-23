@@ -25,6 +25,8 @@ dependencies:
   cupertino_icons: ^0.1.2
   cloud_firestore: ^0.12.10
   firebase_auth: ^0.14.0+9
+  firebase_storage: ^3.0.8
+  firebase_analytics: ^5.0.0
   google_sign_in: ^4.0.14
   flutter_facebook_login: ^3.0.0
   flutter_bloc: ^2.0.0
@@ -39,11 +41,16 @@ dependencies:
   fluro: ^1.5.1
   logger: ^0.7.0+2
   cached_network_image: ^1.1.2+1
-  flutter_staggered_grid_view: "^0.2.7"
+  flutter_staggered_grid_view: ^0.3.0
+  image_picker: ^0.6.2+1
+  firestore_ui: ^1.7.2
+  json_annotation: ^3.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: ^1.5.2
+  json_serializable: ^3.2.3
 
 
 # For information on the generic Dart part of this file, see the

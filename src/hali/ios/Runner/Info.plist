@@ -76,5 +76,11 @@
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to photo gallery. To take photo when creating posts</string>
+	<key>NSCameraUsageDescription</key>
+	<string>To take photo upload to posts</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs access to phone microphone.</string>
 </dict>
 </plist>

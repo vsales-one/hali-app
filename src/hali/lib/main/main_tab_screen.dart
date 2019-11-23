@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hali/messages/messages_screen.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -73,7 +74,8 @@ class _MainScreenState extends State<MainScreen> {
             Container(
               child: Center(child:Text("Page 3")),
               color: Colors.green,
-            )
+            ),
+            HomeScreen(name: "Messages"),
           ],
           scrollDirection: Axis.horizontal,
         ),
@@ -93,7 +95,11 @@ class _MainScreenState extends State<MainScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(MdiIcons.accountCircle),
-              title: Text(''),
+              title: Text('Account'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(MdiIcons.message),
+              title: Text('Messages'),
             ),
           ],
           currentIndex: _selectedIndex,
