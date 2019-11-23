@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hali/models/user_profile.dart';
 import 'package:meta/meta.dart';
 import 'package:hali/commons/app_error.dart';
-import 'package:hali/user_profile/user_profile_model.dart';
 
 abstract class HomeState extends Equatable {
   @override
@@ -32,7 +32,7 @@ class HomeFailure extends HomeState {
 }
 
 class HomeFetchUserSuccess extends HomeState {
-  final UserProfileModel userModel;  
+  final UserProfile userModel;  
 
   HomeFetchUserSuccess({@required this.userModel})
       : assert(userModel != null);

@@ -1,19 +1,22 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:hali/user_profile/user_profile_model.dart';
+import 'package:hali/models/user_profile.dart';
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
   final FacebookLogin _facebookLogin;
+  static final Firestore fireStore = Firestore.instance;
+  static UserProfile user;
 
   UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin, FacebookLogin facebookLogin})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignin ?? GoogleSignIn(),
         _facebookLogin = facebookLogin ?? FacebookLogin();
-
+  
   Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
@@ -73,7 +76,41 @@ class UserRepository {
     return (await _firebaseAuth.currentUser()).email;
   }
 
-  Future<UserProfileModel> getUserProfile() async {
-    return UserProfileModel();
+  static open() async {
+    user = await getUserProfile();
+  }
+
+  static Future<UserProfile> getUserProfile() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();    
+    if (user == null) {
+      return null;
+    }
+    return UserProfile(user.displayName, user.photoUrl, user.email ?? user.uid,
+        user.email, true);
+  }
+
+  static Future<List<UserProfile>> getActiveUsers() async {
+    print("Active Users");
+    var val = await fireStore
+        .collection("users")
+        .where("isActive", isEqualTo: true)
+        .getDocuments();
+    var documents = val.documents;
+    print("Documents ${documents.length}");
+    if (documents.length > 0) {
+      try {
+        print("Active ${documents.length}");
+        return documents.map((document) {
+          UserProfile user =
+              UserProfile.fromJson(Map<String, dynamic>.from(document.data));
+          print("User ${user.displayName}");
+          return user;
+        }).toList();
+      } catch (e) {
+        print("Exception $e");
+        return [];
+      }
+    }
+    return [];
   }
 }

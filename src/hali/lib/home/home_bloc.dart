@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart';
 import 'package:hali/commons/app_error.dart';
 import 'package:hali/home/index.dart';
+import 'package:hali/models/user_profile.dart';
 import 'package:hali/repositories/user_repository.dart';
-import 'package:hali/user_profile/user_profile_model.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   
@@ -24,7 +24,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (event is LoadHomeEvent){
       yield HomeLoading();
       try {
-        final UserProfileModel userProfile = await userRepository.getUserProfile();        
+        final UserProfile userProfile = await UserRepository.getUserProfile();        
         yield HomeFetchUserSuccess(userModel: userProfile);
       }
       on DioError catch(error) {        
