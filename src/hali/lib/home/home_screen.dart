@@ -1,6 +1,10 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
+import 'package:hali/config/application.dart';
+import 'package:hali/config/routes.dart';
+import 'package:hali/home/views/feed_detail.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -26,11 +30,14 @@ class HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
-          _SliverCategory(),
-          _SliverCreateAmbasador(),
           isHiddenBannerInvite ? _SliverEmpty() : _InvitationBanner(closeInvitationBanner: _closeInvitationHandle,),
           _ListPost()
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.create,),
+        backgroundColor: ColorUtils.hexToColor(colorD92c27),
       ),
     );
   }
@@ -140,7 +147,7 @@ class _InvitationBanner extends StatelessWidget {
       child: SizedBox(
         height: 190,
         child: Card(
-          margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+          margin: EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 16),
           child: Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -203,6 +210,11 @@ class _ListPost extends StatelessWidget {
   }
 
   _renderPostItem(BuildContext context, int index) {
-    return FeedCard();
+    return FeedCard(onTapCard: (){
+      Application.router.navigateTo(context, Routes.feedDetail, transition: TransitionType.fadeIn);
+    },);
   }
+//  _navigateToDetail(int index) {
+//    Application.router.navigateTo(context, Routes.feedDetail, transition: TransitionType.fadeIn);
+//  }
 }

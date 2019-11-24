@@ -9,6 +9,9 @@
       <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.4+5" />
       <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.7+2" />
       <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dartlang.org/path_provider-1.4.2" />
+      <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dartlang.org/firebase_storage-3.0.8" />
+      <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dartlang.org/firebase_analytics-5.0.2" />
+      <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dartlang.org/image_picker-0.6.2+1" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -43,11 +43,18 @@ class UserRepository {
     return null;
   }
 
-  Future<void> signInWithCredentials(String email, String password) {
-    return _firebaseAuth.signInWithEmailAndPassword(
+  Future<void> signInWithCredentials(String email, String password) async {
+    AuthResult authResult = await  _firebaseAuth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
+
+
+    var user = await FirebaseAuth.instance.currentUser();
+
+    IdTokenResult idTokenResult
+    = await user.getIdToken();
+    return idTokenResult;
   }
 
   Future<void> signUp({String email, String password}) async {

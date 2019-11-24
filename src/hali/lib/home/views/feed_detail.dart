@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:hali/commons/styles.dart';
-
+import 'package:hali/utils/color_utils.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 class FeedDetail extends StatefulWidget {
 
   @override
@@ -26,8 +27,8 @@ class FeedDetailState extends State<FeedDetail> {
           // sliver app bar
           _VSliverAppBar(),
           _LocationWidget(),
-          _GoingOnWidget(),
           _TitleWidget(),
+          _RequestButton()
 
         ],
       ),
@@ -66,7 +67,7 @@ class _TitleWidget extends StatelessWidget {
       delegate: SliverChildListDelegate(
         [
           Container(
-            margin: EdgeInsets.all(16),
+            margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8)
@@ -92,85 +93,117 @@ class _TitleWidget extends StatelessWidget {
   }
 }
 
-class _GoingOnWidget extends StatelessWidget {
 
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
-        margin: EdgeInsets.only(left: 16, right: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8)
-        ),
-        height: 120.0,
-        child: new Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 16, top: 8,right: 8, bottom: 5),
-              child: Text("Going on", style: Styles.getSemiboldStyle(16, Colors.black54)),
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 16, bottom: 16),
-              height: 3,
-              width: 70,
-              color: Colors.black54,
-            ),
-            Expanded(
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Container(
-                    padding: EdgeInsets.only(left: 16,bottom: 8),
-                    child:  CircleAvatar(
-                      radius: 30,
-                    ),
-                  );
-                },
-              ),
-            )
-          ],
-        )
-      ),
-    );
-  }
-}
 
 class _LocationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Container(
-        margin: EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Container(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Padding(child: Icon(Icons.date_range, color: Colors.black54,), padding: EdgeInsets.only(right: 16),),
-                  Text("24 May, 2018, 8h30 AM", style: Styles.getSemiboldStyle(14, Colors.black54),)
-                ],
-              ),
+      child: Column(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 16),
 
-              Row(
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  margin: EdgeInsets.only(top: 70),
+                  padding: EdgeInsets.all(8),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Padding(child: Icon(Icons.date_range, color: Colors.black54,), padding: EdgeInsets.only(right: 16),),
+                          Expanded(
+                            child: Text("Pickup Time: 24 May, 2018, 8h30 AM", style: Styles.getSemiboldStyle(14, Colors.black54),),
+                          )
+
+                        ],
+                      ),
+
+                      Row(
+                        children: <Widget>[
+                          Padding(child: Icon(Icons.location_on, color: Colors.black54,), padding: EdgeInsets.only(right: 16),),
+                          Expanded(
+                            child: Text("92 Nguyen Huu Canh, Sai Gon Pearl, 92 Nguyen Huu Canh, Sai Gon Pearl", style: Styles.getSemiboldStyle(14, Colors.black54),),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: 20,
+                  left: 16,
+                  right: 16,
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(right: 8),
+                        child: Padding(child: Icon(Icons.share, color: Colors.black54,), padding: EdgeInsets.all(8),),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white
+                        ),
+                      ),
+
+                      Container(
+                        child: Padding(child: Icon(Icons.favorite_border, color: Colors.black54,), padding: EdgeInsets.all(8),),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white
+                        ),
+                      )
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                  ),
+                )
+              ],
+            )
+          ),
+        ],
+      )
+    );
+  }
+}
+
+class _RequestButton extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Container(
+        margin: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: ColorUtils.hexToColor(colorD92c27),
+          borderRadius: BorderRadius.circular(24)
+        ),
+        child: Column(
+          children: <Widget>[
+            FlatButton(
+              color: ColorUtils.hexToColor(colorD92c27),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Padding(child: Icon(Icons.location_on, color: Colors.black54,), padding: EdgeInsets.only(right: 16),),
-                  Expanded(
-                    child: Text("92 Nguyen Huu Canh, Sai Gon Pearl, 92 Nguyen Huu Canh, Sai Gon Pearl", style: Styles.getSemiboldStyle(14, Colors.black54),),
+                  Text("Request listing", style: Styles.getRegularStyle(14, Colors.white),),
+                  Container(
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.location_on, size: 16, color: Colors.white,),
+                        Text("123 km away", style: Styles.getRegularStyle(14, Colors.white),),
+                      ],
+                    ),
                   )
                 ],
-              ),
-            ],
-          ),
+              )
+            )
+          ],
         ),
       ),
     );
