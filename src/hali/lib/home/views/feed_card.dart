@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:hali/di/appModule.dart';
-
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 class FeedCard extends StatelessWidget {
 
   final Function onTapCard;
@@ -17,14 +16,13 @@ class FeedCard extends StatelessWidget {
       color: Colors.white,
       child: Column(
         children: <Widget>[
-          // top
-          _ContainerTop(),
+          _DescriptionEvent(),
           //body
           _BodyImage(onTap: onTapCard,),
           //action
           _ActionBox(),
           //Description
-          _DescriptionEvent(),
+          _ContainerTop(),
         ],
       ),
     );
@@ -71,28 +69,6 @@ class _ContainerTop extends StatelessWidget {
           ),
           // button
 
-          Container(
-            padding: EdgeInsets.all(8),
-            child: GestureDetector(
-
-              child: new Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      color: ColorUtils.hexToColor(colorF0857A),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    padding: EdgeInsets.only(top: 8, bottom: 8, left: 16, right: 16),
-                    child: Text("Follow", style: Styles.getRegularStyle(12, Colors.white),),
-                  ),
-                ],
-              ),
-              onTap: () {
-                logger.d("You followed");
-              },
-            ),
-          )
         ],
       ),
     );
@@ -139,7 +115,7 @@ class _DescriptionEvent extends StatelessWidget {
       alignment: Alignment.topLeft,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        child: Text("Drink 3 beers in 5 mins. ", style: Styles.getSemiboldStyle(14, Colors.black87), textAlign: TextAlign.left,)
+        child: Text("Drink 3 beers in 5 mins. ", style: Styles.getSemiboldStyle(16, Colors.black87), textAlign: TextAlign.left,)
       )
     );
   }
@@ -165,43 +141,8 @@ class _ActionBox extends StatelessWidget {
                   margin: EdgeInsets.only(left: 16),
                   child: Row(
                     children: <Widget>[
-                      Stack(
-                        children: <Widget>[
-                          Container(
-                            width: radius*2*2,
-                          ),
-                          Positioned(
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: radius,
-                              child: CircleAvatar(
-                                radius: radius - 2,
-                              ),
-                            ),
-                          ),
-
-                          Positioned(
-                            left: radius,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: radius,
-                              child: CircleAvatar(
-                                radius: radius - 2,
-                              ),
-                            ),
-                          ),
-
-                          Positioned(
-                            left: radius*2,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: radius,
-                              child: CircleAvatar(
-                                radius: radius - 2,
-                              ),
-                            ),
-                          ),
-                        ],
+                      Container(
+                        child: Icon(Icons.location_on, size: 20,),
                       ),
 
                       // show comments
@@ -209,7 +150,29 @@ class _ActionBox extends StatelessWidget {
                         margin: EdgeInsets.only(left: 8, right: 8),
                         child: Row(
                           children: <Widget>[
-                            Text("32 comments", style: Styles.getSemiboldStyle(12, Colors.black54),)
+                            Text("32 km", style: Styles.getSemiboldStyle(12, Colors.black54),)
+                          ],
+                        ),
+                      )
+
+                    ],
+                  ),
+                ),
+
+                Container(
+                  margin: EdgeInsets.only(left: 16),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        child: Icon(Icons.monetization_on, size: 20,),
+                      ),
+
+                      // show comments
+                      Container(
+                        margin: EdgeInsets.only(left: 8, right: 8),
+                        child: Row(
+                          children: <Widget>[
+                            Text("Free", style: Styles.getSemiboldStyle(12, Colors.black54),)
                           ],
                         ),
                       )
