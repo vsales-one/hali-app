@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hali/messages/message_list_screen.dart';
-import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/user_profile/user_profile_screen.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -22,8 +21,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedIndex = 0;
-    UserRepository.open();
+    _selectedIndex = 0;    
   }
 
   void changePage(int index) {

@@ -24,7 +24,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (event is LoadHomeEvent){
       yield HomeLoading();
       try {
-        final UserProfile userProfile = await UserRepository.getUserProfile();        
+        final UserProfile userProfile = await userRepository.getUserProfile();        
         yield HomeFetchUserSuccess(userModel: userProfile);
       }
       on DioError catch(error) {        

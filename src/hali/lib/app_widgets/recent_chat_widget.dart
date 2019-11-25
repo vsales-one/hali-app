@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hali/app_widgets/user_widget.dart';
+import 'package:hali/config/application.dart';
 import 'package:hali/messages/message_screen.dart';
 import 'package:hali/models/chat_message.dart';
 import 'package:hali/models/user_profile.dart';
-import 'package:hali/repositories/user_repository.dart';
 
 class RecentChatWidget extends StatefulWidget {
   final ChatMessage chat;
@@ -13,10 +13,11 @@ class RecentChatWidget extends StatefulWidget {
 }
 
 class _RecentChatWidgetState extends State<RecentChatWidget> {
-  
   @override
   void initState() {
-    assert(this.widget.chat != null && this.widget.chat.from != null && this.widget.chat.to != null);
+    assert(this.widget.chat != null &&
+        this.widget.chat.from != null &&
+        this.widget.chat.to != null);
     super.initState();
   }
 
@@ -44,7 +45,7 @@ class _RecentChatWidgetState extends State<RecentChatWidget> {
     );
   }
 
-  UserProfile get friend => widget.chat.from.id == UserRepository.user.id
+  UserProfile get friend => widget.chat.from.id == Application.currentUser.id
       ? widget.chat.to
       : widget.chat.from;
 }

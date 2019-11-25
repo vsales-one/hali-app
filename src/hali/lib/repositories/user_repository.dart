@@ -9,13 +9,14 @@ class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
   final FacebookLogin _facebookLogin;
-  static final Firestore fireStore = Firestore.instance;
-  static UserProfile user;
+  final Firestore _fireStore;  
+  static UserProfile currentUser;
 
-  UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin, FacebookLogin facebookLogin})
+  UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin, FacebookLogin facebookLogin, Firestore fireStore})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignin ?? GoogleSignIn(),
-        _facebookLogin = facebookLogin ?? FacebookLogin();
+        _facebookLogin = facebookLogin ?? FacebookLogin(),
+        _fireStore = fireStore ?? Firestore.instance;
   
   Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
@@ -72,15 +73,7 @@ class UserRepository {
     return currentUser != null;
   }
 
-  Future<String> getUser() async {
-    return (await _firebaseAuth.currentUser()).email;
-  }
-
-  static open() async {
-    user = await getUserProfile();
-  }
-
-  static Future<UserProfile> getUserProfile() async {
+  Future<UserProfile> getUserProfile() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();    
     if (user == null) {
       return null;
@@ -89,9 +82,9 @@ class UserRepository {
         user.email, true);
   }
 
-  static Future<List<UserProfile>> getActiveUsers() async {
+  Future<List<UserProfile>> getActiveUsers() async {
     print("Active Users");
-    var val = await fireStore
+    var val = await _fireStore
         .collection("users")
         .where("isActive", isEqualTo: true)
         .getDocuments();

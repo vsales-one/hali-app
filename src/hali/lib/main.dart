@@ -1,51 +1,68 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
 import 'package:hali/config/application.dart';
 import 'package:hali/di/appModule.dart';
+import 'package:hali/repositories/chat_message_repository.dart';
 import 'package:hali/repositories/user_repository.dart';
-import 'package:hali/home/home_screen.dart';
 import 'package:hali/login/login.dart';
 import 'package:hali/splash_screen.dart';
 import 'package:hali/simple_bloc_delegate.dart';
-
-import 'main/main_tab_screen.dart';
+import 'package:hali/main/main_tab_screen.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await init();
 
   BlocSupervisor.delegate = SimpleBlocDelegate();
-  final UserRepository userRepository = UserRepository();
+  final userRepo = UserRepository();
+  
   runApp(
-    BlocProvider(
-      builder: (context) =>
-          AuthenticationBloc(userRepository: userRepository)..add(AppStarted()),
-      child: App(userRepository: userRepository),
-    ),
+    MultiRepositoryProvider(providers: [
+      RepositoryProvider<UserRepository>(
+        builder: (_) => userRepo,
+      ),
+      RepositoryProvider<ChatMessageRepository>(
+        builder: (_) => ChatMessageRepository(userRepository: userRepo, fireStore: Firestore.instance),
+      ),
+    ], child: App()),
   );
 }
 
 class App extends StatelessWidget {
-  final UserRepository _userRepository;
-
-  App({Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository,
-        super(key: key);
+  App({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final userRepo = RepositoryProvider.of<UserRepository>(context);
+    assert(userRepo != null);
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthenticationBloc>(
+          builder: (_) =>
+              AuthenticationBloc(userRepository: userRepo)..add(AppStarted()),
+        ),
+      ],
+      child: buildMaterialApp(context),
+    );
+  }
+
+  Widget buildMaterialApp(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           if (state is Unauthenticated) {
-            return LoginScreen(userRepository: _userRepository);
+            return LoginScreen(
+              userRepository: RepositoryProvider.of<UserRepository>(context),
+            );
           }
           if (state is Authenticated) {
-            return MainScreen(title: "",);
+            return MainScreen(
+              title: "Hali",
+            );
           }
           return SplashScreen();
         },

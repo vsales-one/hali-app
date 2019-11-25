@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:hali/config/application.dart';
+import 'package:hali/models/user_profile.dart';
 import 'package:meta/meta.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
 import 'package:hali/repositories/user_repository.dart';
@@ -31,9 +33,9 @@ class AuthenticationBloc
   Stream<AuthenticationState> _mapAppStartedToState() async* {
     try {
       final isSignedIn = await _userRepository.isSignedIn();
-      if (isSignedIn) {     
-        final userInfo = await UserRepository.getUserProfile();   
-        yield Authenticated(userInfo);
+      if (isSignedIn) {             
+        await _loadUserProfile();
+        yield Authenticated(Application.currentUser);
       } else {
         yield Unauthenticated();
       }
@@ -43,11 +45,18 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
-    yield Authenticated(await UserRepository.getUserProfile());
+    await _loadUserProfile();
+    yield Authenticated(Application.currentUser);    
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
     yield Unauthenticated();
     _userRepository.signOut();
+  }
+
+  Future<UserProfile> _loadUserProfile() async {
+    final userInfo = await _userRepository.getUserProfile();
+    Application.currentUser = userInfo;
+    return userInfo;
   }
 }

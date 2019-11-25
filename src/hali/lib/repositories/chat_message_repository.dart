@@ -2,17 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hali/models/chat_message.dart';
 import 'package:hali/models/user_profile.dart';
 import 'package:hali/repositories/user_repository.dart';
+import 'package:meta/meta.dart';
 
 class ChatMessageRepository {
   static const String CHATS = "chats",
       RECENT = "recentChats",
       MESSAGES = "messages";
 
-  static Stream<List<ChatMessage>> getChats() async* {
-    final firestore = Firestore.instance;
-    final user = await UserRepository.getUserProfile();    
-    List<UserProfile> activeUsers = await UserRepository.getActiveUsers();
-    await for (QuerySnapshot snap in firestore
+  final UserRepository userRepository;
+  final Firestore fireStore;
+
+  ChatMessageRepository({@required this.userRepository, @required this.fireStore});
+
+  Stream<List<ChatMessage>> getChats() async* {    
+    final user = await userRepository.getUserProfile();    
+    List<UserProfile> activeUsers = await userRepository.getActiveUsers();
+    await for (QuerySnapshot snap in fireStore
         .collection(RECENT)
         .document(user.id)
         .collection("history")
@@ -46,9 +51,8 @@ class ChatMessageRepository {
     }
   }
 
-  static Future<bool> sendMessage(ChatMessage chat) async {
-    try {
-      Firestore fireStore = Firestore.instance;
+  Future<bool> sendMessage(ChatMessage chat) async {
+    try {      
       String id = getUniqueId(chat.from.id, chat.to.id);
       print("ID $id");
       chat.groupId = id;
@@ -61,10 +65,9 @@ class ChatMessageRepository {
     }
   }
 
-  static Future saveRecentChat(ChatMessage chat) async {
+  Future saveRecentChat(ChatMessage chat) async {
     List<String> ids = [chat.from.id, chat.to.id];
-    for (String id in ids) {
-      Firestore fireStore = Firestore.instance;
+    for (String id in ids) {      
       Query query = fireStore
           .collection(RECENT)
           .document(id)
@@ -92,10 +95,9 @@ class ChatMessageRepository {
     }
   }
 
-  static Stream<List<ChatMessage>> listenChat(
-      UserProfile from, UserProfile to) async* {
-    Firestore firestore = Firestore.instance;
-    await for (QuerySnapshot snap in firestore
+  Stream<List<ChatMessage>> listenChat(
+      UserProfile from, UserProfile to) async* {    
+    await for (QuerySnapshot snap in fireStore
         .collection("messages")
         .where("groupId",
             isEqualTo: getUniqueId(
