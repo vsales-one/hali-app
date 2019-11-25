@@ -88,19 +88,19 @@ class _BodyImage extends StatelessWidget {
     final d = DateTime.now().toString();
     return GestureDetector(
       child: Container(
-        child: Stack(
-          children: <Widget>[
-            Hero(
-              tag: "123@{$d}",
-              child: CachedNetworkImage(
-                imageUrl: "https://images.unsplash.com/photo-1537758069025-b07fb3548d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2752&q=80",
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-                fit: BoxFit.cover,
-              ),
-            )
-          ],
-        )
+          child: Stack(
+            children: <Widget>[
+              Hero(
+                tag: "123@{$d}",
+                child: CachedNetworkImage(
+                  imageUrl: "https://images.unsplash.com/photo-1537758069025-b07fb3548d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2752&q=80",
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  fit: BoxFit.cover,
+                ),
+              )
+            ],
+          )
       ),
       onTap: onTap,
     );
@@ -112,11 +112,11 @@ class _DescriptionEvent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.topLeft,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        child: Text("Drink 3 beers in 5 mins. ", style: Styles.getSemiboldStyle(16, Colors.black87), textAlign: TextAlign.left,)
-      )
+        alignment: Alignment.topLeft,
+        child: Container(
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: Text("Drink 3 beers in 5 mins. ", style: Styles.getSemiboldStyle(16, Colors.black87), textAlign: TextAlign.left,)
+        )
     );
   }
 
