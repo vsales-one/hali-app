@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/app_widgets/recent_chat_widget.dart';
 import 'package:hali/models/chat_message.dart';
 import 'package:hali/repositories/chat_message_repository.dart';
+import 'package:hali/utils/color_utils.dart';
 
 class MessageListScreen extends StatefulWidget {
   @override
@@ -17,11 +18,16 @@ class _MessageListScreenState extends State<MessageListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return _buildMessageList(context);
+  }  
+
+  Widget _buildMessageList(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: <Widget>[        
+      children: <Widget>[
         StreamBuilder(
-          stream: RepositoryProvider.of<ChatMessageRepository>(context).getChats(),
+          stream:
+              RepositoryProvider.of<ChatMessageRepository>(context).getChats(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(

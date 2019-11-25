@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class ChatInputWidget extends StatefulWidget {
   final Function(String) onSubmitted;
+  final String defaultMessage;
 
-  const ChatInputWidget({Key key, @required this.onSubmitted})
+  const ChatInputWidget({Key key, @required this.onSubmitted, this.defaultMessage})
       : super(key: key);
   @override
   State<StatefulWidget> createState() => _ChatInputWidgetState();
@@ -12,10 +13,11 @@ class ChatInputWidget extends StatefulWidget {
 class _ChatInputWidgetState extends State<ChatInputWidget> {
   TextEditingController editingController = TextEditingController();
   FocusNode focusNode = FocusNode();
-  
+
   @override
   void initState() {
     super.initState();
+    editingController.text = this.widget.defaultMessage;
     editingController.addListener(() {
       if (mounted) {
         setState(() {});

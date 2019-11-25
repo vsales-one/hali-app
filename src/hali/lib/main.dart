@@ -52,6 +52,7 @@ class App extends StatelessWidget {
   Widget buildMaterialApp(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      debugShowMaterialGrid: false,
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           if (state is Unauthenticated) {

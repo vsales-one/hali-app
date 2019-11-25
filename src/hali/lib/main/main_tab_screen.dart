@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hali/messages/message_list_screen.dart';
+import 'package:hali/tests/test_list_screen.dart';
 import 'package:hali/user_profile/user_profile_screen.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -74,6 +75,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
             UserProfileScreen(),
             MessageListScreen(),
+            TestListScreen(),
           ],
           scrollDirection: Axis.horizontal,
         ),
@@ -98,6 +100,10 @@ class _MainScreenState extends State<MainScreen> {
             BottomNavigationBarItem(
               icon: Icon(MdiIcons.message),
               title: Text('Messages'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(MdiIcons.bottleTonic),
+              title: Text('Tests'),
             ),
           ],
           currentIndex: _selectedIndex,
