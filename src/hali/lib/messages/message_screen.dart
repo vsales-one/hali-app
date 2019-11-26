@@ -45,30 +45,30 @@ class _MessageScreenState extends State<MessageScreen> {
     _chatMessageRepository =
         RepositoryProvider.of<ChatMessageRepository>(context);
     initUser();
-    WidgetsBinding.instance.addPostFrameCallback((val) {
-      scrollController.addListener(() {
-        final RenderBox renderBox = _key.currentContext.findRenderObject();
-        final size = renderBox.size;
-        double height = size.height * 2 / 3;
-        if (scrollController.hasClients)
-//        scrollController.animateTo(scrollController.position.maxScrollExtent,
-//            duration: Duration(milliseconds: 100), curve: Curves.easeIn);
+//     WidgetsBinding.instance.addPostFrameCallback((val) {
+//       scrollController.addListener(() {
+//         final RenderBox renderBox = _key.currentContext.findRenderObject();
+//         final size = renderBox.size;
+//         double height = size.height * 2 / 3;
+//         if (scrollController.hasClients)
+// //        scrollController.animateTo(scrollController.position.maxScrollExtent,
+// //            duration: Duration(milliseconds: 100), curve: Curves.easeIn);
 
-        if (scrollController.offset >= height) {
-          if (mounted) {
-            setState(() {
-              isHeader = false;
-            });
-          }
-        } else if (!isHeader) {
-          if (mounted) {
-            setState(() {
-              isHeader = true;
-            });
-          }
-        }
-      });
-    });
+//         if (scrollController.offset >= height) {
+//           if (mounted) {
+//             setState(() {
+//               isHeader = false;
+//             });
+//           }
+//         } else if (!isHeader) {
+//           if (mounted) {
+//             setState(() {
+//               isHeader = true;
+//             });
+//           }
+//         }
+//       });
+//     });
   }
 
   void initUser() async {
@@ -120,7 +120,7 @@ class _MessageScreenState extends State<MessageScreen> {
                     Padding(
                       padding: EdgeInsets.only(left: 8.00),
                       child: Text(
-                        widget.friend.displayName,
+                        widget.friend.firstName,
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 18.0,

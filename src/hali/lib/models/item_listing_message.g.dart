@@ -14,10 +14,10 @@ ItemListingMessage _$ItemListingMessageFromJson(Map<String, dynamic> json) {
     json['itemImageUrl'] as String,
     json['from'] == null
         ? null
-        : UserProfile.fromJson(json['from'] as Map<String, dynamic>),
+        : UserProfile.fromJson(Map<String, dynamic>.from(json['from'])),
     json['to'] == null
         ? null
-        : UserProfile.fromJson(json['to'] as Map<String, dynamic>),
+        : UserProfile.fromJson(Map<String, dynamic>.from(json['to'])),
     json['isSeen'] as bool,
     json['publishedAt'] == null
         ? null
