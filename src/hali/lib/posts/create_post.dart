@@ -20,13 +20,22 @@ class CreatePostScreenState extends State<CreatePostScreen> {
       appBar: AppBar(
         backgroundColor: ColorUtils.hexToColor(colorD92c27),
       ),
-      body: Container(
-        color: Colors.white,
-        child: CustomScrollView(
-          slivers: <Widget>[
-            _PhotoCover(),
-            _ContentForm()
-          ],
+      body: GestureDetector(
+        onTap: (){
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child:  Container(
+            color: Colors.grey[200],
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: Container(
+              color: Colors.white,
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  _PhotoCover(),
+                  _ContentForm()
+                ],
+              ),
+            ),
         ),
       ),
     );
@@ -101,7 +110,7 @@ class _ContentForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: SizedBox(
-        height: 800,
+        height: 500,
         child: _TabBarContent(),
       ),
     );
@@ -128,10 +137,16 @@ class _TabbarContentState extends State<_TabBarContent> with SingleTickerProvide
   }
 
   Widget getTabBar() {
-    return TabBar(controller: _tabController, tabs: [
-      Tab(text: "Add", icon: Icon(MdiIcons.food)),
-      Tab(text: "Edit", icon: Icon(MdiIcons.ceilingLight)),
-    ]);
+    return TabBar(
+        controller: _tabController,
+        tabs: [
+          Tab(text: "Food", icon: Icon(MdiIcons.food)),
+          Tab(text: "Non-Food", icon: Icon(MdiIcons.ceilingLight)),
+        ],
+      unselectedLabelColor: Colors.grey,
+      indicatorColor: ColorUtils.hexToColor(colorD92c27),
+      labelColor: ColorUtils.hexToColor(colorD92c27),
+    );
   }
 
 
@@ -143,11 +158,12 @@ class _TabbarContentState extends State<_TabBarContent> with SingleTickerProvide
           child: getTabBar(),
         ),
         leading: new Container(),
+        backgroundColor: Colors.white,
       ),
       body: TabBarView(
         children: [
           CreateFoodForm(),
-          new Text("This is chat Tab View"),
+          CreateFoodForm(),
         ],
         controller: _tabController,),
     );

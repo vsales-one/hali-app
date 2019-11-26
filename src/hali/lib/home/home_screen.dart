@@ -28,11 +28,20 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          isHiddenBannerInvite ? _SliverEmpty() : _InvitationBanner(closeInvitationBanner: _closeInvitationHandle,),
-          _ListPost()
-        ],
+      body: GestureDetector(
+        onTap: (){
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child:  Container(
+            color: Colors.grey[200],
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: CustomScrollView(
+              slivers: <Widget>[
+                isHiddenBannerInvite ? _SliverEmpty() : _InvitationBanner(closeInvitationBanner: _closeInvitationHandle,),
+                _ListPost()
+              ],
+            )
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _presentCreatePostScreen,
