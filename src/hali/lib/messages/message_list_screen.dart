@@ -17,11 +17,16 @@ class _MessageListScreenState extends State<MessageListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return _buildMessageList(context);
+  }  
+
+  Widget _buildMessageList(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: <Widget>[        
+      children: <Widget>[
         StreamBuilder(
-          stream: RepositoryProvider.of<ChatMessageRepository>(context).getChats(),
+          stream:
+              RepositoryProvider.of<ChatMessageRepository>(context).getItemRequestMessages(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(

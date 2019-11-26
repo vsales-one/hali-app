@@ -11,12 +11,13 @@ ItemListingMessage _$ItemListingMessageFromJson(Map<String, dynamic> json) {
     json['itemType'] as String,
     json['itemId'] as String,
     json['itemTitle'] as String,
+    json['itemImageUrl'] as String,
     json['from'] == null
         ? null
-        : UserProfile.fromJson(json['from'] as Map<String, dynamic>),
+        : UserProfile.fromJson(Map<String, dynamic>.from(json['from'])),
     json['to'] == null
         ? null
-        : UserProfile.fromJson(json['to'] as Map<String, dynamic>),
+        : UserProfile.fromJson(Map<String, dynamic>.from(json['to'])),
     json['isSeen'] as bool,
     json['publishedAt'] == null
         ? null
@@ -29,8 +30,9 @@ Map<String, dynamic> _$ItemListingMessageToJson(ItemListingMessage instance) =>
       'itemType': instance.itemType,
       'itemId': instance.itemId,
       'itemTitle': instance.itemTitle,
-      'from': instance.from,
-      'to': instance.to,
+      'itemImageUrl': instance.itemImageUrl,
+      'from': instance.from.toJson(),
+      'to': instance.to.toJson(),
       'isSeen': instance.isSeen,
       'publishedAt': instance.publishedAt?.toIso8601String(),
     };

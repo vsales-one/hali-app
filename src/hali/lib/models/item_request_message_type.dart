@@ -1,0 +1,4 @@
+enum ItemRequestMessageViewMode {
+  FirstRequestMessage,
+  ChatMessage
+}
