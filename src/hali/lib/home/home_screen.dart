@@ -35,7 +35,7 @@ class HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: _presentCreatePostScreen,
         child: Icon(Icons.create,),
         backgroundColor: ColorUtils.hexToColor(colorD92c27),
       ),
@@ -47,6 +47,11 @@ class HomeScreenState extends State<HomeScreen> {
       isHiddenBannerInvite = !isHiddenBannerInvite;
     });
   }
+
+  _presentCreatePostScreen() {
+    Application.router.navigateTo(context, Routes.createPost, transition: TransitionType.fadeIn);
+  }
+
 
 }
 
