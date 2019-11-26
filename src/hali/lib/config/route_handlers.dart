@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hali/home/views/feed_detail.dart';
 import 'package:hali/login/login.dart';
 import 'package:hali/posts/create_post.dart';
+import 'package:hali/posts/pickup_location.dart';
 import 'package:hali/register/register.dart';
 
 var rootHandler = Handler(
@@ -30,4 +31,9 @@ var showFeedDetailHandler = Handler(
 var showCreatePostScreenHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       return CreatePostScreen();
+    });
+
+var showPickupLocationScreenHandler = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return PickupLocationScreen();
     });

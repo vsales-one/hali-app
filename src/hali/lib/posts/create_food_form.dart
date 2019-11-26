@@ -1,7 +1,10 @@
 
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:hali/commons/styles.dart';
+import 'package:hali/config/application.dart';
+import 'package:hali/config/routes.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:select_dialog/select_dialog.dart';
@@ -179,7 +182,7 @@ class CreateFoodFormState extends State<CreateFoodForm> {
   }
 
   void _presentLocationScreen() {
-
+      Application.router.navigateTo(context, Routes.locationScreen, transition: TransitionType.fadeIn);
   }
 }
 

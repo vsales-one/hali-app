@@ -18,6 +18,7 @@ class Routes {
   static String signUp = "/sign-up";
   static String feedDetail = "/feed-detail";
   static String createPost = "create-post-screen";
+  static String locationScreen = "pickup-location-screen";
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = Handler(
@@ -29,5 +30,6 @@ class Routes {
     router.define(signUp, handler: signUpHandler);
     router.define(feedDetail, handler: showFeedDetailHandler);
     router.define(createPost, handler: showCreatePostScreenHandler);
+    router.define(locationScreen, handler: showPickupLocationScreenHandler);
   }
 }
