@@ -84,5 +84,9 @@
 	<string>This app needs access to phone microphone.</string>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>NSLocationAlwaysUsageDescription</key>
+    <string>This app needs access to location when in the background. This helps users pick up location, find foods or non-foods.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>This app needs access to location when open and in the background. This helps users pick up location, find foods or non-foods.</string>
 </dict>
 </plist>

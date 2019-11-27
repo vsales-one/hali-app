@@ -2,19 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9b87e7a2-3636-48e2-8152-769f3901039e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/hali/lib/posts/pickup_location.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hali/lib/models/location_result.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hali/lib/utils/loading_builder.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hali/lib/utils/location_provider.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hali/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/android/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hali/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/ios/Podfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hali/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hali/ios/Runner/AppDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/ios/Runner/AppDelegate.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hali/ios/Runner/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/ios/Runner/Info.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hali/lib/config/route_handlers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/lib/config/route_handlers.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hali/lib/config/routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/lib/config/routes.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hali/lib/posts/create_food_form.dart" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/lib/posts/create_food_form.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hali/lib/posts/dialog_list.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hali/lib/constatns/constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/lib/constatns/constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hali/lib/posts/pickup_location.dart" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/lib/posts/pickup_location.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hali/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/pubspec.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hali/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/pubspec.yaml" afterDir="false" />
     </list>
@@ -30,20 +28,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/hali/lib/posts/create_post.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-259">
+            <state relative-caret-position="-170">
               <caret line="120" selection-start-line="120" selection-end-line="120" />
               <folding>
                 <element signature="e#1#40#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/hali/lib/constants/constants.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -60,11 +49,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/hali/lib/posts/pickup_location.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="341">
-              <caret line="26" column="24" lean-forward="true" selection-start-line="26" selection-start-column="24" selection-end-line="26" selection-end-column="24" />
+            <state relative-caret-position="196">
+              <caret line="151" column="75" selection-start-line="151" selection-start-column="75" selection-end-line="151" selection-end-column="75" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -72,11 +61,41 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/hali/lib/constatns/constants.dart">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="3" column="55" selection-start-line="3" selection-start-column="55" selection-end-line="3" selection-end-column="55" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/hali/lib/utils/loading_builder.dart">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="206">
+              <caret line="74" column="22" selection-start-line="74" selection-start-column="22" selection-end-line="74" selection-end-column="22" />
+              <folding>
+                <element signature="e#0#17#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/hali/pubspec.yaml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="477">
+              <caret line="56" column="17" selection-start-line="56" selection-start-column="17" selection-end-line="56" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/hali/lib/posts/create_food_form.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="433">
-              <caret line="184" column="103" lean-forward="true" selection-start-line="184" selection-start-column="103" selection-end-line="184" selection-end-column="103" />
+            <state relative-caret-position="460">
+              <caret line="180" column="6" selection-start-line="180" selection-start-column="6" selection-end-line="180" selection-end-column="6" />
               <folding>
                 <element signature="e#1#35#0" expanded="true" />
               </folding>
@@ -87,7 +106,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/hali/lib/home/views/feed_detail.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
+            <state relative-caret-position="1260">
               <caret line="84" column="18" selection-start-line="84" selection-start-column="18" selection-end-line="84" selection-end-column="115" />
               <folding>
                 <element signature="e#1#40#0" expanded="true" />
@@ -109,6 +128,8 @@
     <findStrings>
       <find>changePage</find>
       <find>_widgetOptions</find>
+      <find>http</find>
+      <find>_lastMapPosition</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -131,14 +152,18 @@
         <option value="$PROJECT_DIR$/src/hali/lib/home/home_screen.dart" />
         <option value="$PROJECT_DIR$/src/hali/lib/posts/dialog_list.dart" />
         <option value="$PROJECT_DIR$/src/hali/lib/posts/create_post.dart" />
-        <option value="$PROJECT_DIR$/src/hali/pubspec.yaml" />
         <option value="$PROJECT_DIR$/src/hali/ios/Runner/AppDelegate.swift" />
-        <option value="$PROJECT_DIR$/src/hali/android/app/src/main/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/src/hali/ios/Runner/Info.plist" />
-        <option value="$PROJECT_DIR$/src/hali/lib/posts/pickup_location.dart" />
         <option value="$PROJECT_DIR$/src/hali/lib/config/route_handlers.dart" />
         <option value="$PROJECT_DIR$/src/hali/lib/config/routes.dart" />
         <option value="$PROJECT_DIR$/src/hali/lib/posts/create_food_form.dart" />
+        <option value="$PROJECT_DIR$/src/hali/android/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/src/hali/ios/Runner/Info.plist" />
+        <option value="$PROJECT_DIR$/src/hali/lib/utils/location_provider.dart" />
+        <option value="$PROJECT_DIR$/src/hali/lib/models/location_result.dart" />
+        <option value="$PROJECT_DIR$/src/hali/lib/utils/loading_builder.dart" />
+        <option value="$PROJECT_DIR$/src/hali/pubspec.yaml" />
+        <option value="$PROJECT_DIR$/src/hali/lib/constatns/constants.dart" />
+        <option value="$PROJECT_DIR$/src/hali/lib/posts/pickup_location.dart" />
       </list>
     </option>
   </component>
@@ -185,7 +210,7 @@
               <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
               <item name="hali" type="9f88c78c:ScopeViewTreeModel$FileNode" />
               <item name="lib" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="config" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="constatns" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="hali-app" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
@@ -193,7 +218,7 @@
               <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
               <item name="hali" type="9f88c78c:ScopeViewTreeModel$FileNode" />
               <item name="lib" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="posts" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="utils" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
@@ -261,7 +286,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" sideWeight="0.50165015" side_tool="true" weight="0.32439503" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" sideWeight="0.49834985" visible="true" weight="0.32439503" />
+      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.49834985" visible="true" weight="0.32439503" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -274,7 +299,7 @@
       <window_info anchor="bottom" id="TODO" order="2" />
       <window_info anchor="bottom" id="Android Profiler" order="3" show_stripe_button="false" />
       <window_info anchor="bottom" id="Logcat" order="4" />
-      <window_info anchor="bottom" id="Debug" order="5" visible="true" weight="0.415622" />
+      <window_info active="true" anchor="bottom" id="Debug" order="5" visible="true" weight="0.415622" />
       <window_info anchor="bottom" id="Terminal" order="6" weight="0.3297975" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Flutter Performance" order="8" side_tool="true" />
@@ -343,9 +368,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/hali/pubspec.lock">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/hali/lib/home_screen.dart" />
     <entry file="file://$PROJECT_DIR$/src/hali/lib/home/home_provider.dart">
       <provider selected="true" editor-type-id="text-editor">
@@ -400,13 +422,6 @@
           <folding>
             <element signature="e#1#21#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/hali/android/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" selection-start-line="30" selection-end-line="30" />
         </state>
       </provider>
     </entry>
@@ -513,22 +528,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/hali/android/gradle.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../Development/dev/flutter/bin/cache/pkg/sky_engine/lib/async/schedule_microtask.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#4878#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../Development/dev/flutter/packages/flutter/lib/src/rendering/binding.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -565,16 +564,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/hali/lib/home/views/feed_detail.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="84" column="18" selection-start-line="84" selection-start-column="18" selection-end-line="84" selection-end-column="115" />
-          <folding>
-            <element signature="e#1#40#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dartlang.org/select_dialog-1.0.6+1/lib/select_dialog.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="279">
@@ -596,43 +585,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/hali/android/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="116">
-          <caret line="16" column="40" selection-start-line="16" selection-start-column="40" selection-end-line="16" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/hali/pubspec.yaml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="362">
-          <caret line="68" column="68" selection-start-line="68" selection-start-column="68" selection-end-line="68" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/hali/lib/home/home_screen.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="232">
           <caret line="119" column="30" selection-start-line="119" selection-start-column="30" selection-end-line="119" selection-end-column="30" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/hali/ios/Runner/Info.plist">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="356">
-          <caret line="79" column="66" selection-start-line="79" selection-start-column="66" selection-end-line="79" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/hali/lib/posts/pickup_location.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="341">
-          <caret line="26" column="24" lean-forward="true" selection-start-line="26" selection-start-column="24" selection-end-line="26" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -670,7 +628,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/hali/lib/posts/create_post.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-259">
+        <state relative-caret-position="-170">
           <caret line="120" selection-start-line="120" selection-end-line="120" />
           <folding>
             <element signature="e#1#40#0" expanded="true" />
@@ -680,10 +638,122 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/hali/lib/posts/create_food_form.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="433">
-          <caret line="184" column="103" lean-forward="true" selection-start-line="184" selection-start-column="103" selection-end-line="184" selection-end-column="103" />
+        <state relative-caret-position="460">
+          <caret line="180" column="6" selection-start-line="180" selection-start-column="6" selection-end-line="180" selection-end-column="6" />
           <folding>
             <element signature="e#1#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hali/lib/home/views/feed_detail.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1260">
+          <caret line="84" column="18" selection-start-line="84" selection-start-column="18" selection-end-line="84" selection-end-column="115" />
+          <folding>
+            <element signature="e#1#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Development/dev/flutter/bin/cache/pkg/sky_engine/lib/async/schedule_microtask.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#4878#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Development/dev/flutter/bin/cache/pkg/sky_engine/lib/async/future_impl.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="38" column="30" selection-start-line="38" selection-start-column="30" selection-end-line="38" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hali/ios/Runner/Info.plist">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="430">
+          <caret line="82" column="43" lean-forward="true" selection-start-line="82" selection-start-column="43" selection-end-line="82" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hali/android/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="80" selection-start-line="4" selection-start-column="80" selection-end-line="4" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hali/android/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="163">
+          <caret line="11" column="1" lean-forward="true" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hali/android/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="30" selection-start-line="30" selection-end-line="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hali/android/gradle.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hali/lib/utils/location_provider.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="1" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hali/lib/models/location_result.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hali/lib/utils/loading_builder.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="74" column="22" selection-start-line="74" selection-start-column="22" selection-end-line="74" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#17#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hali/pubspec.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="477">
+          <caret line="56" column="17" selection-start-line="56" selection-start-column="17" selection-end-line="56" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hali/lib/constatns/constants.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="55" selection-start-line="3" selection-start-column="55" selection-end-line="3" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hali/lib/posts/pickup_location.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="151" column="75" selection-start-line="151" selection-start-column="75" selection-end-line="151" selection-end-column="75" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
           </folding>
         </state>
       </provider>

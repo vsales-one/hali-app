@@ -14,6 +14,10 @@
       <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dartlang.org/path_provider-1.4.2" />
       <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dartlang.org/flutter_keyboard_visibility-0.7.0" />
       <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dartlang.org/google_maps_flutter-0.5.21+12" />
+      <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dartlang.org/geolocator-5.1.5" />
+      <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dartlang.org/google_api_availability-2.0.1" />
+      <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dartlang.org/location_permissions-2.0.3" />
+      <root url="file://$PROJECT_DIR$/../.pub-cache/hosted/pub.dartlang.org/permission_handler-4.0.0" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
