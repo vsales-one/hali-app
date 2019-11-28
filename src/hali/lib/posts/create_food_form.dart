@@ -99,10 +99,7 @@ class CreateFoodFormState extends State<CreateFoodForm> {
                       decoration:
                       InputDecoration(labelText: "Pick up time"),
                       validators: [
-                        FormBuilderValidators.requiredTrue(
-                          errorText:
-                          "You must choose pick up time.",
-                        ),
+                        FormBuilderValidators.required(errorText: "You must choose pick up time."),
                       ],
                     ),
 
@@ -113,10 +110,7 @@ class CreateFoodFormState extends State<CreateFoodForm> {
                       decoration:
                       InputDecoration(labelText: "Start date"),
                       validators: [
-                        FormBuilderValidators.requiredTrue(
-                          errorText:
-                          "You must choose start day.",
-                        ),
+                        FormBuilderValidators.required(errorText: "You must choose start date."),
                       ],
                     ),
 
@@ -127,27 +121,27 @@ class CreateFoodFormState extends State<CreateFoodForm> {
                       decoration:
                       InputDecoration(labelText: "End date"),
                       validators: [
-                        FormBuilderValidators.requiredTrue(
-                          errorText:
-                          "You must choose End day.",
-                        ),
+                        FormBuilderValidators.required(errorText: "You must be choose end date."),
                       ],
                     ),
 
                     // list for pickup location
-                    new Row(
-                      children: <Widget>[
-                        Icon(Icons.location_on, size: 20, color: Colors.grey),
-                        Padding(
-                          padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-                          child: Text("Pickup location is set ", style: Styles.getRegularStyle(12, Colors.grey),),
-                        ),
-                        GestureDetector(
-                          child: Text("Change", style: Styles.getRegularStyle(12, Colors.red),  textAlign: TextAlign.left),
-                          onTap: _presentLocationScreen,
-                        )
-                      ],
-                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
+                      child: new Row(
+                        children: <Widget>[
+                          Icon(Icons.location_on, size: 20, color: Colors.grey),
+                          Padding(
+                            padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+                            child: Text("Pickup location is set ", style: Styles.getRegularStyle(12, Colors.grey),),
+                          ),
+                          GestureDetector(
+                            child: Text("Change", style: Styles.getRegularStyle(12, Colors.red),  textAlign: TextAlign.left),
+                            onTap: _presentLocationScreen,
+                          )
+                        ],
+                      ),
+                    )
 
                   ],
                 ),

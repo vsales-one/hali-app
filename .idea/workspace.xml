@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9b87e7a2-3636-48e2-8152-769f3901039e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/hali/assets/images/placeholder.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hali/lib/posts/create_food_form.dart" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/lib/posts/create_food_form.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hali/lib/posts/create_post.dart" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/lib/posts/create_post.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hali/lib/posts/pickup_location.dart" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/lib/posts/pickup_location.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hali/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/hali/pubspec.yaml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,8 +18,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/hali/lib/posts/create_post.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="146" column="17" selection-start-line="146" selection-start-column="17" selection-end-line="146" selection-end-column="17" />
+            <state relative-caret-position="186">
+              <caret line="96" column="29" selection-start-line="96" selection-start-column="29" selection-end-line="96" selection-end-column="29" />
               <folding>
                 <element signature="e#1#18#0" expanded="true" />
               </folding>
@@ -33,8 +30,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/hali/lib/posts/create_food_form.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1158">
-              <caret line="131" column="46" selection-start-line="131" selection-start-column="46" selection-end-line="131" selection-end-column="46" />
+            <state relative-caret-position="1965">
+              <caret line="131" column="43" lean-forward="true" selection-start-line="131" selection-start-column="43" selection-end-line="131" selection-end-column="43" />
               <folding>
                 <element signature="e#1#35#0" expanded="true" />
               </folding>
@@ -758,8 +755,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/hali/lib/posts/create_food_form.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1158">
-          <caret line="131" column="46" selection-start-line="131" selection-start-column="46" selection-end-line="131" selection-end-column="46" />
+        <state relative-caret-position="1965">
+          <caret line="131" column="43" lean-forward="true" selection-start-line="131" selection-start-column="43" selection-end-line="131" selection-end-column="43" />
           <folding>
             <element signature="e#1#35#0" expanded="true" />
           </folding>
@@ -768,8 +765,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/hali/lib/posts/create_post.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="146" column="17" selection-start-line="146" selection-start-column="17" selection-end-line="146" selection-end-column="17" />
+        <state relative-caret-position="186">
+          <caret line="96" column="29" selection-start-line="96" selection-start-column="29" selection-end-line="96" selection-end-column="29" />
           <folding>
             <element signature="e#1#18#0" expanded="true" />
           </folding>

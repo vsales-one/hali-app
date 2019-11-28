@@ -92,8 +92,9 @@ class _PhotoCover extends StatelessWidget {
                mainAxisAlignment: MainAxisAlignment.center,
                crossAxisAlignment: CrossAxisAlignment.center,
                children: <Widget>[
-                 Icon(Icons.camera_alt, size: 80, color: Colors.grey,),
+                 image == null ? Icon(Icons.camera_alt, size: 80, color: Colors.grey,) : new Container(),
                  Container(
+                   width: 150,
                    margin: EdgeInsets.all(16),
                    decoration: BoxDecoration(
                        color: ColorUtils.hexToColor(colorD92c27),
@@ -101,7 +102,14 @@ class _PhotoCover extends StatelessWidget {
                    ),
                    child: FlatButton(
                        onPressed: openCamera,
-                       child: Text("Take a Photo", style: Styles.getRegularStyle(14, Colors.white),)
+                       child: new Row(
+                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                         crossAxisAlignment: CrossAxisAlignment.center,
+                         children: <Widget>[
+                           Icon(Icons.camera, color: Colors.white,),
+                           Text("Take a Photo", style: Styles.getRegularStyle(14, Colors.white),)
+                         ],
+                       )
                    ),
                  ),
                  _UploadFromGallery( openGallery: openGallery, image: image,),
