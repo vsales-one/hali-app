@@ -1,7 +1,11 @@
 
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:hali/utils/color_utils.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'create_food_form.dart';
@@ -13,6 +17,31 @@ class CreatePostScreen extends StatefulWidget {
   }
 }
 class CreatePostScreenState extends State<CreatePostScreen> {
+
+  File _image;
+  
+  _handleOpenCamera() {
+    getImage();
+  }
+
+  _handleOpenGallery() {
+    getGallery();
+  }
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      _image = image;
+    });
+  }
+
+  Future getGallery() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +60,7 @@ class CreatePostScreenState extends State<CreatePostScreen> {
               color: Colors.white,
               child: CustomScrollView(
                 slivers: <Widget>[
-                  _PhotoCover(),
+                  _PhotoCover(openCamera: _handleOpenCamera, image: _image, openGallery: _handleOpenGallery,),
                   _ContentForm()
                 ],
               ),
@@ -44,6 +73,14 @@ class CreatePostScreenState extends State<CreatePostScreen> {
 
 class _PhotoCover extends StatelessWidget {
 
+  Function openCamera;
+  
+  File image;
+
+  Function openGallery;
+
+  _PhotoCover({ this.openCamera, this.image, this.openGallery});
+  
   @override
   Widget build(BuildContext context) {
      return SliverToBoxAdapter(
@@ -56,13 +93,24 @@ class _PhotoCover extends StatelessWidget {
                crossAxisAlignment: CrossAxisAlignment.center,
                children: <Widget>[
                  Icon(Icons.camera_alt, size: 80, color: Colors.grey,),
-                 _TakePhoto(),
-                 _UploadFromGallery(),
+                 Container(
+                   margin: EdgeInsets.all(16),
+                   decoration: BoxDecoration(
+                       color: ColorUtils.hexToColor(colorD92c27),
+                       borderRadius: BorderRadius.circular(15)
+                   ),
+                   child: FlatButton(
+                       onPressed: openCamera,
+                       child: Text("Take a Photo", style: Styles.getRegularStyle(14, Colors.white),)
+                   ),
+                 ),
+                 _UploadFromGallery( openGallery: openGallery, image: image,),
                ],
              ),
            ),
            decoration: BoxDecoration(
-             color: Colors.grey[300]
+             color: Colors.grey[300],
+             image: DecorationImage(image: image == null ? AssetImage("assets/images/placeholder.jpg") : new FileImage(image), fit: BoxFit.cover)
            ),
          ),
        ),
@@ -70,25 +118,11 @@ class _PhotoCover extends StatelessWidget {
   }
 }
 
-class _TakePhoto extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: ColorUtils.hexToColor(colorD92c27),
-        borderRadius: BorderRadius.circular(15)
-      ),
-      child: FlatButton(
-          onPressed: null,
-          child: Text("Take a Photo", style: Styles.getRegularStyle(14, Colors.white),)
-      ),
-    );
-  }
-}
-
 class _UploadFromGallery extends StatelessWidget {
+
+  VoidCallback openGallery;
+  File image;
+  _UploadFromGallery({ this.openGallery, this.image });
 
   @override
   Widget build(BuildContext context) {
@@ -97,8 +131,8 @@ class _UploadFromGallery extends StatelessWidget {
           borderRadius: BorderRadius.circular(15)
       ),
       child: FlatButton(
-          onPressed: null,
-          child: Text("Upload from gallery", style: Styles.getRegularStyle(14, Colors.blueGrey),)
+          onPressed: openGallery,
+          child: Text("Upload from gallery", style: image == null ? Styles.getRegularStyle(14, Colors.blueGrey) : Styles.getRegularStyle(14, Colors.white),)
       ),
     );
   }
@@ -110,7 +144,7 @@ class _ContentForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: SizedBox(
-        height: 500,
+        height: 700,
         child: _TabBarContent(),
       ),
     );

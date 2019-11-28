@@ -75,20 +75,20 @@ class _PickupLocationState extends State<PickupLocationScreen> {
     }
   }
 
-  void _onAddMarkerButtonPressed() {
-    setState(() {
-      _markers.add(Marker(
-        // This marker id can be anything that uniquely identifies each marker.
-        markerId: MarkerId(_lastMapPosition.toString()),
-        position: _lastMapPosition,
-        infoWindow: InfoWindow(
-          title: 'Really cool place',
-          snippet: '5 Star Rating',
-        ),
-        icon: BitmapDescriptor.defaultMarker,
-      ));
-    });
-  }
+//  void _onAddMarkerButtonPressed() {
+//    setState(() {
+//      _markers.add(Marker(
+//        // This marker id can be anything that uniquely identifies each marker.
+//        markerId: MarkerId(_lastMapPosition.toString()),
+//        position: _lastMapPosition,
+//        infoWindow: InfoWindow(
+//          title: 'Really cool place',
+//          snippet: '5 Star Rating',
+//        ),
+//        icon: BitmapDescriptor.defaultMarker,
+//      ));
+//    });
+//  }
   
   @override
   void initState() {
@@ -131,7 +131,6 @@ class _PickupLocationState extends State<PickupLocationScreen> {
         appBar: AppBar(
           title: Text('Pickup Location', style: Styles.getSemiboldStyle(14, Colors.black87),),
           backgroundColor: Colors.white,
-          
           leading: IconButton(
               icon: Icon(Icons.close, color: Colors.black87,),
               onPressed: () => Navigator.of(context).pop()
@@ -171,65 +170,5 @@ class _PickupLocationState extends State<PickupLocationScreen> {
     }
 
     return null;
-  }
-
-  Widget locationCard() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Consumer<LocationProvider>(
-                builder: (context, locationProvider, _) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Flexible(
-                        flex: 20,
-                        child: FutureLoadingBuilder<String>(
-                            future: getAddress(locationProvider.lastIdleLocation),
-                            mutable: true,
-                            loadingIndicator: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                CircularProgressIndicator(),
-                              ],
-                            ),
-                            builder: (context, address) {
-                              _address = address;
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    address ?? 'Unnamed place',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }),
-                      ),
-                      Spacer(),
-                      FloatingActionButton(
-                        onPressed: () {
-                          Navigator.of(context).pop({
-                            'location': LocationResult(
-                              latLng: locationProvider.lastIdleLocation,
-                              address: _address,
-                            )
-                          });
-                        },
-                        child: Icon(Icons.arrow_forward, color: Colors.white),
-                      ),
-                    ],
-                  );
-                }),
-          ),
-        ),
-      ),
-    );
   }
 }

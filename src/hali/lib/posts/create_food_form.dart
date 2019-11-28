@@ -106,28 +106,32 @@ class CreateFoodFormState extends State<CreateFoodForm> {
                       ],
                     ),
 
-                    // list for 5 days
-                    Container(
-                      margin: EdgeInsets.only(top: 16),
-                      child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(top: 0),
-                            child: Icon(Icons.calendar_today, size: 18, color: Colors.grey),
-                          ),
+                    FormBuilderDateTimePicker(
+                      attribute: "startDate",
+                      inputType: InputType.date,
+                      format: DateFormat("yyyy-MM-dd"),
+                      decoration:
+                      InputDecoration(labelText: "Start date"),
+                      validators: [
+                        FormBuilderValidators.requiredTrue(
+                          errorText:
+                          "You must choose start day.",
+                        ),
+                      ],
+                    ),
 
-                          Container(
-                            padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-                            child: Text("List for $listFor5Days", style: Styles.getRegularStyle(12, Colors.grey),),
-                          ),
-                          GestureDetector(
-                            child: Text("Change", style: Styles.getRegularStyle(12, Colors.red),  textAlign: TextAlign.left),
-                            onTap: _showListDays,
-                          )
-                        ],
-                      ),
+                    FormBuilderDateTimePicker(
+                      attribute: "endDate",
+                      inputType: InputType.date,
+                      format: DateFormat("yyyy-MM-dd"),
+                      decoration:
+                      InputDecoration(labelText: "End date"),
+                      validators: [
+                        FormBuilderValidators.requiredTrue(
+                          errorText:
+                          "You must choose End day.",
+                        ),
+                      ],
                     ),
 
                     // list for pickup location
