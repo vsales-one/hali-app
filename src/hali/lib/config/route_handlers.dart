@@ -6,6 +6,7 @@ import 'package:hali/login/login.dart';
 import 'package:hali/posts/create_post.dart';
 import 'package:hali/posts/pickup_location.dart';
 import 'package:hali/register/register.dart';
+import 'package:hali/repositories/post_repository.dart';
 
 var rootHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -30,7 +31,8 @@ var showFeedDetailHandler = Handler(
 
 var showCreatePostScreenHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return CreatePostScreen();
+      final postRepository = PostRepository();
+      return CreatePostScreen(postRepository: postRepository,);
     });
 
 var showPickupLocationScreenHandler = Handler(

@@ -54,6 +54,7 @@ dependencies:
   geolocator: ^5.1.5
   permission_handler: '^4.0.0'
   provider: ^3.1.0+1
+  dson: ^0.16.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

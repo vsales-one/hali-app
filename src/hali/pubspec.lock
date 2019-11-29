@@ -99,6 +99,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.2"
+  built_mirrors:
+    dependency: transitive
+    description:
+      name: built_mirrors
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.11.0"
   built_value:
     dependency: transitive
     description:
@@ -211,6 +218,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.5"
+  dson:
+    dependency: "direct main"
+    description:
+      name: dson
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.16.0"
   equatable:
     dependency: "direct main"
     description:
@@ -669,6 +683,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.6+1"
+  serializable:
+    dependency: transitive
+    description:
+      name: serializable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.12.0"
   shared_preferences:
     dependency: "direct main"
     description:
