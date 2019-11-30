@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hali/home/views/feed_detail.dart';
 import 'package:hali/login/login.dart';
 import 'package:hali/posts/create_post.dart';
+import 'package:hali/posts/create_post_page.dart';
 import 'package:hali/posts/pickup_location.dart';
 import 'package:hali/register/register.dart';
 import 'package:hali/repositories/post_repository.dart';
@@ -31,8 +32,8 @@ var showFeedDetailHandler = Handler(
 
 var showCreatePostScreenHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      final postRepository = PostRepository();
-      return CreatePostScreen(postRepository: postRepository,);
+      final _postRepository = new PostRepository();
+      return CreatePostPage(postRepository: _postRepository,);
     });
 
 var showPickupLocationScreenHandler = Handler(

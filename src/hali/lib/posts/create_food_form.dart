@@ -1,15 +1,26 @@
 
+import 'dart:io';
+
+import 'package:date_format/date_format.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:hali/config/application.dart';
 import 'package:hali/config/routes.dart';
+import 'package:hali/models/post_model.dart';
+import 'package:hali/utils/alert_helper.dart';
 import 'package:hali/utils/color_utils.dart';
+import 'package:hali/utils/date_utils.dart';
 import 'package:intl/intl.dart';
-import 'package:select_dialog/select_dialog.dart';
+import 'bloc/index.dart';
 
 class CreateFoodForm extends StatefulWidget {
+
+final File imageCover;
+
+  const CreateFoodForm(this.imageCover);
 
   @override
   State<StatefulWidget> createState() {
@@ -21,41 +32,17 @@ class CreateFoodFormState extends State<CreateFoodForm> {
 
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
 
-  String listFor5Days = "";
-  List<String> listOfDays;
-
-  List<String> _renderListingDays() {
-    List<String> chidrens = [];
-    for (var i = 5; i < 29; i++) {
-      chidrens.add("$i days");
-    }
-    return chidrens;
-  }
-
-  _showListDays() {
-    listOfDays = _renderListingDays();
-
-    SelectDialog.showModal<String>(
-      context,
-      searchBoxDecoration: InputDecoration(
-        hintText: "Search"
-      ),
-      label: "List for ",
-      selectedValue: listFor5Days,
-      items: listOfDays,
-      onChange: (String selected) {
-        setState(() {
-          listFor5Days = selected;
-        });
-      },
-    );
-  }
+  String _title = "";
+  String _description = "";
+  DateTime _startDate = DateTime.now();
+  DateTime _endDate = DateTime.now();
+  String _pickup = "";
+  String _lat = "";
+  String _longtitude = "";
 
   @override
   void initState() {
     super.initState();
-    listOfDays = _renderListingDays();
-    listFor5Days = listOfDays[0];
   }
 
   @override
@@ -84,6 +71,11 @@ class CreateFoodFormState extends State<CreateFoodForm> {
                       validators: [
                         FormBuilderValidators.required(),
                       ],
+                      onChanged: (title){
+                        setState(() {
+                          _title = title;
+                        });
+                      },          
                     ),
                     FormBuilderTextField(
                       attribute: "description",
@@ -91,6 +83,11 @@ class CreateFoodFormState extends State<CreateFoodForm> {
                       validators: [
                         FormBuilderValidators.required(),
                       ],
+                      onChanged: (desc) {
+                        setState(() {
+                          _description = desc;
+                        });
+                      },
                     ),
                     FormBuilderDateTimePicker(
                       attribute: "pickupTime",
@@ -101,6 +98,11 @@ class CreateFoodFormState extends State<CreateFoodForm> {
                       validators: [
                         FormBuilderValidators.required(errorText: "You must choose pick up time."),
                       ],
+                      onChanged: (pickup){
+                        setState(() {
+                          _pickup = pickup.toIso8601String();
+                        });
+                      },
                     ),
 
                     FormBuilderDateTimePicker(
@@ -112,6 +114,11 @@ class CreateFoodFormState extends State<CreateFoodForm> {
                       validators: [
                         FormBuilderValidators.required(errorText: "You must choose start date."),
                       ],
+                      onChanged: (startDate){
+                        setState(() {
+                          _startDate = startDate;
+                        });
+                      },
                     ),
 
                     FormBuilderDateTimePicker(
@@ -123,6 +130,11 @@ class CreateFoodFormState extends State<CreateFoodForm> {
                       validators: [
                         FormBuilderValidators.required(errorText: "You must be choose end date."),
                       ],
+                      onChanged: (endDate){
+                        setState(() {
+                          _endDate = endDate;
+                        });
+                      },
                     ),
 
                     // list for pickup location
@@ -162,11 +174,7 @@ class CreateFoodFormState extends State<CreateFoodForm> {
                         child: Text("Submit"),
 
                         textColor: Colors.white,
-                        onPressed: () {
-                          if (_fbKey.currentState.saveAndValidate()) {
-                            print(_fbKey.currentState.value);
-                          }
-                        },
+                        onPressed: _handleCreatePost
                       ),
                     )
                   ],
@@ -181,6 +189,23 @@ class CreateFoodFormState extends State<CreateFoodForm> {
 
   void _presentLocationScreen() {
       Application.router.navigateTo(context, Routes.locationScreen, transition: TransitionType.fadeIn);
+  }
+
+  void _handleCreatePost() {
+    if (_fbKey.currentState.saveAndValidate()) {
+      if (widget.imageCover == null) {
+        AlertHelper.showAlertError(context, "Image Cover can not empty.");
+      }
+
+      final postModel = new PostModel(
+        title: _title,
+        description: _description,
+        pickUpTime: _pickup,
+        startDate: DateUtils.dateToString(_startDate),
+        endDate: DateUtils.dateToString(_endDate),
+      );
+      BlocProvider.of<CreatePostBloc>(context).add(AddPostStartEvent(postModel: postModel, image: widget.imageCover));
+    }
   }
 }
 

@@ -10,16 +10,16 @@ class PostModel {
   String city;
   String description;
   String district;
-  DateTime endDate;
+  String endDate;
   int id;
   String imageUrl;
   String lastModifiedBy;
-  DateTime lastModifiedDate;
+  String lastModifiedDate;
   int latitude;
   int longitude;
   String pickUpTime;
   String pickupAddress;
-  DateTime startDate;
+  String startDate;
   String title;
 
   PostModel({

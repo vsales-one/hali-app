@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hali/commons/dialog.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:hali/repositories/post_repository.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'bloc/index.dart';
 import 'create_food_form.dart';
@@ -84,7 +86,7 @@ class CreatePostScreenState extends State<CreatePostScreen> {
                   image: _image,
                   openGallery: _handleOpenGallery,
                 ),
-                _ContentForm()
+                _ContentForm(_image)
               ],
             ),
           ),
@@ -92,10 +94,20 @@ class CreatePostScreenState extends State<CreatePostScreen> {
       ),
     );
     return BlocListener<CreatePostBloc, CreatePostState>(
-      listener: (context, state) => {},
+      listener: (context, state) => {
+        if (state.error != null) {
+          displayAlert(context, "Error Message", state.error.message)
+        } else  if (state.postModel != null) {
+          Navigator.of(context).pop()
+        }
+
+      },
       child: BlocBuilder<CreatePostBloc, CreatePostState>(
         builder: (context, state) {
-          return screen;
+          return ModalProgressHUD(
+            child: screen,
+            inAsyncCall: state.isLoading,
+          );
         },
       ),
     );
@@ -194,18 +206,27 @@ class _UploadFromGallery extends StatelessWidget {
 }
 
 class _ContentForm extends StatelessWidget {
+  
+  File imageCover;
+
+  _ContentForm(this.imageCover);
+
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: SizedBox(
         height: 700,
-        child: _TabBarContent(),
+        child: _TabBarContent(imageCover),
       ),
     );
   }
 }
 
 class _TabBarContent extends StatefulWidget {
+
+  File coverImage; 
+  _TabBarContent(this.coverImage);
+
   @override
   State<StatefulWidget> createState() {
     return _TabbarContentState();
@@ -247,8 +268,8 @@ class _TabbarContentState extends State<_TabBarContent>
       ),
       body: TabBarView(
         children: [
-          CreateFoodForm(),
-          CreateFoodForm(),
+          CreateFoodForm(widget.coverImage),
+          CreateFoodForm(widget.coverImage),
         ],
         controller: _tabController,
       ),

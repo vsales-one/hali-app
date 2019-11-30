@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:hali/constants/constants.dart';
+import 'package:hali/di/appModule.dart';
 import 'package:hali/models/user_profile.dart';
 
 class UserRepository {
@@ -53,11 +55,9 @@ class UserRepository {
       password: password,
     );
 
-
     var user = await FirebaseAuth.instance.currentUser();
-
-    IdTokenResult idTokenResult
-    = await user.getIdToken();
+    IdTokenResult idTokenResult = await user.getIdToken();
+    spUtil.putString(KEY_TOKEN, idTokenResult.token);
     return idTokenResult;
   }
 

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hali/login/bloc/bloc.dart';
 import 'package:hali/messages/message_list_screen.dart';
+import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/tests/test_list_screen.dart';
 import 'package:hali/user_profile/user_profile_screen.dart';
 import 'package:hali/utils/color_utils.dart';
@@ -44,7 +47,10 @@ class _MainScreenState extends State<MainScreen> {
   Widget _renderNotify() {
     return Container(
       padding: EdgeInsets.all(16),
-      child: Icon(MdiIcons.bellRingOutline, color: Colors.black38,),
+      child: IconButton(icon: Icon(MdiIcons.bellRingOutline, color: Colors.black38,), onPressed: (){
+        final repo = RepositoryProvider.of<UserRepository>(context);
+        repo.signOut();
+      },),
     );
   }
 
@@ -83,14 +89,6 @@ class _MainScreenState extends State<MainScreen> {
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(MdiIcons.foodForkDrink),
-              title: Text(''),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              title: Text(''),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(MdiIcons.heart),
               title: Text(''),
             ),
             BottomNavigationBarItem(

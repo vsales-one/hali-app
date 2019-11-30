@@ -6,14 +6,14 @@ import 'package:hali/models/api_response.dart';
 
 class HomeProvider {
 
-  Future<ApiResponse<UserStatisticsDashboardDto, DioError>> fetchUserStatisticDashboard(int month) async {
+  Future<ApiResponse<UserStatisticsDashboardDto>> fetchUserStatisticDashboard(int month) async {
     final client = await ClientRepository.create();
     try {
       final response = await client.get('/api/user/dms-statistics/$month');
       return ApiResponse(data: UserStatisticsDashboardDto.fromJson(response.data));
     }
     on DioError catch(e) {
-      return ApiResponse(errorMgs: e.message, error: e);
+      return ApiResponse(errorMgs: e.message);
     }
   }
 }

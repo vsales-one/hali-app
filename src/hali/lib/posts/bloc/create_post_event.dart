@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as developer;
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -16,10 +17,10 @@ abstract class CreatePostEvent extends Equatable {
 }
 
 class AddPostStartEvent extends CreatePostEvent {
-
+  final File image;
   final PostModel postModel;
 
-  AddPostStartEvent({this.postModel});
+  AddPostStartEvent({ this.image, this.postModel});
 
   @override
   String toString() => 'AddPostEvent { todo: $postModel }';
