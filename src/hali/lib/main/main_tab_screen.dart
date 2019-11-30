@@ -69,16 +69,7 @@ class _MainScreenState extends State<MainScreen> {
           controller: controller,
           onPageChanged: onPageViewChanged,
           children: <Widget>[
-            HomeScreen(name: "Home",),
-            Container(
-              child: Center(child:Text("Page 2")),
-              color: Colors.blueAccent,
-            ),
-
-            Container(
-              child: Center(child:Text("Page 3")),
-              color: Colors.green,
-            ),
+            HomeScreen(name: "Home",),            
             UserProfileScreen(),
             MessageListScreen(),
             TestListScreen(),

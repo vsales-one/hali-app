@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hali/commons/styles.dart';
-import 'package:hali/constatns/constants.dart';
+import 'package:hali/constants/constants.dart';
 import 'package:hali/models/location_result.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:geolocator/geolocator.dart';
@@ -161,7 +161,7 @@ class _PickupLocationState extends State<PickupLocationScreen> {
   Future<String> getAddress(LatLng location) async {
     try {
       var endPoint =
-          'https://maps.googleapis.com/maps/api/geocode/json?latlng=${location?.latitude},${location?.longitude}&key=${apiKey}';
+          'https://maps.googleapis.com/maps/api/geocode/json?latlng=${location?.latitude},${location?.longitude}&key=$kApiKey';
       var response = jsonDecode((await http.get(endPoint)).body);
 
       return response['results'][0]['formatted_address'];

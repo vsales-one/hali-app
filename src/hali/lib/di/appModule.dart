@@ -16,14 +16,14 @@ import 'package:firebase_core/firebase_core.dart';
 class AuthInterceptor extends Interceptor {
   @override
   onRequest(RequestOptions options) {
-    final token = spUtil.getString(KEY_TOKEN);
+    final token = spUtil.getString(kFirebaseAuthToken);
     options.headers.update("X-Firebase-Auth", (_) => token, ifAbsent: () => token);
     return super.onRequest(options);
   }
 }
 
 final dio = Dio()
-  ..options = BaseOptions(baseUrl: baseUrl, connectTimeout: 5000, receiveTimeout: 5000)
+  ..options = BaseOptions(baseUrl: kBaseUrl, connectTimeout: 5000, receiveTimeout: 5000)
   ..interceptors.add(AuthInterceptor())
   ..interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
 

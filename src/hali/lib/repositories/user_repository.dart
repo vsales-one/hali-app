@@ -29,7 +29,9 @@ class UserRepository {
       idToken: googleAuth.idToken,
     );
     await _firebaseAuth.signInWithCredential(credential);    
-    return _firebaseAuth.currentUser();
+    final user = await _firebaseAuth.currentUser();
+    await storeFirebaseAuthToken(user);
+    return user;
   }
 
   Future<FirebaseUser> signInWithFacebook() async {
@@ -39,7 +41,9 @@ class UserRepository {
       final token = fbLoginResult.accessToken.token;
       final AuthCredential credential = FacebookAuthProvider.getCredential(accessToken: token);
       await _firebaseAuth.signInWithCredential(credential);
-      return _firebaseAuth.currentUser();   
+      final user = await _firebaseAuth.currentUser();
+      await storeFirebaseAuthToken(user);
+      return user;
       break;
     case FacebookLoginStatus.cancelledByUser:
     case FacebookLoginStatus.error:
@@ -49,16 +53,14 @@ class UserRepository {
     return null;
   }
 
-  Future<void> signInWithCredentials(String email, String password) async {
-    AuthResult authResult = await  _firebaseAuth.signInWithEmailAndPassword(
+  Future<FirebaseUser> signInWithCredentials(String email, String password) async {
+    await  _firebaseAuth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
-
-    var user = await FirebaseAuth.instance.currentUser();
-    IdTokenResult idTokenResult = await user.getIdToken();
-    spUtil.putString(KEY_TOKEN, idTokenResult.token);
-    return idTokenResult;
+    final user = await FirebaseAuth.instance.currentUser();    
+    await storeFirebaseAuthToken(user);
+    return user;
   }
 
   Future<void> signUp({String email, String password}) async {
@@ -72,12 +74,19 @@ class UserRepository {
     return Future.wait([
       _firebaseAuth.signOut(),
       _googleSignIn.signOut(),
+      _facebookLogin.logOut()
     ]);
   }
 
   Future<bool> isSignedIn() async {
     final currentUser = await _firebaseAuth.currentUser();
     return currentUser != null;
+  }
+
+  Future<void> storeFirebaseAuthToken(FirebaseUser user) async {
+    final idTokenResult = await user.getIdToken();
+    print('>>>>>>> Storing the user auth token: ${idTokenResult.token}');
+    spUtil.putString(kFirebaseAuthToken, idTokenResult.token);
   }
 
   Future<UserProfile> getUserProfile() async {

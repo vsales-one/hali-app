@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:hali/constants/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hali/constatns/constants.dart';
 
 class ClientRepository {
   static Future<Dio> create() async {
@@ -71,17 +71,6 @@ class AccessTokenUtils {
   static Future<String> getMobileToken() async {
     Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
-    return prefs.getString(kAccess_token) ?? '';
+    return prefs.getString(kFirebaseAuthToken) ?? '';
   }
-
-  // static Future<LoginResponse> getMobileTokenObject() async {
-  //   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  //   final SharedPreferences prefs = await _prefs;
-  //   final tokenJson = prefs.getString(kLoginTokenObject) ?? '';
-  //   if(tokenJson.isEmpty) {
-  //     return null;
-  //   }
-  //   return jsonDecode(tokenJson);
-  // }
-
 }
