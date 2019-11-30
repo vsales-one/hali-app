@@ -59,7 +59,7 @@ class ChatWidget extends StatelessWidget {
               ? Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage(chat.from.profilePicture),
+                    backgroundImage: NetworkImage(chat.from.imageUrl ?? 'https://api.adorable.io/avatars/100/abott@adorable.png'),
                     radius: 12.0,
                   ),
                 )

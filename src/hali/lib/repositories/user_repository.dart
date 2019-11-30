@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -6,6 +5,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:hali/constants/constants.dart';
 import 'package:hali/di/appModule.dart';
 import 'package:hali/models/user_profile.dart';
+import 'package:hali/providers/app_user_profile_provider.dart';
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
@@ -30,7 +30,8 @@ class UserRepository {
     );
     await _firebaseAuth.signInWithCredential(credential);    
     final user = await _firebaseAuth.currentUser();
-    await storeFirebaseAuthToken(user);
+    await storeFirebaseAuthToken(user);    
+    await linkFirebaseUserWithAppUser(user);
     return user;
   }
 
@@ -43,6 +44,7 @@ class UserRepository {
       await _firebaseAuth.signInWithCredential(credential);
       final user = await _firebaseAuth.currentUser();
       await storeFirebaseAuthToken(user);
+      await linkFirebaseUserWithAppUser(user);
       return user;
       break;
     case FacebookLoginStatus.cancelledByUser:
@@ -60,6 +62,7 @@ class UserRepository {
     );
     final user = await FirebaseAuth.instance.currentUser();    
     await storeFirebaseAuthToken(user);
+    await linkFirebaseUserWithAppUser(user);
     return user;
   }
 
@@ -89,13 +92,30 @@ class UserRepository {
     spUtil.putString(kFirebaseAuthToken, idTokenResult.token);
   }
 
+  Future<void> linkFirebaseUserWithAppUser(FirebaseUser user) async {
+    print('>>>>>>> Link firebase user with app user: ${user.uid}');
+    final appUserProvider = AppUserProfileProvider();
+    await appUserProvider.linkFirebaseUserWithAppUser(user);
+  }
+
   Future<UserProfile> getUserProfile() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();    
     if (user == null) {
       return null;
     }
-    return UserProfile(user.displayName, user.photoUrl, user.email ?? user.uid,
-        user.email, true);
+    return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, user.photoUrl, 
+      "", "", "", true);
+  }
+
+  Future<UserProfile> getUserProfileFull() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();    
+    if (user == null) {
+      return null;
+    }
+    final appUserProfileProvider = AppUserProfileProvider();
+    final appUserProfile = await appUserProfileProvider.getAppUserProfileByUserId(user.uid);    
+    return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, user.photoUrl, 
+      appUserProfile?.address, appUserProfile?.district, appUserProfile?.city, true);
   }
 
   Future<List<UserProfile>> getActiveUsers() async {

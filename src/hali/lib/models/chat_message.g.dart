@@ -6,15 +6,19 @@ part of 'chat_message.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) {
+ChatMessage _$ChatMessageFromJson(Map json) {
   return ChatMessage(
     json['content'],
     json['from'] == null
         ? null
-        : UserProfile.fromJson(json['from'] as Map<String, dynamic>),
+        : UserProfile.fromJson((json['from'] as Map)?.map(
+            (k, e) => MapEntry(k as String, e),
+          )),
     json['to'] == null
         ? null
-        : UserProfile.fromJson(json['to'] as Map<String, dynamic>),
+        : UserProfile.fromJson((json['to'] as Map)?.map(
+            (k, e) => MapEntry(k as String, e),
+          )),
     json['isSeen'] as bool,
     json['publishedAt'] == null
         ? null
@@ -28,8 +32,8 @@ Map<String, dynamic> _$ChatMessageToJson(ChatMessage instance) =>
     <String, dynamic>{
       'type': instance.type,
       'content': instance.content,
-      'from': instance.from,
-      'to': instance.to,
+      'from': instance.from?.toJson(),
+      'to': instance.to?.toJson(),
       'isSeen': instance.isSeen,
       'publishedAt': instance.publishedAt?.toIso8601String(),
       'groupId': instance.groupId,

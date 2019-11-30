@@ -14,7 +14,7 @@ description: An app for community to share and reduce waste
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: ">=2.3.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -57,6 +57,7 @@ dependencies:
   dson: ^0.16.0
   flutter_file_manager: ^0.2.0
   date_format: ^1.0.8
+  dartz: ^0.8.9
 
 
 dev_dependencies:

@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'chat_message.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(anyMap: true, explicitToJson: true)
 class ChatMessage {
   static const String TEXT = "text";
   String type;
@@ -24,8 +24,9 @@ class ChatMessage {
           UserProfile to,
           bool isSeen,
           DateTime publishedAt,
+          String groupId,
           String type = TEXT}) =>
-      ChatMessage(content, from, to, isSeen, publishedAt, type, "");
+      ChatMessage(content, from, to, isSeen, publishedAt, type, groupId);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated

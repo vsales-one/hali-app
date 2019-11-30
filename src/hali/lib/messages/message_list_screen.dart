@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/app_widgets/recent_chat_widget.dart';
-import 'package:hali/models/chat_message.dart';
+import 'package:hali/models/item_listing_message.dart';
 import 'package:hali/repositories/chat_message_repository.dart';
 
 class MessageListScreen extends StatefulWidget {
@@ -33,10 +33,15 @@ class _MessageListScreenState extends State<MessageListScreen> {
                 child: CircularProgressIndicator(),
               );
             }
-            List<ChatMessage> chats = snapshot.data;
+            List<ItemListingMessage> chats = snapshot.data;
+            if(chats == null || chats.isEmpty) {
+              return Center(
+                child: Text("Không có tin nhắn dành cho bạn"),
+              );
+            }
             return ListView.builder(
               itemBuilder: (context, index) => RecentChatWidget(
-                chat: chats[index],
+                requestMessage: chats[index],
               ),
               itemCount: chats.length,
               shrinkWrap: true,

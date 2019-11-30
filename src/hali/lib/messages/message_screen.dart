@@ -113,7 +113,7 @@ class _MessageScreenState extends State<MessageScreen> {
                   children: <Widget>[
                     CircleAvatar(
                       backgroundImage: NetworkImage(
-                        widget.friend.profilePicture,
+                        widget.friend.imageUrl,
                       ),
                       radius: 14.0,
                     ),
@@ -206,8 +206,8 @@ class _MessageScreenState extends State<MessageScreen> {
             radius: 64.0,
             backgroundColor: Colors.transparent,
             backgroundImage:
-                friendUser != null && friendUser.profilePicture.isNotEmpty
-                    ? NetworkImage(friendUser.profilePicture)
+                friendUser != null && friendUser.imageUrl.isNotEmpty
+                    ? NetworkImage(friendUser.imageUrl)
                     : AssetImage('assets/hali_logo_199.png'),
           ),
         ),
@@ -271,9 +271,9 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget _buildRequestMessageInput() {
     return ChatInputWidget(
       defaultMessage: "Hi ${widget.itemRequestMessage.to.displayName},",
-      onSubmitted: (val) async {
-        print(">>>>>>> sending message: $val");
-        final sendResOk = await _chatMessageRepository.sendItemRequestMessage(widget.itemRequestMessage);
+      onSubmitted: (message) async {
+        print(">>>>>>> sending message: $message");
+        final sendResOk = await _chatMessageRepository.sendItemRequestMessage(message, widget.itemRequestMessage);
         if(sendResOk) {
           AlertHelper.showAlertInfo(context, "Success! your request of the item has been sent.");
         }
@@ -301,7 +301,8 @@ class _MessageScreenState extends State<MessageScreen> {
                       to: widget.friend,
                       content: val,
                       isSeen: false,
-                      publishedAt: DateTime.now());
+                      publishedAt: DateTime.now(),
+                      groupId: widget.itemRequestMessage.groupId);
                   _chatMessageRepository.sendMessage(chat);
                   scrollController.animateTo(
                       scrollController.position.maxScrollExtent,
@@ -325,7 +326,7 @@ class _MessageScreenState extends State<MessageScreen> {
           ClipRRect(
             borderRadius: BorderRadius.circular(125.0),
             child: Image.network(
-              widget.friend.profilePicture,
+              widget.friend.imageUrl,
               height: 125.0,
               fit: BoxFit.cover,
             ),
@@ -340,7 +341,7 @@ class _MessageScreenState extends State<MessageScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 4.0),
             child: Text(
-              "${widget.friend.id}",
+              "${widget.friend.email}",
               style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.w500,
@@ -354,14 +355,14 @@ class _MessageScreenState extends State<MessageScreen> {
 
   Widget _buildChatMessages() {
     return StreamBuilder(
-        stream: _chatMessageRepository.listenChat(currentUser, widget.friend),
+        stream: _chatMessageRepository.listenChat(widget.itemRequestMessage.groupId),
         builder: (context, snapshot) {
           if (!snapshot.hasData || snapshot.data == null) {
             return Center(
               child: CircularProgressIndicator(),
             );
           }
-          List<ChatMessage> chats = snapshot.data;
+          List<ChatMessage> chats = snapshot.data;          
           return ListView.builder(
             controller: scrollController,
             itemBuilder: (context, index) {

@@ -4,15 +4,15 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'item_listing_message.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(anyMap: true, explicitToJson: true)
 class ItemListingMessage extends ChatMessage {  
   String itemType; // food, non-food
   String itemId;
   String itemTitle;
-  String itemImageUrl;
+  String itemImageUrl; 
   UserProfile from, to;
   bool isSeen;
-  DateTime publishedAt;  
+  DateTime publishedAt;
 
   ItemListingMessage(
     this.itemType, 

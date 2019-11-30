@@ -6,7 +6,7 @@ part of 'item_listing_message.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ItemListingMessage _$ItemListingMessageFromJson(Map<String, dynamic> json) {
+ItemListingMessage _$ItemListingMessageFromJson(Map json) {
   return ItemListingMessage(
     json['itemType'] as String,
     json['itemId'] as String,
@@ -14,10 +14,14 @@ ItemListingMessage _$ItemListingMessageFromJson(Map<String, dynamic> json) {
     json['itemImageUrl'] as String,
     json['from'] == null
         ? null
-        : UserProfile.fromJson(json['from'] as Map<String, dynamic>),
+        : UserProfile.fromJson((json['from'] as Map)?.map(
+            (k, e) => MapEntry(k as String, e),
+          )),
     json['to'] == null
         ? null
-        : UserProfile.fromJson(json['to'] as Map<String, dynamic>),
+        : UserProfile.fromJson((json['to'] as Map)?.map(
+            (k, e) => MapEntry(k as String, e),
+          )),
     json['isSeen'] as bool,
     json['publishedAt'] == null
         ? null
@@ -37,8 +41,8 @@ Map<String, dynamic> _$ItemListingMessageToJson(ItemListingMessage instance) =>
       'itemId': instance.itemId,
       'itemTitle': instance.itemTitle,
       'itemImageUrl': instance.itemImageUrl,
-      'from': instance.from,
-      'to': instance.to,
+      'from': instance.from?.toJson(),
+      'to': instance.to?.toJson(),
       'isSeen': instance.isSeen,
       'publishedAt': instance.publishedAt?.toIso8601String(),
     };

@@ -12,7 +12,7 @@ class UserWidget extends StatelessWidget {
       alignment: Alignment.bottomRight,
       children: <Widget>[
         CircleAvatar(
-          backgroundImage: NetworkImage(user.profilePicture),
+          backgroundImage: NetworkImage(user.imageUrl),
           radius: size,
         ),
         user.isActive

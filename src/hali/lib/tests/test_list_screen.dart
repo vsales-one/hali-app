@@ -22,16 +22,16 @@ class _TestListScreenState extends State<TestListScreen> {
             "https://firebasestorage.googleapis.com/v0/b/hali-ca190.appspot.com/o/public_images%2FTomato_PNG_Clipart_Picture.png?alt=media&token=9e3605a8-3209-4750-8cbc-e06a16d96b17",
         from: UserProfile.fromNamed(
             displayName: "Thinh Hua Quang",
-            profilePicture:
+            imageUrl:
                 "https://lh3.googleusercontent.com/a-/AAuE7mA61feM1gOmpGCrIUYJz0azUwI6buQOaWVRok0RGw=s96-c",
-            id: "hquangthinh@gmail.com",
+            userId: "VVrhTSFPzvUP2Bsb6na2vgrFlp52",
             email: "hquangthinh@gmail.com",
             isActive: true),
         to: UserProfile.fromNamed(
             displayName: "Tomato",
-            profilePicture:
+            imageUrl:
                 "https://api.adorable.io/avatars/100/abott@adorable.png",
-            id: "brtometh@gmail.com",
+            userId: "y41Rrmr7A0gzniC9kSudv6RmeA62",
             email: "brtometh@gmail.com",
             isActive: true),
         isSeen: false,
