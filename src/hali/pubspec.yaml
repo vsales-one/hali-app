@@ -57,7 +57,7 @@ dependencies:
   dson: ^0.16.0
   flutter_file_manager: ^0.2.0
   date_format: ^1.0.8
-
+  rxdart: ^0.22.6
 
 dev_dependencies:
   flutter_test:

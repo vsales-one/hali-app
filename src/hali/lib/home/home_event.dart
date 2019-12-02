@@ -10,13 +10,10 @@ class LoadHomeEvent extends HomeEvent {
   String toString() => 'LoadHomeEvent';
 }
 
+class Fetch extends HomeEvent {
+  final int currentPage;
+  Fetch({this.currentPage});
 
-class VerifyToken extends HomeEvent {
-  @override
-  String toString() => 'VerifyToken';
-}
-
-class UploadInProgressAvatarHomeEvent extends HomeEvent {
-  @override
-  String toString() => 'UploadInProgressAvatarHomeEvent';
+   @override
+  String toString() => 'HomeFetch: $currentPage';
 }

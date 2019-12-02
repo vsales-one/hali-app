@@ -1,40 +1,47 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:dio/dio.dart';
-import 'package:hali/commons/app_error.dart';
 import 'package:hali/home/index.dart';
-import 'package:hali/models/user_profile.dart';
 import 'package:hali/repositories/user_repository.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  
-  HomeState get initialState => new HomeInitial();
+  HomeState get initialState => new HomeUninitialized();
 
   final UserRepository userRepository;
   final HomeRepository homeRepository;
-  
-  HomeBloc({ @required this.userRepository, @required this.homeRepository});
-  
+
+  HomeBloc({@required this.userRepository, @required this.homeRepository});
+
   @override
   Stream<HomeState> mapEventToState(
     HomeEvent event,
   ) async* {
-            
-    if (event is LoadHomeEvent){
-      yield HomeLoading();
+    final currentState = state;
+    if (event is Fetch && !_hasReachedMax(currentState)) {
       try {
-        final UserProfile userProfile = await userRepository.getUserProfile();        
-        yield HomeFetchUserSuccess(userModel: userProfile);
-      }
-      on DioError catch(error) {        
-        final vserror = AppError(message: error.message, statusCode: error.response.statusCode);
-        yield HomeFailure(error: vserror);
-      }
-      catch(error) {
-        final e = AppError(message: error.response.data["Message"], statusCode: error.response.statusCode);
-        yield HomeFailure(error: e);
+        if (currentState is HomeUninitialized) {
+          final responsePost =
+              await homeRepository.fetchPosts(event.currentPage, 10);
+          yield HomeLoaded(posts: responsePost.data, hasReachedMax: false);
+          return;
+        }
+        if (currentState is HomeLoaded) {
+          final res =
+              await homeRepository.fetchPosts(event.currentPage + 1, 10);
+          final posts = res.data;
+          yield posts.isEmpty
+              ? currentState.copyWith(hasReachedMax: true)
+              : HomeLoaded(
+                  posts: currentState.posts + posts,
+                  hasReachedMax: false,
+                );
+        }
+      } catch (_) {
+        yield HomeError();
       }
     }
   }
+
+  bool _hasReachedMax(HomeState state) =>
+      state is HomeLoaded && state.hasReachedMax;
 }
