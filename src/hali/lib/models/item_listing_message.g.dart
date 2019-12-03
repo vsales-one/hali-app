@@ -26,6 +26,7 @@ ItemListingMessage _$ItemListingMessageFromJson(Map json) {
     json['publishedAt'] == null
         ? null
         : DateTime.parse(json['publishedAt'] as String),
+    _$enumDecodeNullable(_$ItemRequestMessageStatusEnumMap, json['status']),
   )
     ..type = json['type'] as String
     ..content = json['content']
@@ -45,4 +46,43 @@ Map<String, dynamic> _$ItemListingMessageToJson(ItemListingMessage instance) =>
       'to': instance.to?.toJson(),
       'isSeen': instance.isSeen,
       'publishedAt': instance.publishedAt?.toIso8601String(),
+      'status': _$ItemRequestMessageStatusEnumMap[instance.status],
     };
+
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError('A value must be provided. Supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
+}
+
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+}
+
+const _$ItemRequestMessageStatusEnumMap = {
+  ItemRequestMessageStatus.Open: 'Open',
+  ItemRequestMessageStatus.Cancelled: 'Cancelled',
+  ItemRequestMessageStatus.Closed: 'Closed',
+};

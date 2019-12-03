@@ -4,6 +4,12 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'item_listing_message.g.dart';
 
+enum ItemRequestMessageStatus {
+  Open,
+  Cancelled,
+  Closed
+}
+
 @JsonSerializable(anyMap: true, explicitToJson: true)
 class ItemListingMessage extends ChatMessage {  
   String itemType; // food, non-food
@@ -13,6 +19,7 @@ class ItemListingMessage extends ChatMessage {
   UserProfile from, to;
   bool isSeen;
   DateTime publishedAt;
+  ItemRequestMessageStatus status;
 
   ItemListingMessage(
     this.itemType, 
@@ -22,7 +29,8 @@ class ItemListingMessage extends ChatMessage {
     this.from, 
     this.to, 
     this.isSeen, 
-    this.publishedAt
+    this.publishedAt,
+    this.status
   ) : super(itemTitle, from, to, isSeen, publishedAt, itemType, itemId);
 
   factory ItemListingMessage.fromJson(Map<String, dynamic> json) =>
@@ -36,8 +44,9 @@ class ItemListingMessage extends ChatMessage {
           UserProfile from,
           UserProfile to,
           bool isSeen,
-          DateTime publishedAt}) =>
-      ItemListingMessage(itemType, itemId, itemTitle, itemImageUrl, from, to, isSeen, publishedAt);
+          DateTime publishedAt,
+          ItemRequestMessageStatus status}) =>
+      ItemListingMessage(itemType, itemId, itemTitle, itemImageUrl, from, to, isSeen, publishedAt, status);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated

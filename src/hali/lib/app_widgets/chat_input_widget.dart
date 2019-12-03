@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 class ChatInputWidget extends StatefulWidget {
   final Function(String) onSubmitted;
   final String defaultMessage;
+  final String hintMessage;
 
-  const ChatInputWidget({Key key, @required this.onSubmitted, this.defaultMessage})
+  const ChatInputWidget(
+      {Key key,
+      @required this.onSubmitted,
+      this.defaultMessage,
+      this.hintMessage})
       : super(key: key);
   @override
   State<StatefulWidget> createState() => _ChatInputWidgetState();
@@ -52,15 +57,15 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                   ],
                 ),
                 Expanded(
-                    child: TextField(
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Message...",
-                  ),
-                  focusNode: focusNode,
-                  textInputAction: TextInputAction.send,
-                  controller: editingController,
-                  onSubmitted: sendMessage,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: this.widget.hintMessage ?? "Message...",
+                    ),
+                    focusNode: focusNode,
+                    textInputAction: TextInputAction.send,
+                    controller: editingController,
+                    onSubmitted: sendMessage,
                 )),
                 IconButton(
                   icon: Icon(isTexting ? Icons.send : Icons.keyboard_voice),

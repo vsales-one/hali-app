@@ -232,6 +232,7 @@ class _RequestButton extends StatelessWidget {
   static final uuid = Uuid();
   final List<ItemListingMessage> itemListing = List.generate(10, (int index) {
     return ItemListingMessage.fromNamed(
+        status: ItemRequestMessageStatus.Open,
         itemType: "food",
         itemId: uuid.v1(),
         itemTitle: "Food item created at ${DateTime.now().toIso8601String()}",

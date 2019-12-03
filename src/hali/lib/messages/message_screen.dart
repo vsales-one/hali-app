@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/app_widgets/chat_input_widget.dart';
 import 'package:hali/app_widgets/chat_widget.dart';
+import 'package:hali/config/routes.dart';
 import 'package:hali/messages/widgets/first_message_tooltip.dart';
 import 'package:hali/messages/widgets/request_item_info.dart';
 import 'package:hali/models/chat_message.dart';
@@ -195,7 +196,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
   Widget _buildRequestMessageInput() {
     return ChatInputWidget(
-      defaultMessage: "Hi ${widget.itemRequestMessage.to.displayName},",
+      defaultMessage: "Xin chào ${widget.itemRequestMessage.to.displayName},",
       onSubmitted: (message) async {
         print(">>>>>>> sending message: $message");
         setState(() {
@@ -207,9 +208,8 @@ class _MessageScreenState extends State<MessageScreen> {
           isProcessing = false;
         });
         if (sendResOk) {
-          await AlertHelper.showAlertInfo(context, "Success! your request of the item has been sent.");
-          Navigator.of(context).pop();
-          // Should navigate to the success screen
+          await AlertHelper.showAlertInfo(context, "Tin nhắn của bạn đã được gửi");
+          Navigator.of(context).popUntil(ModalRoute.withName(Routes.root));
         }
       },
     );
@@ -224,10 +224,11 @@ class _MessageScreenState extends State<MessageScreen> {
             children: <Widget>[
               Flexible(child: _buildChatMessages()),
               ChatInputWidget(
+                hintMessage: "Gửi tin nhắn đến ${widget.friend.firstName}",
                 onSubmitted: (val) {
                   if (currentUser.id == widget.friend.id) {
                     _scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text("You can not send message to you")));
+                        content: Text("Bạn không thể gửi tin nhắn cho chính mình")));
                     return;
                   }
                   ChatMessage chat = ChatMessage.fromNamed(
