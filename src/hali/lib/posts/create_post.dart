@@ -9,6 +9,7 @@ import 'package:hali/utils/color_utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'bloc/index.dart';
 import 'create_food_form.dart';
@@ -268,8 +269,8 @@ class _TabbarContentState extends State<_TabBarContent>
       ),
       body: TabBarView(
         children: [
-          CreateFoodForm(widget.coverImage),
-          CreateFoodForm(widget.coverImage),
+          CreateFoodForm(widget.coverImage, 0),
+          CreateFoodForm(widget.coverImage, 1),
         ],
         controller: _tabController,
       ),

@@ -1,13 +1,15 @@
 import 'dart:async';
 
-class HomeRepository {  
-  Future<void> loadAsync(String token) async {
-    /// write from keystore/keychain
-    await Future.delayed(new Duration(seconds: 2));
-  }
+import 'package:hali/home/index.dart';
+import 'package:hali/models/api_response.dart';
+import 'package:hali/models/post_model.dart';
 
-  Future<void> saveAsync(String token) async {
-    /// write from keystore/keychain
-    await Future.delayed(new Duration(seconds: 2));
+class HomeRepository {
+
+  final provider = HomeProvider();
+
+  Future<ApiResponse<List<PostModel>>> fetchPosts(int pageNumber, int pageSize) async {
+    return provider.fetchPosts(pageNumber, pageSize);
   }
+  
 }

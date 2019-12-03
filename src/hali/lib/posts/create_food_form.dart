@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:date_format/date_format.dart';
 import 'package:fluro/fluro.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -19,8 +20,9 @@ import 'bloc/index.dart';
 class CreateFoodForm extends StatefulWidget {
 
 final File imageCover;
+final int _categoryId;
 
-  const CreateFoodForm(this.imageCover);
+  const CreateFoodForm(this.imageCover, this._categoryId);
 
   @override
   State<StatefulWidget> createState() {
@@ -203,6 +205,10 @@ class CreateFoodFormState extends State<CreateFoodForm> {
         pickUpTime: _pickup,
         startDate: DateUtils.dateToString(_startDate),
         endDate: DateUtils.dateToString(_endDate),
+        categoryId: widget._categoryId,
+        lastModifiedBy: "trung@yopmail.com",
+        lastModifiedDate: DateUtils.dateToString(DateTime.now()),
+        pickupAddress: "92 Nguyen Huu Canh"
       );
       BlocProvider.of<CreatePostBloc>(context).add(AddPostStartEvent(postModel: postModel, image: widget.imageCover));
     }

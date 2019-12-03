@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hali/home/index.dart';
 import 'package:hali/login/bloc/bloc.dart';
 import 'package:hali/messages/message_list_screen.dart';
 import 'package:hali/repositories/user_repository.dart';
@@ -69,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
           controller: controller,
           onPageChanged: onPageViewChanged,
           children: <Widget>[
-            HomeScreen(name: "Home",),            
+            HomePage(userRepository: RepositoryProvider.of<UserRepository>(context), homeRepository: RepositoryProvider.of<HomeRepository>(context),),            
             UserProfileScreen(),
             MessageListScreen(),
             TestListScreen(),

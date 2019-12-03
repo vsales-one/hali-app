@@ -1,14 +1,16 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hali/authentication_bloc/bloc.dart';
+import 'package:hali/commons/bottom_loader.dart';
+import 'package:hali/commons/dialog.dart';
 import 'package:hali/config/application.dart';
 import 'package:hali/config/routes.dart';
-import 'package:hali/home/views/feed_detail.dart';
+import 'package:hali/home/index.dart';
+import 'package:hali/models/post_model.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
+import 'package:loading_indicator/loading_indicator.dart';
 import 'views/feed_card.dart';
 class HomeScreen extends StatefulWidget {
   final String name;
@@ -25,62 +27,81 @@ class HomeScreenState extends State<HomeScreen> {
 
   bool isHiddenBannerInvite = false;
 
+  List<PostModel> _posts = [];
+
+  final _scrollController = ScrollController();
+  final _scrollThreshold = 200.0;
+  HomeBloc _homeBloc;
+  int _currentPage = 0;
+  bool _isReachMax = false;
+
+@override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    _homeBloc = BlocProvider.of<HomeBloc>(context);
+    _homeBloc.add(Fetch(currentPage: _currentPage));
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        onTap: (){
-          FocusScope.of(context).requestFocus(new FocusNode());
-        },
-        child:  Container(
-            color: Colors.grey[200],
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            child: CustomScrollView(
-              slivers: <Widget>[
-                isHiddenBannerInvite ? _SliverEmpty() : _InvitationBanner(closeInvitationBanner: _closeInvitationHandle,),
-                _ListPost()
-              ],
-            )
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _presentCreatePostScreen,
-        child: Icon(Icons.create,),
-        backgroundColor: ColorUtils.hexToColor(colorD92c27),
-      ),
-    );
-  }
+    return BlocListener<HomeBloc, HomeState>(
+       listener: (context, state) {
+        if(state is HomeUninitialized) {
+          return LoadingIndicator(indicatorType: Indicator.ballPulse, color: Colors.red,);
+        }
+        if (state is HomeError) {
+          return displayAlert(context, "Error", state.error.message);
+        }
 
-  _closeInvitationHandle() {
-    setState(() {
-      isHiddenBannerInvite = !isHiddenBannerInvite;
-    });
+        if (state is HomeLoaded) {
+            _isReachMax = state.hasReachedMax;
+            _posts = state.posts;
+        }
+      },
+      child: Scaffold(
+        body: _posts.isEmpty ? EmptyPageContentScreen() : ListView.builder(
+            itemBuilder: (BuildContext context, int index) {
+              return index >= _posts.length
+                  ? BottomLoader()
+                  : FeedCard();
+            },
+            itemCount: _isReachMax
+                ? _posts.length
+                : _posts.length + 1,
+            controller: _scrollController,
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: _presentCreatePostScreen,
+            child: Icon(Icons.create,),
+            backgroundColor: ColorUtils.hexToColor(colorD92c27),
+          ),
+      )
+    );
+
   }
 
   _presentCreatePostScreen() {
     Application.router.navigateTo(context, Routes.createPost, transition: TransitionType.fadeIn);
   }
 
-
-}
-
-class _SliverEmpty extends StatelessWidget {
-
   @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-        child: SizedBox(
-            height: 10,
-            child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white
-                ),
-            )
-        )
-    );
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    if (maxScroll - currentScroll <= _scrollThreshold) {
+      if (!_isReachMax) {
+        _homeBloc.add(Fetch(currentPage: _currentPage + 1));
+      }
+    }
   }
 
 }
+
 
 class _SliverCategory extends StatelessWidget {
   @override
@@ -105,13 +126,34 @@ class _SliverCategory extends StatelessWidget {
   }
 }
 
-class _SliverCreateAmbasador extends StatelessWidget {
+class EmptyPageContentScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        child: Column(
+          children: [
+            Image.asset('assets/images/ic-empty.png'),
+            Padding(
+              padding: EdgeInsets.all(8),
+              child: Text('Không có dữ liệu nào'),
+            )
+          ],
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+        ),
+      ),
+    );
+  }
+}
+
+class _SliverEmptyPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: SizedBox(
-          height: 190,
+          height: 200,
           child: Card(
             margin: EdgeInsets.all(16),
             child: new Column(
@@ -120,24 +162,7 @@ class _SliverCreateAmbasador extends StatelessWidget {
                   padding: EdgeInsets.all(16),
                   child: Text("Recruit places, become a ambassador!", style: Styles.getSemiboldStyle(16, Colors.black87),),
                 ),
-
-                Padding(
-                  padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                  child: Text("As a ambassador, you not only save your foods, but also help people", style: Styles.getRegularStyle(14, Colors.black54), textAlign: TextAlign.center,)
-                ),
-                
-                Container(
-                  height: 35,
-                    padding: EdgeInsets.only(left: 24, right: 24),
-                    child: FlatButton(
-                      child: Text("Create your store", textAlign: TextAlign.center, style: Styles.getRegularStyle(14, Colors.white),),
-                    ),
-                  decoration: BoxDecoration(
-                    color: ColorUtils.hexToColor(colorD92c27),
-                    borderRadius: BorderRadius.circular(15)
-                  ),
-                    
-                ),
+                EmptyPageContentScreen()
               ],
             ),
             shape: RoundedRectangleBorder(
@@ -216,10 +241,18 @@ class _InvitationBanner extends StatelessWidget {
 }
 
 class _ListPost extends StatelessWidget {
+
+  final List<PostModel> posts;
+
+  _ListPost(this.posts);
+
   @override
   Widget build(BuildContext context) {
     return SliverList(
-      delegate: SliverChildBuilderDelegate((context, index) => _renderPostItem(context, index)),
+      delegate: SliverChildBuilderDelegate(
+        (context, index) => _renderPostItem(context, index),
+        childCount: posts.length
+        ),
     );
   }
 
@@ -228,7 +261,5 @@ class _ListPost extends StatelessWidget {
       Application.router.navigateTo(context, Routes.feedDetail, transition: TransitionType.fadeIn);
     },);
   }
-//  _navigateToDetail(int index) {
-//    Application.router.navigateTo(context, Routes.feedDetail, transition: TransitionType.fadeIn);
-//  }
+
 }

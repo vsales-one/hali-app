@@ -1,69 +1,55 @@
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hali/models/post_model.dart';
 import 'package:hali/models/user_profile.dart';
 import 'package:meta/meta.dart';
 import 'package:hali/commons/app_error.dart';
 
 abstract class HomeState extends Equatable {
+
+  const HomeState();
+
   @override
   List<Object> get props => [];
 }
 
-class HomeInitial extends HomeState {
+class HomeUninitialized extends HomeState {
   @override
-  String toString() => 'HomeInitial';
+  String toString() => 'HomeUninitialized';
 }
 
-class HomeLoading extends HomeState {
+class HomeError extends HomeState {
+  final DioError error;
+
+  HomeError(this.error);
+
   @override
-  String toString() => 'HomeLoading';
+  String toString() => 'HomeError';
 }
+class HomeLoaded extends HomeState { 
 
-class HomeFailure extends HomeState {  
-  final AppError error;
+  final List<PostModel> posts;
+  final bool hasReachedMax;
+  
+  const HomeLoaded({
+    this.posts,
+    this.hasReachedMax,
+  });
 
-  HomeFailure({@required this.error});
-
+  HomeLoaded copyWith({
+    List<PostModel> posts,
+    bool hasReachedMax,
+  }) {
+    return HomeLoaded(
+      posts: posts ?? this.posts,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+    );
+  }
   @override
-  List<Object> get props => [error];
-
+  List<Object> get props => [posts, hasReachedMax];
+  
   @override
-  String toString() => 'HomeFailure';
-}
-
-class HomeFetchUserSuccess extends HomeState {
-  final UserProfile userModel;  
-
-  HomeFetchUserSuccess({@required this.userModel})
-      : assert(userModel != null);
-
-  @override
-  List<Object> get props => [userModel];
-
-  @override
-  String toString() => 'HomeFetchUserSuccess';
-}
-
-class HomeAvatarUploadInprogressSuccess extends HomeState {
-  final String userAvatarUrl;
-
-  HomeAvatarUploadInprogressSuccess({this.userAvatarUrl});
-
-  @override
-  List<Object> get props => [userAvatarUrl];
-
-  @override
-  String toString() => 'HomeAvatarUploadInprogressSuccess';
-}
-
-class HomeAvatarUploadSuccess extends HomeState {
-  final String userAvatarUrl;
-
-  HomeAvatarUploadSuccess({this.userAvatarUrl}) ;
-
-  @override
-  List<Object> get props => [userAvatarUrl];
-
-  @override
-  String toString() => 'HomeAvatarUploadSuccess';
+  String toString() =>
+      'HomeLoaded { posts: ${posts.length}, hasReachedMax: $hasReachedMax }';
 }
