@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/home/index.dart';
-import 'package:hali/login/bloc/bloc.dart';
 import 'package:hali/messages/message_list_screen.dart';
 import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/tests/test_list_screen.dart';
 import 'package:hali/user_profile/user_profile_screen.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
-import '../home/home_screen.dart';
 
 class MainScreen extends StatefulWidget {
   MainScreen({Key key, this.title}) : super(key: key);
@@ -71,8 +68,8 @@ class _MainScreenState extends State<MainScreen> {
           onPageChanged: onPageViewChanged,
           children: <Widget>[
             HomePage(userRepository: RepositoryProvider.of<UserRepository>(context), homeRepository: RepositoryProvider.of<HomeRepository>(context),),            
-            UserProfileScreen(),
             MessageListScreen(),
+            UserProfileScreen(),
             TestListScreen(),
           ],
           scrollDirection: Axis.horizontal,
@@ -81,19 +78,19 @@ class _MainScreenState extends State<MainScreen> {
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(MdiIcons.foodForkDrink),
-              title: Text(''),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(MdiIcons.accountCircle),
-              title: Text('Account'),
+              title: Text('Home'),
             ),
             BottomNavigationBarItem(
               icon: Icon(MdiIcons.message),
               title: Text('Messages'),
             ),
             BottomNavigationBarItem(
-              icon: Icon(MdiIcons.bottleTonic),
-              title: Text('Tests'),
+              icon: Icon(MdiIcons.accountCircle),
+              title: Text('Account'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(MdiIcons.testTube),
+              title: Text('Testing Posts'),
             ),
           ],
           currentIndex: _selectedIndex,

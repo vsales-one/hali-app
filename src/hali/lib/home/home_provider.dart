@@ -22,5 +22,9 @@ class HomeProvider {
     on DioError catch(e) {
       return ApiResponse(errorMgs: e.message, error: e);
     }
+    catch(e) {
+      print(e);
+      return ApiResponse(errorMgs: e.message, error: e);
+    }
   }
 }

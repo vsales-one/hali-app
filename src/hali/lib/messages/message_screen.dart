@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/app_widgets/chat_input_widget.dart';
 import 'package:hali/app_widgets/chat_widget.dart';
+import 'package:hali/messages/widgets/first_message_tooltip.dart';
+import 'package:hali/messages/widgets/request_item_info.dart';
 import 'package:hali/models/chat_message.dart';
 import 'package:hali/models/item_listing_message.dart';
 import 'package:hali/models/item_request_message_type.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hali/repositories/chat_message_repository.dart';
 import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/utils/alert_helper.dart';
+import 'package:hali/utils/color_utils.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class MessageScreen extends StatefulWidget {
@@ -37,6 +40,7 @@ class _MessageScreenState extends State<MessageScreen> {
   List<ChatMessage> chats = [];
   UserProfile currentUser;
   bool isHeader = true;
+  bool isProcessing = false;
 
   @override
   void initState() {
@@ -91,15 +95,17 @@ class _MessageScreenState extends State<MessageScreen> {
 
   Widget _buildAppBar() {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorUtils.hexToColor(colorD92c27),
       elevation: 1.0,
       automaticallyImplyLeading: false,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back),
+        icon: Icon(
+          Icons.arrow_back,
+          color: Colors.white,
+        ),
         onPressed: () {
           Navigator.of(context).pop();
         },
-        color: Theme.of(context).primaryColor,
       ),
       title: Row(
         mainAxisSize: MainAxisSize.min,
@@ -135,12 +141,12 @@ class _MessageScreenState extends State<MessageScreen> {
         IconButton(
           icon: Icon(Icons.call),
           onPressed: () {},
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).accentIconTheme.color,
         ),
         IconButton(
           icon: Icon(Icons.videocam),
           onPressed: () {},
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).accentIconTheme.color,
         ),
         PopupMenuButton(
           itemBuilder: (context) => [
@@ -151,121 +157,40 @@ class _MessageScreenState extends State<MessageScreen> {
           ],
           icon: Icon(
             Icons.more_vert,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).accentIconTheme.color,
           ),
         )
       ],
     );
   }
 
+  // In this view mode, requestor send first request message to item owner
+  // the message header is different from normal view mode
   Widget _buildFirstRequestMessageViewMode() {
-    final friend = widget.friend;
-    return currentUser == null
+    return currentUser == null || isProcessing
         ? Center(
             child: CircularProgressIndicator(),
           )
-        : Container(          
+        : Container(
             child: ModalProgressHUD(
-              child: Column(               
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Flexible(
+                  Flexible(                    
                     child: ListView(
-                      children: <Widget>[
-                        _buildFriendAvatar(friend),
-                        _buildFriendFullName(friend),
-                        _buildFriendLocation(friend),
-                        SizedBox(height: 20,),
-                        _buildFirstMessageToolTipCard(),
+                      children: <Widget>[                        
+                        _buildChatMessageHeader(),
+                        RequestItemInfo(itemListingMessage: widget.itemRequestMessage,),
+                        FirstMessageTooltip(),
                       ],
                     ),
                   ),
-                  // _buildFriendAvatar(friend),
-                  // _buildFriendFullName(friend),
-                  // _buildFriendLocation(friend),
-                  // SizedBox(height: 20,),
-                  // Expanded(
-                  //   child: _buildFirstMessageToolTipCard(),
-                  // ),
-                  // _buildFirstMessageToolTipCard(),
-                  _buildRequestMessageInput(),                  
+                  _buildRequestMessageInput(),
                 ],
-              ), 
+              ),
               inAsyncCall: currentUser == null,
             ),
           );
-  }
-
-  Widget _buildFriendAvatar(UserProfile friendUser) {
-    return GestureDetector(
-      child: Hero(
-        tag: 'hero',
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: CircleAvatar(
-            radius: 64.0,
-            backgroundColor: Colors.transparent,
-            backgroundImage:
-                friendUser != null && friendUser.imageUrl.isNotEmpty
-                    ? NetworkImage(friendUser.imageUrl)
-                    : AssetImage('assets/hali_logo_199.png'),
-          ),
-        ),
-      ),
-      onTap: () {},
-    );
-  }
-
-  Widget _buildFriendFullName(UserProfile friendUser) {
-    return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Text(
-        friendUser.displayName ?? '',
-        key: Key('user_fullname'),
-        style: TextStyle(fontSize: 24.0, color: Colors.blueAccent),
-      ),
-    );
-  }
-
-  Widget _buildFriendLocation(UserProfile friendUser) {    
-    return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(Icons.location_on),
-          Text("2.8 km away"),
-        ],
-      ),
-    );        
-  }
-
-  Widget _buildFirstMessageToolTipCard() {
-    return Card(
-      margin: EdgeInsets.only(left: 8, right: 8),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,            
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(12),
-            child: Text("Tool tips", style: TextStyle(fontWeight: FontWeight.bold,),),
-          ),
-          Padding(
-            padding: EdgeInsets.all(12),
-            child: Text("- Say when you can pickup this listing"),
-          ),
-          Padding(
-            padding: EdgeInsets.all(12),
-            child: Text("Be polite by saying please and thank you"),
-          ),
-          Padding(
-            padding: EdgeInsets.all(12),
-            child: Text("Never set off without the pickup confirmed, and an address"),
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _buildRequestMessageInput() {
@@ -273,16 +198,25 @@ class _MessageScreenState extends State<MessageScreen> {
       defaultMessage: "Hi ${widget.itemRequestMessage.to.displayName},",
       onSubmitted: (message) async {
         print(">>>>>>> sending message: $message");
-        final sendResOk = await _chatMessageRepository.sendItemRequestMessage(message, widget.itemRequestMessage);
-        if(sendResOk) {
-          AlertHelper.showAlertInfo(context, "Success! your request of the item has been sent.");
+        setState(() {
+          isProcessing = true;
+        });
+        final sendResOk = await _chatMessageRepository.sendItemRequestMessage(
+            message, widget.itemRequestMessage);
+        setState(() {
+          isProcessing = false;
+        });
+        if (sendResOk) {
+          await AlertHelper.showAlertInfo(context, "Success! your request of the item has been sent.");
+          Navigator.of(context).pop();
+          // Should navigate to the success screen
         }
       },
     );
   }
 
   Widget _buildChatMessageViewMode() {
-    return currentUser == null
+    return currentUser == null || isProcessing
         ? Center(
             child: CircularProgressIndicator(),
           )
@@ -355,14 +289,15 @@ class _MessageScreenState extends State<MessageScreen> {
 
   Widget _buildChatMessages() {
     return StreamBuilder(
-        stream: _chatMessageRepository.listenChat(widget.itemRequestMessage.groupId),
+        stream: _chatMessageRepository
+            .listenChat(widget.itemRequestMessage.groupId),
         builder: (context, snapshot) {
           if (!snapshot.hasData || snapshot.data == null) {
             return Center(
               child: CircularProgressIndicator(),
             );
           }
-          List<ChatMessage> chats = snapshot.data;          
+          List<ChatMessage> chats = snapshot.data;
           return ListView.builder(
             controller: scrollController,
             itemBuilder: (context, index) {

@@ -15,8 +15,8 @@ class PostModel {
   String imageUrl;
   String lastModifiedBy;
   String lastModifiedDate;
-  int latitude;
-  int longitude;
+  double latitude;
+  double longitude;
   String pickUpTime;
   String pickupAddress;
   String startDate;

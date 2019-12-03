@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hali/app_theme.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
 import 'package:hali/config/application.dart';
 import 'package:hali/di/appModule.dart';
@@ -57,6 +58,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       debugShowMaterialGrid: false,
+      theme: appRedTheme,
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           if (state is Unauthenticated) {

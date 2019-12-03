@@ -11,96 +11,143 @@ class RequestListingConfirmationScreen extends StatelessWidget {
 
   static const double LineHeight = 20;
   static const List<String> DoItems = [
-    "Say what time you can collect",
-    "Message if you're running late",
-    "Be respecful to all users"
+    "Cho biết thời gian bạn đến nhận quà",
+    "Hãy thông báo nếu bạn đến muộn",
+    "Hãy tôn trọng tất cả người dùng"
   ];
   static const List<String> DoNotItems = [
-    "Ask for item to be delivered / mailed",
-    "Get upset if you don't get anything",
-    "Set off for a collection until \r\n 1. It's been confirmed \r\n 2. You have the address \r\n 3. There's an agreed time"
+    "Yêu cầu quà được gửi đến tận nơi",
+    "Cảm thấy buồn khi bạn không nhận được quà như ý",
+    "Đến nhận quà khi \r\n 1. Chưa được người cho xác nhận \r\n 2. Chưa có địa chỉ rõ ràng \r\n 3. Chưa có sự đồng ý về thời gian nhận"
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Request listing item",
-            style: TextStyle(
-                fontSize: 20, color: ColorUtils.hexToColor(color1D1D1D)),
+      appBar: AppBar(
+        backgroundColor: ColorUtils.hexToColor(colorD92c27),
+      ),
+      backgroundColor: ColorUtils.hexToColor(colorD92c27),
+      body: SingleChildScrollView(
+        child: _buildBody(context),
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return Center(
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            height: LineHeight,
           ),
-          backgroundColor: Colors.white,
-        ),
-        body: Center(
-          child: Column(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              SizedBox(
-                height: LineHeight,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(Icons.note),
-                  Text("To request a listing", style: TextStyle(fontSize: 24),),
-                ],
-              ),
-              SizedBox(
-                height: LineHeight,
-              ),
-              Container(
-                color: Colors.blueAccent,
-                alignment: Alignment.center,
-                child: Row(
-                  children: <Widget>[Icon(Icons.thumb_up), Text("Do")],
+              Padding(
+                padding: EdgeInsets.only(right: 4),
+                child: Icon(           
+                  Icons.note,
+                  color: Colors.white,
                 ),
               ),
-              _buildCardCheckList(DoItems),
-              SizedBox(
-                height: LineHeight,
-              ),
-              Container(
-                color: Colors.redAccent,
-                child: Row(
-                  children: <Widget>[Icon(Icons.thumb_down), Text("Don't")],
-                ),
-              ),
-              _buildCardCheckList(DoNotItems),
-              SizedBox(
-                height: LineHeight,
-              ),
-              Container(
-                padding: EdgeInsets.all(4),
-                child: Text(
-                    "If you don't follow these guidelines you could get a low star rating and you have your account suspended."),
-              ),
-              SizedBox(
-                height: LineHeight,
-              ),
-              Container(
-                child: RaisedButton(
-                  color: Colors.blueAccent,
-                  child: Text(
-                    "I agree",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => MessageScreen(
-                        friend: requestItem.to,
-                        itemRequestMessage: requestItem,
-                        viewMode: ItemRequestMessageViewMode.FirstRequestMessage,
-                      )));
-                  },
-                ),
+              Text(
+                "Để yêu cầu nhận quà",
+                style: TextStyle(fontSize: 24, color: Colors.white),
               ),
             ],
           ),
-        ));
+          SizedBox(
+            height: LineHeight,
+          ),
+          Container(
+            padding: EdgeInsets.all(8),
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Icon(
+                    Icons.thumb_up,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  "Việc Phải Làm",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            ),
+          ),
+          _buildCardCheckList(DoItems),
+          SizedBox(
+            height: LineHeight,
+          ),
+          Container(
+            padding: EdgeInsets.all(8),
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Icon(
+                    Icons.thumb_down,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  "Việc Không Nên Làm",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            ),
+          ),
+          _buildCardCheckList(DoNotItems),
+          SizedBox(
+            height: LineHeight,
+          ),
+          Container(
+            padding: EdgeInsets.all(8),
+            child: Text(
+              "Nếu bạn không tuân theo các quy định cộng đồng của Hali bạn có thể bị đánh giá thấp và có thể bị khoá tài khoản.",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          SizedBox(
+            height: LineHeight,
+          ),
+          Container(
+            child: RaisedButton(
+              color: Colors.white,
+              child: Text(
+                "Tôi Đồng Ý Với Các Điều Khoản Trên",
+                style: TextStyle(color: Colors.blueAccent),
+              ),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => MessageScreen(
+                          friend: requestItem.to,
+                          itemRequestMessage: requestItem,
+                          viewMode:
+                              ItemRequestMessageViewMode.FirstRequestMessage,
+                        )));
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildCardCheckList(List<String> items) {
     return Card(
+      color: Colors.white,
       child: Column(
         children: items.map((title) {
           return CheckboxListTile(

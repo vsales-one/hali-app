@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class AlertHelper {
-  static void showAlertInfo(BuildContext context, String message) {
-    Alert(context: context, title: 'Thông báo', desc: message, buttons: [
+  static Future<bool> showAlertInfo(BuildContext context, String message) async {
+    return Alert(context: context, title: 'Thông báo', desc: message, buttons: [
       DialogButton(
         child: Text(
           "OK",
