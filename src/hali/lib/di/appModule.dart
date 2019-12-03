@@ -22,9 +22,20 @@ class AuthInterceptor extends Interceptor {
   }
 }
 
+/// AuthInterceptor
+///
+class HeaderInterceptor extends Interceptor {
+  @override
+  onRequest(RequestOptions options) {
+    options.headers["Content-Type"] = "application/json";
+    return super.onRequest(options);
+  }
+}
+
 final dio = Dio()
   ..options = BaseOptions(baseUrl: kBaseUrl, connectTimeout: 5000, receiveTimeout: 5000)
   ..interceptors.add(AuthInterceptor())
+  ..interceptors.add(HeaderInterceptor())
   ..interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
 
 final FirebaseStorage storage = FirebaseStorage(app: FirebaseApp.instance, 

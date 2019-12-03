@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
 import 'package:hali/config/application.dart';
 import 'package:hali/di/appModule.dart';
+import 'package:hali/home/index.dart';
 import 'package:hali/repositories/chat_message_repository.dart';
 import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/login/login.dart';
@@ -27,6 +28,9 @@ Future main() async {
       RepositoryProvider<ChatMessageRepository>(
         builder: (_) => ChatMessageRepository(userRepository: userRepo, fireStore: Firestore.instance),
       ),
+      RepositoryProvider<HomeRepository>(
+        builder: (_) => HomeRepository(),
+      )
     ], child: App()),
   );
 }

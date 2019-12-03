@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hali/models/post_model.dart';
@@ -19,6 +20,10 @@ class HomeUninitialized extends HomeState {
 }
 
 class HomeError extends HomeState {
+  final DioError error;
+
+  HomeError(this.error);
+
   @override
   String toString() => 'HomeError';
 }

@@ -1,10 +1,10 @@
-import 'package:date_format/date_format.dart';
+import 'package:intl/intl.dart';
 
 class DateUtils {
 
   // colors
   static String dateToString(DateTime target) {
-    return formatDate(target, [HH, ':', nn, ':', ss, ' ', Z]);
+    return new DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(target);
   }
 
 }
