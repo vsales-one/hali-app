@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:hali/commons/app_error.dart';
 import 'package:hali/constants/constants.dart';
 import 'package:hali/di/appModule.dart';
 import 'package:hali/models/user_profile.dart';
@@ -22,6 +25,15 @@ class UserRepository {
   
   Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final signinMethods = await _firebaseAuth.fetchSignInMethodsForEmail(email: googleUser.email);
+
+    if(signinMethods.isNotEmpty && signinMethods.indexOf("google.com") < 0) {
+        throw AppError(
+          statusCode: 200, 
+          message: "Email đã tồn tại với phương thức đăng nhập ${signinMethods.join(",")}"
+        );
+      }
+
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
@@ -35,11 +47,32 @@ class UserRepository {
     return user;
   }
 
+  Future<dynamic> _getUserEmailFromFacebookToken(String token) async { 
+    final dioClient = Dio();
+    final graphResponse = await dioClient.get("https://graph.facebook.com/v2.12/me?fields=email&access_token=$token");
+    if(graphResponse.statusCode != 200) {
+      return null;
+    }    
+    return jsonDecode(graphResponse.data);
+  }
+
   Future<FirebaseUser> signInWithFacebook() async {
     final fbLoginResult = await _facebookLogin.logIn(['email']);
     switch (fbLoginResult.status) {
-    case FacebookLoginStatus.loggedIn:        
+    case FacebookLoginStatus.loggedIn:
       final token = fbLoginResult.accessToken.token;
+      final fbProfile = await _getUserEmailFromFacebookToken(token);
+      if(fbProfile == null)
+        return null;
+      final signinMethods = await _firebaseAuth.fetchSignInMethodsForEmail(email: fbProfile["email"]);
+
+      if(signinMethods.isNotEmpty && signinMethods.indexOf("facebook.com") < 0) {        
+        throw AppError(
+          statusCode: 200, 
+          message: "Email đã tồn tại với phương thức đăng nhập ${signinMethods.join(",")}"
+        );
+      }
+
       final AuthCredential credential = FacebookAuthProvider.getCredential(accessToken: token);
       await _firebaseAuth.signInWithCredential(credential);
       final user = await _firebaseAuth.currentUser();
@@ -60,6 +93,13 @@ class UserRepository {
       email: email,
       password: password,
     );
+    final signinMethods = await _firebaseAuth.fetchSignInMethodsForEmail(email: email);
+    if(signinMethods.isNotEmpty && signinMethods.indexOf("password") < 0) {
+        throw AppError(
+          statusCode: 200, 
+          message: "Email đã tồn tại với phương thức đăng nhập ${signinMethods.join(",")}"
+        );
+      }
     final user = await FirebaseAuth.instance.currentUser();    
     await storeFirebaseAuthToken(user);
     await linkFirebaseUserWithAppUser(user);
@@ -116,6 +156,12 @@ class UserRepository {
     final appUserProfile = await appUserProfileProvider.getAppUserProfileByUserId(user.uid);    
     return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, user.photoUrl, 
       appUserProfile?.address, appUserProfile?.district, appUserProfile?.city, true);
+  }
+
+  Future<UserProfile> updateUserProfile(UserProfile userProfile) async {
+    final appUserProfileProvider = AppUserProfileProvider();
+    await appUserProfileProvider.updateUserProfile(userProfile);
+    return await getUserProfileFull();
   }
 
   Future<List<UserProfile>> getActiveUsers() async {

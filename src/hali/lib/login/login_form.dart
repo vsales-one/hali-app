@@ -4,6 +4,7 @@ import 'package:hali/login/facebook_login_button.dart';
 import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
 import 'package:hali/login/login.dart';
+import 'package:hali/utils/alert_helper.dart';
 
 class LoginForm extends StatefulWidget {
   final UserRepository _userRepository;
@@ -44,17 +45,7 @@ class _LoginFormState extends State<LoginForm> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.isFailure) {
-          Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text('Login Failure'), Icon(Icons.error)],
-                ),
-                backgroundColor: Colors.red,
-              ),
-            );
+          AlertHelper.showAlertError(context, state.message);          
         }
         if (state.isSubmitting) {
           Scaffold.of(context)

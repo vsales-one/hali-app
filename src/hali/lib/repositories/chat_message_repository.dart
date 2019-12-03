@@ -23,7 +23,7 @@ class ChatMessageRepository {
     final activeUsers = await userRepository.getActiveUsers();
 
     await for (QuerySnapshot snap
-        in fireStore.collection(ITEM_REQUEST_MESSAGES).snapshots()) {
+        in fireStore.collection(ITEM_REQUEST_MESSAGES).orderBy("publishedAt").snapshots()) {
       try {
         final chats = snap.documents
             .map((doc) => ItemListingMessage.fromJson(doc.data))

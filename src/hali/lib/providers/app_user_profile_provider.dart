@@ -40,4 +40,14 @@ class AppUserProfileProvider {
       return null;
     }
   }
+
+  Future<UserProfile> updateUserProfile(UserProfile userProfile) async {
+    try {
+      final response = await dio.put<UserProfile>("/api/user-profiles",
+          data: userProfile.toJson());
+      return response.data;
+    } on DioError {
+      return null;
+    }
+  }
 }
