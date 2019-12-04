@@ -23,7 +23,9 @@ class ChatMessageRepository {
     final activeUsers = await userRepository.getActiveUsers();
 
     await for (QuerySnapshot snap
-        in fireStore.collection(ITEM_REQUEST_MESSAGES).orderBy("publishedAt").snapshots()) {
+        in fireStore.collection(ITEM_REQUEST_MESSAGES)          
+          .where("to.userId", isEqualTo: user.userId)
+          .orderBy("publishedAt").snapshots()) {
       try {
         final chats = snap.documents
             .map((doc) => ItemListingMessage.fromJson(doc.data))
@@ -118,7 +120,73 @@ class ChatMessageRepository {
         print(e);
       }
     }
-  }  
+  }
+
+  /// confirm item pick up and close the post
+  Future<bool> confirmItemPickupAndClosePost(ItemListingMessage itemRequestMessage) async {
+    final snapShot = await fireStore
+      .collection(ITEM_REQUEST_MESSAGES)
+      .where("itemId", isEqualTo: itemRequestMessage.itemId)
+      .snapshots().first;
+
+    if(snapShot.documents.first != null) {      
+      final data = {
+        "status": "Closed"
+      };
+
+      await fireStore.collection(ITEM_REQUEST_MESSAGES)
+        .document(snapShot.documents.first.documentID)
+        .setData(data, merge: true);
+
+      // send message to requestor
+      final toRequestorMessage = ChatMessage.fromNamed(
+        content: "${itemRequestMessage.from.firstName} đã xác nhận bạn nhận được quà",
+        from: itemRequestMessage.from,
+        to: itemRequestMessage.to,
+        isSeen: false,
+        publishedAt: DateTime.now(),
+        groupId: itemRequestMessage.groupId
+      );
+      await fireStore.collection(MESSAGES).add(toRequestorMessage.toJson());
+
+      return true;
+    }
+
+    return false;
+  }
+
+  /// Cancel item pickup and reopen post  
+  Future<bool> cancelItemPickupAndReopenPost(ItemListingMessage itemRequestMessage) async {
+    final snapShot = await fireStore
+      .collection(ITEM_REQUEST_MESSAGES)
+      .where("itemId", isEqualTo: itemRequestMessage.itemId)
+      .snapshots().first;
+
+    if(snapShot.documents.first != null) {      
+      final data = {
+        "status": "Open"
+      };
+
+      await fireStore.collection(ITEM_REQUEST_MESSAGES)
+        .document(snapShot.documents.first.documentID)
+        .setData(data, merge: true);
+
+      // send message to requestor
+      final toRequestorMessage = ChatMessage.fromNamed(
+        content: "${itemRequestMessage.from.firstName} đã huỷ xác nhận cho bạn được nhận quà",
+        from: itemRequestMessage.from,
+        to: itemRequestMessage.to,
+        isSeen: false,
+        publishedAt: DateTime.now(),
+        groupId: itemRequestMessage.groupId
+      );
+      await fireStore.collection(MESSAGES).add(toRequestorMessage.toJson());
+
+      return true;
+    }
+
+    return false;
+  }
 
   static String filterVal(String val) {
     List<String> inCorrects = [":", "#", "\$", "[", "]", "."];
