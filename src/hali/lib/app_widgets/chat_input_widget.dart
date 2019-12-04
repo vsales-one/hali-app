@@ -1,7 +1,10 @@
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ChatInputWidget extends StatefulWidget {
-  final Function(String) onSubmitted;
+  final Function(String, String) onSubmitted;
   final String defaultMessage;
   final String hintMessage;
 
@@ -18,6 +21,10 @@ class ChatInputWidget extends StatefulWidget {
 class _ChatInputWidgetState extends State<ChatInputWidget> {
   TextEditingController editingController = TextEditingController();
   FocusNode focusNode = FocusNode();
+  File imageFile;
+  bool isLoading;
+  bool isShowSticker;
+  String imageUrl;
 
   @override
   void initState() {
@@ -52,7 +59,9 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                         Icons.add_circle,
                         color: Color(0xff3b5998),
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        await _getImage();
+                      },
                     ),
                   ],
                 ),
@@ -84,12 +93,40 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
 
   bool get isTexting => editingController.text.length != 0;
 
-  void sendMessage(String message) {
+  void sendMessage(String message, {String type = "text"}) {
     if (!isTexting) {
       return;
     }
-    widget.onSubmitted(message);
+    widget.onSubmitted(message, type);
     editingController.text = '';
     focusNode.unfocus();
+  }
+
+  Future _getImage() async {
+    imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (imageFile != null) {
+      setState(() {
+        isLoading = true;
+      });
+      _uploadFile();
+    }
+  }
+
+  Future _uploadFile() async {
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    final reference = FirebaseStorage.instance.ref().child(fileName);
+    final uploadTask = reference.putFile(imageFile);
+    final storageTaskSnapshot = await uploadTask.onComplete;
+    storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
+      imageUrl = downloadUrl;
+      setState(() {
+        isLoading = false;
+        widget.onSubmitted(imageUrl, "image");
+      });
+    }, onError: (err) {
+      setState(() {
+        isLoading = false;
+      });      
+    });
   }
 }

@@ -189,7 +189,7 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget _buildRequestMessageInput() {
     return ChatInputWidget(
       defaultMessage: "Xin chào ${widget.itemRequestMessage.to.displayName},",
-      onSubmitted: (message) async {
+      onSubmitted: (message, type) async {
         print(">>>>>>> sending message: $message");
         setState(() {
           isProcessing = true;
@@ -218,7 +218,7 @@ class _MessageScreenState extends State<MessageScreen> {
               Flexible(child: _buildChatMessages()),
               ChatInputWidget(
                 hintMessage: "Gửi tin nhắn đến ${widget.friend.firstName}",
-                onSubmitted: (val) {
+                onSubmitted: (message, type) {
                   if (currentUser.userId == widget.friend.userId) {
                     _scaffoldKey.currentState.showSnackBar(SnackBar(
                         content:
@@ -228,10 +228,11 @@ class _MessageScreenState extends State<MessageScreen> {
                   ChatMessage chat = ChatMessage.fromNamed(
                       from: currentUser,
                       to: widget.friend,
-                      content: val,
+                      content: message,
                       isSeen: false,
                       publishedAt: DateTime.now(),
-                      groupId: widget.itemRequestMessage.groupId);
+                      groupId: widget.itemRequestMessage.groupId,
+                      type: type);
                   _chatMessageRepository.sendMessage(chat);
                   scrollController.animateTo(
                       scrollController.position.maxScrollExtent,

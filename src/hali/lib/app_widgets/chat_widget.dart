@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hali/models/chat_message.dart';
 
@@ -5,7 +6,7 @@ class ChatWidget extends StatelessWidget {
   final ChatMessage chat;
   final bool isReceived;
   final bool showUser;
-  
+
   const ChatWidget(
       {Key key,
       @required this.chat,
@@ -30,7 +31,7 @@ class ChatWidget extends StatelessWidget {
   }
 
   Widget _buildSentMessage(BuildContext context) {
-    Color sendColor = Color(0xff0084FF);
+    Color sendColor = chat.type != ChatMessage.IMAGE ? Color(0xff0084FF) : Colors.white;
     return Container(
       alignment: Alignment.centerRight,
       child: Container(
@@ -41,10 +42,7 @@ class ChatWidget extends StatelessWidget {
           color: sendColor,
           borderRadius: BorderRadius.circular(25.0),
         ),
-        child: Text(
-          chat.content,
-          style: TextStyle(fontSize: 18.0, color: Colors.white),
-        ),
+        child: _buildChatContent(chat),
       ),
     );
   }
@@ -59,7 +57,8 @@ class ChatWidget extends StatelessWidget {
               ? Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage(chat.from.imageUrl ?? 'https://api.adorable.io/avatars/100/abott@adorable.png'),
+                    backgroundImage: NetworkImage(chat.from.imageUrl ??
+                        'https://api.adorable.io/avatars/100/abott@adorable.png'),
                     radius: 12.0,
                   ),
                 )
@@ -75,13 +74,24 @@ class ChatWidget extends StatelessWidget {
               color: receivedColor,
               borderRadius: BorderRadius.circular(25.0),
             ),
-            child: Text(
-              chat.content,
-              style: TextStyle(fontSize: 18.0, color: Colors.black),
-            ),
+            child: _buildChatContent(chat),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildChatContent(ChatMessage chat) {
+    return chat.type == ChatMessage.IMAGE
+        ? CachedNetworkImage(
+            imageUrl: chat.content,
+            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            fit: BoxFit.cover,
+          )
+        : Text(
+            chat.content,
+            style: TextStyle(fontSize: 18.0, color: Colors.black),
+          );
   }
 }
