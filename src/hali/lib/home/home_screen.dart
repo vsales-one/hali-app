@@ -55,7 +55,10 @@ class HomeScreenState extends State<HomeScreen> {
 
         if (state is HomeLoaded) {
             _isReachMax = state.hasReachedMax;
-            _posts = state.posts;
+            setState(() {
+              _posts = state.posts;
+            });
+            
         }
       },
       child: Scaffold(

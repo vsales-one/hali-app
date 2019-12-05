@@ -1,15 +1,16 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/commons/dialog.dart';
 import 'package:hali/commons/styles.dart';
+import 'package:hali/models/post_model.dart';
 import 'package:hali/repositories/post_repository.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'bloc/index.dart';
 import 'create_food_form.dart';
@@ -35,6 +36,8 @@ class CreatePostScreenState extends State<CreatePostScreen> {
   PostRepository get postRepository => widget._postRepository;
 
   File _image;
+
+  PostModel postModel = new PostModel();
 
   _handleOpenCamera() {
     getImage();
@@ -87,7 +90,7 @@ class CreatePostScreenState extends State<CreatePostScreen> {
                   image: _image,
                   openGallery: _handleOpenGallery,
                 ),
-                _ContentForm(_image)
+                PostForm(image: _image,)
               ],
             ),
           ),
@@ -206,74 +209,19 @@ class _UploadFromGallery extends StatelessWidget {
   }
 }
 
-class _ContentForm extends StatelessWidget {
-  
-  File imageCover;
+class PostForm extends StatelessWidget {
 
-  _ContentForm(this.imageCover);
+  File image;
+
+  PostForm({this.image});
 
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: SizedBox(
-        height: 700,
-        child: _TabBarContent(imageCover),
-      ),
-    );
-  }
-}
-
-class _TabBarContent extends StatefulWidget {
-
-  File coverImage; 
-  _TabBarContent(this.coverImage);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _TabbarContentState();
-  }
-}
-
-class _TabbarContentState extends State<_TabBarContent>
-    with SingleTickerProviderStateMixin {
-  TabController _tabController;
-
-  @override
-  void initState() {
-    _tabController = new TabController(length: 2, vsync: this);
-    super.initState();
-  }
-
-  Widget getTabBar() {
-    return TabBar(
-      controller: _tabController,
-      tabs: [
-        Tab(text: "Food", icon: Icon(MdiIcons.food)),
-        Tab(text: "Non-Food", icon: Icon(MdiIcons.ceilingLight)),
-      ],
-      unselectedLabelColor: Colors.grey,
-      indicatorColor: ColorUtils.hexToColor(colorD92c27),
-      labelColor: ColorUtils.hexToColor(colorD92c27),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: AppBar(
-        flexibleSpace: SafeArea(
-          child: getTabBar(),
-        ),
-        leading: new Container(),
-        backgroundColor: Colors.white,
-      ),
-      body: TabBarView(
-        children: [
-          CreateFoodForm(widget.coverImage, 0),
-          CreateFoodForm(widget.coverImage, 1),
-        ],
-        controller: _tabController,
-      ),
+        height: 900,
+        child: CreateFoodForm(image),
+      )
     );
   }
 }

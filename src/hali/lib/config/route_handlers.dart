@@ -1,6 +1,7 @@
 import 'package:flutter/painting.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hali/home/views/feed_detail.dart';
 import 'package:hali/login/login.dart';
 import 'package:hali/posts/create_post.dart';

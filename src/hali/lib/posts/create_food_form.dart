@@ -1,28 +1,27 @@
 
 import 'dart:io';
-
-import 'package:date_format/date_format.dart';
-import 'package:fluro/fluro.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hali/commons/styles.dart';
-import 'package:hali/config/application.dart';
-import 'package:hali/config/routes.dart';
+import 'package:hali/constants/constants.dart';
+import 'package:hali/di/appModule.dart';
+import 'package:hali/models/hali_category.dart';
 import 'package:hali/models/post_model.dart';
 import 'package:hali/utils/alert_helper.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:hali/utils/date_utils.dart';
 import 'package:intl/intl.dart';
+import 'package:place_picker/place_picker.dart';
 import 'bloc/index.dart';
 
 class CreateFoodForm extends StatefulWidget {
 
 final File imageCover;
-final int _categoryId;
 
-  const CreateFoodForm(this.imageCover, this._categoryId);
+  const CreateFoodForm(this.imageCover);
 
   @override
   State<StatefulWidget> createState() {
@@ -41,10 +40,16 @@ class CreateFoodFormState extends State<CreateFoodForm> {
   String _pickup = "";
   String _lat = "";
   String _longtitude = "";
+  LatLng _postLocation;
+  HCategory _categorySelected;
+  String _address;
 
   @override
   void initState() {
     super.initState();
+
+    _categorySelected = HCategory.generated()[0];
+
   }
 
   @override
@@ -56,6 +61,19 @@ class CreateFoodFormState extends State<CreateFoodForm> {
           padding: EdgeInsets.all(10),
           child: Column(
             children: <Widget>[
+              FormBuilderRadio(
+                decoration: InputDecoration(labelText: 'Category'),
+                attribute: "category",
+                initialValue: _categorySelected.categoryName,
+                validators: [FormBuilderValidators.required()],
+                onChanged: (cate){
+                  logger.d("did tap");
+                  _categorySelected = HCategory.generated().where((e) => e.categoryName == cate).toList().first;
+                },
+                options: HCategory.generated()
+                    .map((lang) => FormBuilderFieldOption(value: lang.categoryName))
+                    .toList(growable: false),
+              ),
               FormBuilder(
                 key: _fbKey,
                 initialValue: {
@@ -102,7 +120,7 @@ class CreateFoodFormState extends State<CreateFoodForm> {
                       ],
                       onChanged: (pickup){
                         setState(() {
-                          _pickup = pickup.toIso8601String();
+                          _pickup = DateUtils.dateToString(pickup);
                         });
                       },
                     ),
@@ -189,14 +207,20 @@ class CreateFoodFormState extends State<CreateFoodForm> {
     );
   }
 
-  void _presentLocationScreen() {
-      Application.router.navigateTo(context, Routes.locationScreen, transition: TransitionType.fadeIn);
+  Future _presentLocationScreen() async {
+    _postLocation = new LatLng(10.7797855,106.6968249);
+    LocationResult result = await Navigator.of(context).push(
+        CupertinoPageRoute(builder: (context) => PlacePicker(kApiKey, displayLocation: _postLocation,)));
+    _postLocation = result.latLng;
+    _address = result.formattedAddress;
+
   }
 
   void _handleCreatePost() {
     if (_fbKey.currentState.saveAndValidate()) {
       if (widget.imageCover == null) {
         AlertHelper.showAlertError(context, "Image Cover can not empty.");
+        return;
       }
 
       final postModel = new PostModel(
@@ -205,10 +229,11 @@ class CreateFoodFormState extends State<CreateFoodForm> {
         pickUpTime: _pickup,
         startDate: DateUtils.dateToString(_startDate),
         endDate: DateUtils.dateToString(_endDate),
-        categoryId: widget._categoryId,
-        lastModifiedBy: "trung@yopmail.com",
+        categoryId: _categorySelected.id,
         lastModifiedDate: DateUtils.dateToString(DateTime.now()),
-        pickupAddress: "92 Nguyen Huu Canh"
+        latitude: _postLocation.latitude,
+        longitude: _postLocation.longitude,
+        pickupAddress: _address
       );
       BlocProvider.of<CreatePostBloc>(context).add(AddPostStartEvent(postModel: postModel, image: widget.imageCover));
     }

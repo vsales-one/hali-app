@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hali/utils/color_utils.dart';
 import 'package:hali/commons/styles.dart';
-import 'package:hali/di/appModule.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:hali/models/post_model.dart';
 class FeedCard extends StatelessWidget {
 
   final Function onTapCard;
 
-  const FeedCard({Key key, this.onTapCard}) : super(key: key);
+  final PostModel postModel;
+
+  const FeedCard({Key key, this.onTapCard, this.postModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

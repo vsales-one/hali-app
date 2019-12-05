@@ -88,5 +88,10 @@
     <string>This app needs access to location when in the background. This helps users pick up location, find foods or non-foods.</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>This app needs access to location when open and in the background. This helps users pick up location, find foods or non-foods.</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
 </dict>
 </plist>
