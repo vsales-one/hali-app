@@ -15,6 +15,7 @@ class _TestListScreenState extends State<TestListScreen> {
   static final uuid = Uuid();
   final List<ItemListingMessage> itemListing = List.generate(10, (int index) {
     return ItemListingMessage.fromNamed(
+        status: ItemRequestMessageStatus.Open,
         itemType: "food",
         itemId: uuid.v1(),
         itemTitle: "Item name $index",
@@ -29,8 +30,7 @@ class _TestListScreenState extends State<TestListScreen> {
             isActive: true),
         to: UserProfile.fromNamed(
             displayName: "Tomato",
-            imageUrl:
-                "https://api.adorable.io/avatars/100/abott@adorable.png",
+            imageUrl: "https://api.adorable.io/avatars/100/abott@adorable.png",
             userId: "y41Rrmr7A0gzniC9kSudv6RmeA62",
             email: "brtometh@gmail.com",
             isActive: true),
@@ -61,7 +61,10 @@ class _TestListScreenState extends State<TestListScreen> {
           leading: Icon(Icons.fastfood),
           title: Text(item.itemTitle),
           trailing: RaisedButton(
-            child: Text("Request Item", style: TextStyle(color: Colors.white),),
+            child: Text(
+              "Request Item",
+              style: TextStyle(color: Colors.white),
+            ),
             color: Colors.blueAccent,
             onPressed: () {
               _requestItem(item);
@@ -72,13 +75,13 @@ class _TestListScreenState extends State<TestListScreen> {
     );
   }
 
-  _requestItem(ItemListingMessage item) {    
-    // 1) open request listing confirmation screen    
+  _requestItem(ItemListingMessage item) {
+    // 1) open request listing confirmation screen
     // 2) on confirmed at confirmation screen send a message from requestor to owner
     // 3) Then goes to message screen
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => RequestListingConfirmationScreen(
-          requestItem: item,
-        )));
+              requestItem: item,
+            )));
   }
 }

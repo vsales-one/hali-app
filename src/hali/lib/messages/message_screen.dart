@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/app_widgets/chat_input_widget.dart';
 import 'package:hali/app_widgets/chat_widget.dart';
+import 'package:hali/config/routes.dart';
+import 'package:hali/messages/widgets/chat_message_header.dart';
 import 'package:hali/messages/widgets/first_message_tooltip.dart';
 import 'package:hali/messages/widgets/request_item_info.dart';
 import 'package:hali/models/chat_message.dart';
@@ -14,6 +16,7 @@ import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/utils/alert_helper.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class MessageScreen extends StatefulWidget {
   final UserProfile friend;
@@ -35,12 +38,14 @@ class _MessageScreenState extends State<MessageScreen> {
   ScrollController scrollController = ScrollController();
   UserRepository _userRepository;
   ChatMessageRepository _chatMessageRepository;
-  final GlobalKey _key = GlobalKey();
+  // final GlobalKey _firstRequestMessageHeaderKey = GlobalKey();
+  // final GlobalKey _messageHeaderKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<ChatMessage> chats = [];
   UserProfile currentUser;
   bool isHeader = true;
   bool isProcessing = false;
+  bool isPickupPendingApproval = true;
 
   @override
   void initState() {
@@ -49,30 +54,14 @@ class _MessageScreenState extends State<MessageScreen> {
     _chatMessageRepository =
         RepositoryProvider.of<ChatMessageRepository>(context);
     initUser();
-//     WidgetsBinding.instance.addPostFrameCallback((val) {
-//       scrollController.addListener(() {
-//         final RenderBox renderBox = _key.currentContext.findRenderObject();
-//         final size = renderBox.size;
-//         double height = size.height * 2 / 3;
-//         if (scrollController.hasClients)
-// //        scrollController.animateTo(scrollController.position.maxScrollExtent,
-// //            duration: Duration(milliseconds: 100), curve: Curves.easeIn);
-
-//         if (scrollController.offset >= height) {
-//           if (mounted) {
-//             setState(() {
-//               isHeader = false;
-//             });
-//           }
-//         } else if (!isHeader) {
-//           if (mounted) {
-//             setState(() {
-//               isHeader = true;
-//             });
-//           }
-//         }
-//       });
-//     });
+    var messageStatus = widget.itemRequestMessage.status;
+    print(">>>>>>> message status: $messageStatus");
+    if ((messageStatus == ItemRequestMessageStatus.Open || messageStatus == null ||
+        messageStatus.toString().isEmpty)) {
+      isPickupPendingApproval = true;
+    } else {
+      isPickupPendingApproval = false;
+    }
   }
 
   void initUser() async {
@@ -176,11 +165,15 @@ class _MessageScreenState extends State<MessageScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Flexible(                    
+                  Flexible(
                     child: ListView(
-                      children: <Widget>[                        
-                        _buildChatMessageHeader(),
-                        RequestItemInfo(itemListingMessage: widget.itemRequestMessage,),
+                      children: <Widget>[
+                        ChatMessageHeader(
+                            // key: _firstRequestMessageHeaderKey,
+                            user: widget.friend),
+                        RequestItemInfo(
+                          itemListingMessage: widget.itemRequestMessage,
+                        ),
                         FirstMessageTooltip(),
                       ],
                     ),
@@ -195,8 +188,8 @@ class _MessageScreenState extends State<MessageScreen> {
 
   Widget _buildRequestMessageInput() {
     return ChatInputWidget(
-      defaultMessage: "Hi ${widget.itemRequestMessage.to.displayName},",
-      onSubmitted: (message) async {
+      defaultMessage: "Xin chào ${widget.itemRequestMessage.to.displayName},",
+      onSubmitted: (message, type) async {
         print(">>>>>>> sending message: $message");
         setState(() {
           isProcessing = true;
@@ -207,9 +200,9 @@ class _MessageScreenState extends State<MessageScreen> {
           isProcessing = false;
         });
         if (sendResOk) {
-          await AlertHelper.showAlertInfo(context, "Success! your request of the item has been sent.");
-          Navigator.of(context).pop();
-          // Should navigate to the success screen
+          await AlertHelper.showAlertInfo(
+              context, "Tin nhắn của bạn đã được gửi");
+          Navigator.of(context).popUntil(ModalRoute.withName(Routes.root));
         }
       },
     );
@@ -224,19 +217,22 @@ class _MessageScreenState extends State<MessageScreen> {
             children: <Widget>[
               Flexible(child: _buildChatMessages()),
               ChatInputWidget(
-                onSubmitted: (val) {
-                  if (currentUser.id == widget.friend.id) {
+                hintMessage: "Gửi tin nhắn đến ${widget.friend.firstName}",
+                onSubmitted: (message, type) {
+                  if (currentUser.userId == widget.friend.userId) {
                     _scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text("You can not send message to you")));
+                        content:
+                            Text("Bạn không thể gửi tin nhắn cho chính mình")));
                     return;
                   }
                   ChatMessage chat = ChatMessage.fromNamed(
                       from: currentUser,
                       to: widget.friend,
-                      content: val,
+                      content: message,
                       isSeen: false,
                       publishedAt: DateTime.now(),
-                      groupId: widget.itemRequestMessage.groupId);
+                      groupId: widget.itemRequestMessage.groupId,
+                      type: type);
                   _chatMessageRepository.sendMessage(chat);
                   scrollController.animateTo(
                       scrollController.position.maxScrollExtent,
@@ -251,40 +247,105 @@ class _MessageScreenState extends State<MessageScreen> {
           );
   }
 
-  Widget _buildChatMessageHeader() {
+  Widget _buildActionButtons(ItemListingMessage itemRequestMessage) {
+    if (currentUser.userId == itemRequestMessage.from.userId) {
+      // view message as requestor
+      return Container();
+    }
+    // view message as item owner
     return Container(
-      key: _key,
-      padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 12.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
       child: Column(
         children: <Widget>[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(125.0),
-            child: Image.network(
-              widget.friend.imageUrl,
-              height: 125.0,
-              fit: BoxFit.cover,
-            ),
-          ),
           Padding(
-            padding: const EdgeInsets.only(top: 8.0),
+            padding: EdgeInsets.all(8),
             child: Text(
-              widget.friend.displayName,
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0),
-            child: Text(
-              "${widget.friend.email}",
+              "Xác nhận ${itemRequestMessage.from.firstName} đã nhận được \r\n${itemRequestMessage.itemTitle}.",
+              textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black54),
+                  color: Theme.of(context).textTheme.body2.color,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
             ),
           ),
+          isPickupPendingApproval
+              ? _buildConfirmationApprovalButton()
+              : _buildCancelApprovalButton(widget.friend),
         ],
       ),
     );
+  }
+
+  Widget _buildConfirmationApprovalButton() {
+    return RaisedButton(
+      color: Theme.of(context).primaryColor,
+      child: Text(
+        "Xác Nhận",
+        style: TextStyle(
+          color: Theme.of(context).accentIconTheme.color,
+        ),
+      ),
+      onPressed: () => showItemOwnerPickupApproval(context),
+    );
+  }
+
+  Widget _buildCancelApprovalButton(UserProfile user) {
+    return RaisedButton(
+      color: Theme.of(context).primaryColor,
+      child: Text(
+        "Thay Đổi",
+        style: TextStyle(
+          color: Theme.of(context).accentIconTheme.color,
+        ),
+      ),
+      onPressed: () => showItemOwnerCancelPickup(context, user),
+    );
+  }
+
+  void showItemOwnerPickupApproval(BuildContext context) {
+    Alert(
+        context: context,
+        title: 'Xác Nhận',
+        desc: "Xác nhận quà đã được cho",
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Đồng ý và ẩn bài viết",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () async {
+              await _chatMessageRepository
+                  .confirmItemPickupAndClosePost(widget.itemRequestMessage);
+              setState(() {
+                isPickupPendingApproval = false;
+              });
+              Navigator.pop(context);
+            },
+          ),
+        ]).show();
+  }
+
+  void showItemOwnerCancelPickup(BuildContext context, UserProfile user) {
+    Alert(
+        context: context,
+        title: 'Xác Nhận',
+        desc: "Bạn không muốn cho món quà này đến ${user.firstName} nữa",
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Đồng ý và hiển thị lại bài viết",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () async {
+              await _chatMessageRepository
+                  .cancelItemPickupAndReopenPost(widget.itemRequestMessage);
+              setState(() {
+                isPickupPendingApproval = true;
+              });
+              Navigator.pop(context);
+            },
+          ),
+        ]).show();
   }
 
   Widget _buildChatMessages() {
@@ -298,22 +359,29 @@ class _MessageScreenState extends State<MessageScreen> {
             );
           }
           List<ChatMessage> chats = snapshot.data;
+          final totalItemCount = chats.length + 2;
           return ListView.builder(
             controller: scrollController,
             itemBuilder: (context, index) {
               if (index == 0) {
-                return _buildChatMessageHeader();
+                return ChatMessageHeader(
+                  // key: _messageHeaderKey,
+                  user: widget.friend,
+                );
               }
+              if (index == totalItemCount - 1) {
+                return _buildActionButtons(widget.itemRequestMessage);
+              }
+              final messageData = chats[index - 1];
               return ChatWidget(
-                chat: chats[index - 1],
-                isReceived: currentUser.id != chats[index - 1].from.id,
+                chat: messageData,
+                isReceived: currentUser.userId != messageData.from.userId,
                 showUser: (index == 1) ||
                     (index >= 2 &&
-                        !(chats[index - 1].from.id ==
-                            chats[index - 2].from.id)),
+                        !(messageData.from.userId == messageData.from.userId)),
               );
             },
-            itemCount: chats.length + 1,
+            itemCount: totalItemCount,
           );
         });
   }

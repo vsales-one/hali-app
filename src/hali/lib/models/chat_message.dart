@@ -6,6 +6,7 @@ part 'chat_message.g.dart';
 @JsonSerializable(anyMap: true, explicitToJson: true)
 class ChatMessage {
   static const String TEXT = "text";
+  static const String IMAGE = "image";
   String type;
   dynamic content;
   UserProfile from, to;

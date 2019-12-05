@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hali/app_widgets/empty_listing.dart';
 import 'package:hali/app_widgets/recent_chat_widget.dart';
 import 'package:hali/models/item_listing_message.dart';
 import 'package:hali/repositories/chat_message_repository.dart';
@@ -21,35 +22,48 @@ class _MessageListScreenState extends State<MessageListScreen> {
   }  
 
   Widget _buildMessageList(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        StreamBuilder(
-          stream:
-              RepositoryProvider.of<ChatMessageRepository>(context).getItemRequestMessages(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            List<ItemListingMessage> chats = snapshot.data;
-            if(chats == null || chats.isEmpty) {
-              return Center(
-                child: Text("Không có tin nhắn dành cho bạn"),
-              );
-            }
-            return ListView.builder(
+    return StreamBuilder(
+      stream: RepositoryProvider.of<ChatMessageRepository>(context)
+          .getItemRequestMessages(),
+      builder: (context, snapshot) {
+        print(">>>>>>> connectionState: ${snapshot.connectionState}");
+
+        if(snapshot.connectionState == ConnectionState.waiting) {
+          return Padding(
+            padding: EdgeInsets.only(top: 20),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
+        if (!snapshot.hasData || snapshot.hasError) {
+          return EmptyListing(
+            noDataMessage: "Chưa có tin nhắn nào dành cho bạn",
+          );
+        }
+
+        List<ItemListingMessage> chats = snapshot.data;
+        if (chats == null || chats.isEmpty) {
+          return EmptyListing(
+            noDataMessage: "Chưa có tin nhắn nào dành cho bạn",
+          );
+        }
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListView.builder(
               itemBuilder: (context, index) => RecentChatWidget(
                 requestMessage: chats[index],
               ),
               itemCount: chats.length,
               shrinkWrap: true,
               physics: ClampingScrollPhysics(),
-            );
-          },
-        )
-      ],
+            )
+          ],
+        );
+      },
     );
   }
 }
