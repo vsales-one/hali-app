@@ -21,8 +21,8 @@ class PostRepository implements AbstractPostRepository {
   @override
   Future<ApiResponse<PostModel>> addNewPost(PostModel postModel) async {
     try {
-      final response = await dio.post<PostModel>("/api/posting-items", data: postModel.toJson());
-      return ApiResponse(data: response.data);
+      final response = await dio.post("/api/posting-items", data: postModel.toJson());
+      return ApiResponse(data: PostModel.fromJson(response.data));
     }
     on DioError catch(e) {
       return ApiResponse(errorMgs: e.message, error: e);

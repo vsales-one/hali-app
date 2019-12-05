@@ -31,25 +31,29 @@ class HomeLoaded extends HomeState {
 
   final List<PostModel> posts;
   final bool hasReachedMax;
-  
+  final int currentPage;
+
   const HomeLoaded({
     this.posts,
     this.hasReachedMax,
+    this.currentPage
   });
 
   HomeLoaded copyWith({
     List<PostModel> posts,
     bool hasReachedMax,
+    int currentPage,
   }) {
     return HomeLoaded(
       posts: posts ?? this.posts,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      currentPage: currentPage ?? 0
     );
   }
   @override
-  List<Object> get props => [posts, hasReachedMax];
+  List<Object> get props => [posts, hasReachedMax, currentPage];
   
   @override
   String toString() =>
-      'HomeLoaded { posts: ${posts.length}, hasReachedMax: $hasReachedMax }';
+      'HomeLoaded { posts: ${posts.length}, hasReachedMax: $hasReachedMax , currentPage: $currentPage }';
 }

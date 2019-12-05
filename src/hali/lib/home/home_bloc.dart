@@ -35,10 +35,11 @@ Stream<HomeState> transformEvents(
     if (event is Fetch && !_hasReachedMax(currentState)) {
       try {
         if (currentState is HomeUninitialized) {
+          var currentPage = 0;
           final responsePost =
-              await homeRepository.fetchPosts(event.currentPage, 10);
+              await homeRepository.fetchPosts(currentPage, 10);
           if (responsePost.data != null) {
-            yield HomeLoaded(posts: responsePost.data, hasReachedMax: false);
+            yield HomeLoaded(posts: responsePost.data, hasReachedMax: false, currentPage: currentPage + 1);
           } else {
             yield HomeError(responsePost.error);
           }
@@ -46,7 +47,7 @@ Stream<HomeState> transformEvents(
         }
         if (currentState is HomeLoaded) {
           final res =
-              await homeRepository.fetchPosts(event.currentPage + 1, 10);
+              await homeRepository.fetchPosts(currentState.currentPage, 10);
           final posts = res.data;
           if (posts != null) {
             yield posts.isEmpty
@@ -54,6 +55,7 @@ Stream<HomeState> transformEvents(
               : HomeLoaded(
                   posts: currentState.posts + posts,
                   hasReachedMax: false,
+                  currentPage: currentState.currentPage + 1
                 );
           } else {
              yield HomeError(res.error);

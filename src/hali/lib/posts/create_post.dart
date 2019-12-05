@@ -7,6 +7,7 @@ import 'package:hali/commons/dialog.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:hali/models/post_model.dart';
 import 'package:hali/repositories/post_repository.dart';
+import 'package:hali/utils/app_utils.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -100,7 +101,7 @@ class CreatePostScreenState extends State<CreatePostScreen> {
     return BlocListener<CreatePostBloc, CreatePostState>(
       listener: (context, state) => {
         if (state.error != null) {
-          displayAlert(context, "Error Message", state.error.message)
+          dispatchFailure(context, state.error)
         } else  if (state.postModel != null) {
           Navigator.of(context).pop()
         }

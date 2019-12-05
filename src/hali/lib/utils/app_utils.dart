@@ -2,8 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hali/authentication_bloc/bloc.dart';
+import 'package:hali/commons/dialog.dart';
 import 'package:hali/commons/toast.dart';
 
 dispatchFailure(BuildContext context, dynamic e) {
@@ -13,7 +12,6 @@ dispatchFailure(BuildContext context, dynamic e) {
 
     if (response?.statusCode == 401) {
       message = "account or password error ";
-      BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
     } else if (403 == response?.statusCode) {
       message = "forbidden";
     } else if (404 == response?.statusCode) {
@@ -24,12 +22,16 @@ dispatchFailure(BuildContext context, dynamic e) {
       message = "Server Updating";
     } else if (e.error is SocketException) {
       message = "network cannot use";
+    } else if (400 == response?.statusCode) {
+      message = e.message;
     } else {
       message = "Oops!!";
     }
+
   }
   print("error ：" + message);
   if (context != null) {
     Toast.show(message, context, type: Toast.ERROR);
   }
+  displayAlertError(context, "Error", e, message);
 }

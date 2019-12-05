@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:hali/models/post_model.dart';
+import 'package:place_picker/uuid.dart';
 class FeedCard extends StatelessWidget {
 
   final Function onTapCard;
@@ -16,11 +17,11 @@ class FeedCard extends StatelessWidget {
       color: Colors.white,
       child: Column(
         children: <Widget>[
-          _DescriptionEvent(),
+          _DescriptionEvent(title: this.postModel.title),
           //body
-          _BodyImage(onTap: onTapCard,),
+          _BodyImage(onTap: onTapCard, imageUrl: this.postModel.imageUrl, id: this.postModel.id,),
           //action
-          _ActionBox(),
+          _ActionBox(postModel: this.postModel,),
           //Description
           _ContainerTop(),
         ],
@@ -80,7 +81,11 @@ class _BodyImage extends StatelessWidget {
 
   final VoidCallback onTap;
 
-  const _BodyImage({Key key, this.onTap}) : super(key: key);
+  final int id;
+
+  final String imageUrl;
+
+  const _BodyImage({Key key, this.onTap, this.imageUrl, this.id }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +96,9 @@ class _BodyImage extends StatelessWidget {
           child: Stack(
             children: <Widget>[
               Hero(
-                tag: "123@{$d}",
+                tag: "$Uuid()@{$id}",
                 child: CachedNetworkImage(
-                  imageUrl: "https://images.unsplash.com/photo-1537758069025-b07fb3548d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2752&q=80",
+                  imageUrl: imageUrl ?? "",
                   placeholder: (context, url) => CircularProgressIndicator(),
                   errorWidget: (context, url, error) => Icon(Icons.error),
                   fit: BoxFit.cover,
@@ -109,13 +114,17 @@ class _BodyImage extends StatelessWidget {
 
 class _DescriptionEvent extends StatelessWidget {
 
+  final String title;
+
+  _DescriptionEvent({this.title});
+  
   @override
   Widget build(BuildContext context) {
     return Align(
         alignment: Alignment.topLeft,
         child: Container(
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text("Drink 3 beers in 5 mins. ", style: Styles.getSemiboldStyle(16, Colors.black87), textAlign: TextAlign.left,)
+            child: Text(this.title ?? "", style: Styles.getSemiboldStyle(16, Colors.black87), textAlign: TextAlign.left,)
         )
     );
   }
@@ -126,6 +135,10 @@ class _DescriptionEvent extends StatelessWidget {
 class _ActionBox extends StatelessWidget {
 
   final double radius = 14.0;
+
+  final PostModel postModel;
+
+  _ActionBox({ this.postModel });
 
   @override
   Widget build(BuildContext context) {

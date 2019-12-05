@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hali/authentication_bloc/bloc.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 Future<T> _showAlert<T>({BuildContext context, Widget child}) => showDialog<T>(
@@ -119,19 +122,24 @@ class LoadingDialog extends CupertinoAlertDialog {
   }
 }
 
-displayAlert(BuildContext context, String title, String desc) {
+displayAlertError(BuildContext context, String title, DioError error, String message) {
   Alert(
       context: context,
       type: AlertType.error,
       title: title,
-      desc: desc,
+      desc: message,
       buttons: [
         DialogButton(
           child: Text(
             "OK",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: (){
+            Navigator.pop(context);
+            if (error.response.statusCode == 401) {
+              BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+            }
+          },
           width: 120,
         )
       ],

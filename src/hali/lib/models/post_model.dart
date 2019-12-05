@@ -1,4 +1,7 @@
 
+import 'dart:ffi';
+
+import 'package:hali/models/user_profile.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'post_model.g.dart';
@@ -21,6 +24,9 @@ class PostModel {
   String pickupAddress;
   String startDate;
   String title;
+  UserProfile userProfile;
+  int numberLike;
+  Float distance;
 
   PostModel({
     this.categoryCategoryName,
@@ -39,6 +45,9 @@ class PostModel {
     this.pickupAddress,
     this.startDate,
     this.title,
+    this.userProfile,
+    this.numberLike,
+    this.distance
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) =>

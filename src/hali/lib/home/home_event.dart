@@ -11,9 +11,5 @@ class LoadHomeEvent extends HomeEvent {
 }
 
 class Fetch extends HomeEvent {
-  final int currentPage;
-  Fetch({this.currentPage});
-
-   @override
-  String toString() => 'HomeFetch: $currentPage';
+  String toString() => 'HomeFetch';
 }

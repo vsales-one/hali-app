@@ -7,6 +7,7 @@ import 'package:hali/config/application.dart';
 import 'package:hali/config/routes.dart';
 import 'package:hali/home/index.dart';
 import 'package:hali/models/post_model.dart';
+import 'package:hali/utils/app_utils.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -40,7 +41,7 @@ class HomeScreenState extends State<HomeScreen> {
     super.initState();
     _scrollController.addListener(_onScroll);
     _homeBloc = BlocProvider.of<HomeBloc>(context);
-    _homeBloc.add(Fetch(currentPage: _currentPage));
+    _homeBloc.add(Fetch());
   }
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,7 @@ class HomeScreenState extends State<HomeScreen> {
           return LoadingIndicator(indicatorType: Indicator.ballPulse, color: Colors.red,);
         }
         if (state is HomeError) {
-          return displayAlert(context, "Error", state.error.message);
+          return dispatchFailure(context, state.error);
         }
 
         if (state is HomeLoaded) {
@@ -66,7 +67,7 @@ class HomeScreenState extends State<HomeScreen> {
             itemBuilder: (BuildContext context, int index) {
               return index >= _posts.length
                   ? BottomLoader()
-                  : FeedCard();
+                  : FeedCard(onTapCard: _navigateToDetailPost, postModel: _posts[index],);
             },
             itemCount: _isReachMax
                 ? _posts.length
@@ -87,6 +88,10 @@ class HomeScreenState extends State<HomeScreen> {
     Application.router.navigateTo(context, Routes.createPost, transition: TransitionType.fadeIn);
   }
 
+  _navigateToDetailPost() {
+    Application.router.navigateTo(context, Routes.feedDetail, transition: TransitionType.fadeIn);
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -98,7 +103,7 @@ class HomeScreenState extends State<HomeScreen> {
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= _scrollThreshold) {
       if (!_isReachMax) {
-        _homeBloc.add(Fetch(currentPage: _currentPage + 1));
+        _homeBloc.add(Fetch());
       }
     }
   }
