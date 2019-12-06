@@ -6,10 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hali/commons/styles.dart';
+import 'package:hali/commons/user_manager.dart';
 import 'package:hali/constants/constants.dart';
 import 'package:hali/di/appModule.dart';
 import 'package:hali/models/hali_category.dart';
 import 'package:hali/models/post_model.dart';
+import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/utils/alert_helper.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:hali/utils/date_utils.dart';
@@ -55,25 +57,13 @@ class CreateFoodFormState extends State<CreateFoodForm> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Card(
+      child: Container(
         margin: EdgeInsets.all(16),
         child: Container(
           padding: EdgeInsets.all(10),
           child: Column(
             children: <Widget>[
-              FormBuilderRadio(
-                decoration: InputDecoration(labelText: 'Category'),
-                attribute: "category",
-                initialValue: _categorySelected.categoryName,
-                validators: [FormBuilderValidators.required()],
-                onChanged: (cate){
-                  logger.d("did tap");
-                  _categorySelected = HCategory.generated().where((e) => e.categoryName == cate).toList().first;
-                },
-                options: HCategory.generated()
-                    .map((lang) => FormBuilderFieldOption(value: lang.categoryName))
-                    .toList(growable: false),
-              ),
+              
               FormBuilder(
                 key: _fbKey,
                 initialValue: {
@@ -84,6 +74,20 @@ class CreateFoodFormState extends State<CreateFoodForm> {
                 autovalidate: true,
                 child: Column(
                   children: <Widget>[
+
+                    FormBuilderRadio(
+                      decoration: InputDecoration(labelText: 'Category'),
+                      attribute: "category",
+                      initialValue: _categorySelected.categoryName,
+                      validators: [FormBuilderValidators.required()],
+                      onChanged: (cate){
+                        logger.d("did tap");
+                        _categorySelected = HCategory.generated().where((e) => e.categoryName == cate).toList().first;
+                      },
+                      options: HCategory.generated()
+                          .map((lang) => FormBuilderFieldOption(value: lang.categoryName))
+                          .toList(growable: false),
+                    ),
 
                     FormBuilderTextField(
                       attribute: "title",
@@ -222,6 +226,8 @@ class CreateFoodFormState extends State<CreateFoodForm> {
         AlertHelper.showAlertError(context, "Image Cover can not empty.");
         return;
       }
+      
+      final profile = userManager.userProfile.value;
 
       final postModel = new PostModel(
         title: _title,
@@ -233,7 +239,8 @@ class CreateFoodFormState extends State<CreateFoodForm> {
         lastModifiedDate: DateUtils.dateToString(DateTime.now()),
         latitude: _postLocation.latitude,
         longitude: _postLocation.longitude,
-        pickupAddress: _address
+        pickupAddress: _address,
+        lastModifiedBy: profile.email
       );
       BlocProvider.of<CreatePostBloc>(context).add(AddPostStartEvent(postModel: postModel, image: widget.imageCover));
     }

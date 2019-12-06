@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SpUtil {
@@ -56,6 +57,16 @@ class SpUtil {
   Future<bool> putString(String key, String value) {
     if (_beforCheck()) return null;
     return _spf.setString(key, value);
+  }
+
+  Future<bool> saveObject(String key, value) {
+    if (_beforCheck()) return null;
+    return _spf.setString(key, json.encode(value));
+  }
+
+  Future<dynamic> readObject(String key) {
+    if (_beforCheck()) return null;
+    return json.decode(_spf.getString(key));
   }
 
   bool getBool(String key) {

@@ -132,10 +132,20 @@ class UserRepository {
     spUtil.putString(kFirebaseAuthToken, idTokenResult.token);
   }
 
+  Future<void> storeFirebaseUserLogged(UserProfile userProfile) async {
+    spUtil.saveObject(kFirebaseUser, userProfile);
+  }
+
+  Future<UserProfile> retrieveFirebaseUserLogged() async {
+    return UserProfile.fromJson(await spUtil.readObject(kFirebaseUser));
+  }
+
   Future<void> linkFirebaseUserWithAppUser(FirebaseUser user) async {
     print('>>>>>>> Link firebase user with app user: ${user.uid}');
     final appUserProvider = AppUserProfileProvider();
-    await appUserProvider.linkFirebaseUserWithAppUser(user);
+    final profile = await appUserProvider.linkFirebaseUserWithAppUser(user);
+    await storeFirebaseUserLogged(profile);
+    await userManager.bind();
   }
 
   Future<UserProfile> getUserProfile() async {

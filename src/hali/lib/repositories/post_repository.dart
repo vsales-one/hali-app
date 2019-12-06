@@ -11,6 +11,9 @@ abstract class AbstractPostRepository {
   Future<ApiResponse<PostModel>> addNewPost(PostModel postModel);
 
   Future<StorageTaskSnapshot> uploadImage(File image, String _fileName);
+
+  Future<ApiResponse<PostModel>> getPostById(int id);
+
 }
 
 class PostRepository implements AbstractPostRepository {
@@ -46,5 +49,15 @@ class PostRepository implements AbstractPostRepository {
     return await uploadTask.onComplete;
   }
 
+  @override
+  Future<ApiResponse<PostModel>> getPostById(int id) async {
+    try {
+      final response = await dio.get("/api/posting-items/$id");
+      return ApiResponse(data: PostModel.fromJson(response.data));
+    }
+    on DioError catch(e) {
+      return ApiResponse(errorMgs: e.message, error: e);
+    }
+  }
 
 }

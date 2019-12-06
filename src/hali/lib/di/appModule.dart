@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fluro/fluro.dart';
 import 'package:hali/commons/shared_preferences.dart';
+import 'package:hali/commons/user_manager.dart';
 import 'package:hali/config/application.dart';
 import 'package:hali/config/routes.dart';
 import 'package:hali/constants/constants.dart';
@@ -40,11 +41,16 @@ final FirebaseStorage storage = FirebaseStorage(app: FirebaseApp.instance,
     
 SpUtil spUtil;
 
+UserManager userManager;
+
 final appModule = [];
 /// init
 ///
 init() async {
+  
   spUtil = await SpUtil.getInstance();
+
+  userManager = await UserManager.getInstance();
   // DartIn start
 
   // init router

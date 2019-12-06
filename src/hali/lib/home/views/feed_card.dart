@@ -150,6 +150,7 @@ class _ActionBox extends StatelessWidget {
           Container(
             child: Row(
               children: <Widget>[
+                this.postModel.distance != null ?
                 Container(
                   margin: EdgeInsets.only(left: 16),
                   child: Row(
@@ -170,7 +171,7 @@ class _ActionBox extends StatelessWidget {
 
                     ],
                   ),
-                ),
+                ) : new Container(),
 
                 Container(
                   margin: EdgeInsets.only(left: 16),
@@ -199,6 +200,7 @@ class _ActionBox extends StatelessWidget {
           // button
 
           // show like
+          this.postModel.numberLike != null ? 
           Container(
             padding: EdgeInsets.only(left: 16, right: 16),
             child: new Row(
@@ -206,11 +208,12 @@ class _ActionBox extends StatelessWidget {
                 Icon(Icons.favorite, color: Colors.red, size: 20,),
                 Padding(
                   padding: EdgeInsets.only(left: 8),
-                  child: Text("1.1999, 39999k", style: Styles.getSemiboldStyle(12, Colors.black54),),
+                  child: Text("$postModel.numberLike ?? 0", style: Styles.getSemiboldStyle(12, Colors.black54),),
                 )
               ],
             ),
           )
+          : new Container()
         ],
       ),
     );

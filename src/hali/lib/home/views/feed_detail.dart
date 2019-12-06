@@ -1,23 +1,29 @@
-
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:hali/messages/request_listing_confirmation_screen.dart';
 import 'package:hali/models/item_listing_message.dart';
+import 'package:hali/models/post_model.dart';
 import 'package:hali/models/user_profile.dart';
 import 'package:hali/utils/color_utils.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:uuid/uuid.dart';
+import 'package:hali/home/views/feed_detail/index.dart';
+
 class FeedDetail extends StatefulWidget {
+  final int postId;
+
+  FeedDetail({this.postId});
 
   @override
   State<StatefulWidget> createState() {
-    return FeedDetailState();
+    return FeedDetailScreenState();
   }
 }
 
-class FeedDetailState extends State<FeedDetail> {
+class FeedDetailScreenState extends State<FeedDetail> {
+  PostModel postModel;
 
   @override
   void initState() {
@@ -26,24 +32,41 @@ class FeedDetailState extends State<FeedDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[200],
-      child: CustomScrollView(
-        slivers: <Widget>[
-          // sliver app bar
-          _VSliverAppBar(),
-          _LocationWidget(),
-          _TitleWidget(),
-          _RequestButton()
-
-        ],
-      ),
+    return BlocListener<FeedDetailBloc, FeedDetailState>(
+      listener: (context, state) {
+        if (state is FeedDetailUninitialized) {
+           LoadingIndicator(
+            indicatorType: Indicator.pacman,
+            color: Colors.red,
+          );
+        }
+        if (state is FeedDetailLoaded) {
+          postModel = state.postModel;
+        }
+      },
+      child: postModel != null ? Container(
+        color: Colors.grey[200],
+        child: CustomScrollView(
+          slivers: <Widget>[
+            // sliver app bar
+            _VSliverAppBar(
+              postModel: postModel,
+            ),
+            _LocationWidget(),
+            _TitleWidget(),
+            _RequestButton()
+          ],
+        ),
+      ) :  new Container(),
     );
   }
-
 }
 
 class _VSliverAppBar extends StatelessWidget {
+  final PostModel postModel;
+
+  _VSliverAppBar({this.postModel});
+
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -52,32 +75,33 @@ class _VSliverAppBar extends StatelessWidget {
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
           centerTitle: true,
-          title: Text("Collapsing Toolbar",
+          title: Text("",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16.0,
               )),
           background: Image.network(
-            "https://images.unsplash.com/photo-1537758069025-b07fb3548d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2752&q=80",
+            postModel.imageUrl ?? "",
             fit: BoxFit.cover,
-          )
-      ),
+          )),
     );
   }
 }
 
 class _TitleWidget extends StatelessWidget {
+
+  final PostModel postModel;
+
+  _TitleWidget({this.postModel});
+
   @override
   Widget build(BuildContext context) {
     return SliverList(
-      delegate: SliverChildListDelegate(
-        [
-          Container(
+      delegate: SliverChildListDelegate([
+        Container(
             margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
             decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8)
-            ),
+                color: Colors.white, borderRadius: BorderRadius.circular(8)),
             child: Container(
               padding: EdgeInsets.only(left: 16, top: 20, bottom: 20),
               child: new Column(
@@ -85,32 +109,38 @@ class _TitleWidget extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.all(16),
-                    child: Text("PORSTMORE FEST", style: Styles.getSemiboldStyle(25, Colors.black54), textAlign: TextAlign.center,),
+                    child: Text(
+                      postModel.title ?? "",
+                      style: Styles.getSemiboldStyle(25, Colors.black54),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  Text("Cùng Phượt – Hòn Nội (Khánh Hòa) sở hữu bãi tắm đôi duy nhất tại Việt Nam với một bên nóng, một bên lạnh. Nơi đây trở thành địa điểm check-in biển tuyệt vời của du khách.", style: Styles.getRegularStyle(16, Colors.black54), textAlign: TextAlign.left,),
-                  Text("Read more...", style: Styles.getRegularStyle(12, Colors.blue),  textAlign: TextAlign.left),
+                  Text(
+                    postModel.description ?? "",
+                    style: Styles.getRegularStyle(16, Colors.black54),
+                    textAlign: TextAlign.left,
+                  )
                 ],
               ),
-            )
-          )
-        ]
-      ),
+            ))
+      ]),
     );
   }
 }
 
-
-
 class _LocationWidget extends StatelessWidget {
+
+  final PostModel postModel;
+
+  _LocationWidget({ this.postModel });
 
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Column(
-        children: <Widget>[
-          Container(
+        child: Column(
+      children: <Widget>[
+        Container(
             margin: EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 16),
-
             child: Stack(
               children: <Widget>[
                 Container(
@@ -124,19 +154,37 @@ class _LocationWidget extends StatelessWidget {
                     children: <Widget>[
                       Row(
                         children: <Widget>[
-                          Padding(child: Icon(Icons.date_range, color: Colors.black54,), padding: EdgeInsets.only(right: 16),),
+                          Padding(
+                            child: Icon(
+                              Icons.date_range,
+                              color: Colors.black54,
+                            ),
+                            padding: EdgeInsets.only(right: 16),
+                          ),
                           Expanded(
-                            child: Text("Pickup Time: 24 May, 2018, 8h30 AM", style: Styles.getSemiboldStyle(14, Colors.black54),),
+                            child: Text(
+                              "Pickup Time: " + postModel.pickUpTime,
+                              style:
+                                  Styles.getSemiboldStyle(14, Colors.black54),
+                            ),
                           )
-
                         ],
                       ),
-
                       Row(
                         children: <Widget>[
-                          Padding(child: Icon(Icons.location_on, color: Colors.black54,), padding: EdgeInsets.only(right: 16),),
+                          Padding(
+                            child: Icon(
+                              Icons.location_on,
+                              color: Colors.black54,
+                            ),
+                            padding: EdgeInsets.only(right: 16),
+                          ),
                           Expanded(
-                            child: Text("92 Nguyen Huu Canh, Sai Gon Pearl, 92 Nguyen Huu Canh, Sai Gon Pearl", style: Styles.getSemiboldStyle(14, Colors.black54),),
+                            child: Text(
+                              postModel.pickupAddress ?? "",
+                              style:
+                                  Styles.getSemiboldStyle(14, Colors.black54),
+                            ),
                           )
                         ],
                       ),
@@ -151,19 +199,28 @@ class _LocationWidget extends StatelessWidget {
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.only(right: 8),
-                        child: Padding(child: Icon(Icons.share, color: Colors.black54,), padding: EdgeInsets.all(8),),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white
+                        child: Padding(
+                          child: Icon(
+                            Icons.share,
+                            color: Colors.black54,
+                          ),
+                          padding: EdgeInsets.all(8),
                         ),
-                      ),
-
-                      Container(
-                        child: Padding(child: Icon(Icons.favorite_border, color: Colors.black54,), padding: EdgeInsets.all(8),),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: Colors.white
+                            color: Colors.white),
+                      ),
+                      Container(
+                        child: Padding(
+                          child: Icon(
+                            Icons.favorite_border,
+                            color: Colors.black54,
+                          ),
+                          padding: EdgeInsets.all(8),
                         ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white),
                       )
                     ],
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -171,15 +228,17 @@ class _LocationWidget extends StatelessWidget {
                   ),
                 )
               ],
-            )
-          ),
-        ],
-      )
-    );
+            )),
+      ],
+    ));
   }
 }
 
 class _RequestButton extends StatelessWidget {
+
+  final int distance;
+
+  _RequestButton({this.distance});
 
   @override
   Widget build(BuildContext context) {
@@ -187,45 +246,53 @@ class _RequestButton extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: ColorUtils.hexToColor(colorD92c27),
-          borderRadius: BorderRadius.circular(24)
-        ),
+            color: ColorUtils.hexToColor(colorD92c27),
+            borderRadius: BorderRadius.circular(24)),
         child: Column(
           children: <Widget>[
             FlatButton(
-              color: ColorUtils.hexToColor(colorD92c27),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text("Request listing", style: Styles.getRegularStyle(14, Colors.white),),
-                  Container(
-                    child: Row(
-                      children: <Widget>[
-                        Icon(Icons.location_on, size: 16, color: Colors.white,),
-                        Text("123 km away", style: Styles.getRegularStyle(14, Colors.white),),
-                      ],
+                color: Colors.transparent,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      "Request listing",
+                      style: Styles.getRegularStyle(14, Colors.white),
                     ),
-                  )
-                ],
-              ),
-              onPressed: () {
-                _requestItem(context, itemListing[Random().nextInt(10)]);
-              }
-            ),
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.location_on,
+                            size: 16,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            "$distance km away",
+                            style: Styles.getRegularStyle(14, Colors.white),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                onPressed: () {
+                  _requestItem(context, itemListing[Random().nextInt(10)]);
+                }),
           ],
         ),
       ),
     );
   }
 
-  _requestItem(BuildContext context, ItemListingMessage item) {    
-    // 1) open request listing confirmation screen    
+  _requestItem(BuildContext context, ItemListingMessage item) {
+    // 1) open request listing confirmation screen
     // 2) on confirmed at confirmation screen send a message from requestor to owner
     // 3) Then goes to message screen
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => RequestListingConfirmationScreen(
-          requestItem: item,
-        )));
+              requestItem: item,
+            )));
   }
 
   // mock data
@@ -247,8 +314,7 @@ class _RequestButton extends StatelessWidget {
             isActive: true),
         to: UserProfile.fromNamed(
             displayName: "Tomato",
-            imageUrl:
-                "https://api.adorable.io/avatars/100/abott@adorable.png",
+            imageUrl: "https://api.adorable.io/avatars/100/abott@adorable.png",
             userId: "y41Rrmr7A0gzniC9kSudv6RmeA62",
             email: "brtometh@gmail.com",
             isActive: true),
