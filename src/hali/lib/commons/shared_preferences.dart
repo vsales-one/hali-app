@@ -66,7 +66,8 @@ class SpUtil {
 
   Future<dynamic> readObject(String key) {
     if (_beforCheck()) return null;
-    return json.decode(_spf.getString(key));
+    final res = json.decode(_spf.getString(key));
+    return res;
   }
 
   bool getBool(String key) {

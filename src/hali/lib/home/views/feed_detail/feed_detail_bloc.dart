@@ -18,8 +18,8 @@ class FeedDetailBloc extends Bloc<FeedDetailEvent, FeedDetailState> {
     final currentState = state;
     if(event is FeedEventFetch) {
       if(currentState is FeedDetailUninitialized) {
-        final response = await postRepository.getPostById(currentState.postId);
-        if(response.error != null) {
+        final response = await postRepository.getPostById(event.postId);
+        if(response.error == null) {
           yield FeedDetailLoaded(postModel: response.data);
         } else {
           yield FeedDetailError(error: response.error);

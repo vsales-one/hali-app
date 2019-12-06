@@ -98,7 +98,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield LoginState.success();
     } on AppError catch(e) {
       yield LoginState.failure(e.message);
-    } catch (_) {
+    } catch (e) {
       yield LoginState.failure("Đăng nhập không thành công");
     }
   }

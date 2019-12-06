@@ -67,7 +67,12 @@ class HomeScreenState extends State<HomeScreen> {
             itemBuilder: (BuildContext context, int index) {
               return index >= _posts.length
                   ? BottomLoader()
-                  : FeedCard(onTapCard: _navigateToDetailPost(_posts[index].id), postModel: _posts[index],);
+                  : FeedCard(
+                    onTapCard: (){
+                      _navigateToDetailPost(_posts[index].id);
+                    },
+                      postModel: _posts[index],
+                     );
             },
             itemCount: _isReachMax
                 ? _posts.length

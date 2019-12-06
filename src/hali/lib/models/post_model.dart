@@ -2,6 +2,7 @@
 import 'dart:ffi';
 
 import 'package:hali/models/user_profile.dart';
+import 'package:hali/utils/date_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'post_model.g.dart';
@@ -26,7 +27,7 @@ class PostModel {
   String title;
   UserProfile userProfile;
   int numberLike;
-  Float distance;
+  double distance;
 
   PostModel({
     this.categoryCategoryName,
@@ -54,4 +55,17 @@ class PostModel {
       _$PostModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$PostModelToJson(this);
+
+  DateTime getPickupTime() {
+    return DateUtils.dateFromString(this.pickUpTime);
+  }
+
+  String pickupTimeDisplay() {
+    return DateUtils.formatDateAsString(getPickupTime());
+  }
+
+  double displayDistance() {
+    return this.distance ?? 0.0;
+  }
+
 }

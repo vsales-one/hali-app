@@ -8,6 +8,7 @@ import 'package:hali/config/application.dart';
 import 'package:hali/di/appModule.dart';
 import 'package:hali/home/index.dart';
 import 'package:hali/repositories/chat_message_repository.dart';
+import 'package:hali/repositories/post_repository.dart';
 import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/login/login.dart';
 import 'package:hali/splash_screen.dart';
@@ -31,6 +32,9 @@ Future main() async {
       ),
       RepositoryProvider<HomeRepository>(
         builder: (_) => HomeRepository(),
+      ),
+      RepositoryProvider<PostRepository>(
+        builder: (_) => PostRepository(),
       )
     ], child: App()),
   );

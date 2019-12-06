@@ -1,15 +1,20 @@
+import 'dart:ffi';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:hali/messages/request_listing_confirmation_screen.dart';
 import 'package:hali/models/item_listing_message.dart';
 import 'package:hali/models/post_model.dart';
 import 'package:hali/models/user_profile.dart';
+import 'package:hali/utils/app_utils.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-import 'package:uuid/uuid.dart';
 import 'package:hali/home/views/feed_detail/index.dart';
+import 'package:uuid/uuid.dart';
+
+import '../home_screen.dart';
 
 class FeedDetail extends StatefulWidget {
   final int postId;
@@ -23,41 +28,60 @@ class FeedDetail extends StatefulWidget {
 }
 
 class FeedDetailScreenState extends State<FeedDetail> {
+
   PostModel postModel;
+
+  FeedDetailBloc _bloc;
 
   @override
   void initState() {
     super.initState();
+
+    _bloc = BlocProvider.of<FeedDetailBloc>(context);
+    _bloc.add(FeedEventFetch(postId: widget.postId));
+    
   }
 
   @override
   Widget build(BuildContext context) {
+
+
     return BlocListener<FeedDetailBloc, FeedDetailState>(
       listener: (context, state) {
+
         if (state is FeedDetailUninitialized) {
-           LoadingIndicator(
+           return LoadingIndicator(
             indicatorType: Indicator.pacman,
             color: Colors.red,
           );
         }
+
+        if (state is FeedDetailError) {
+          return dispatchFailure(context, state.error);
+        }
+
         if (state is FeedDetailLoaded) {
-          postModel = state.postModel;
+          setState(() {
+            postModel = state.postModel;
+          });
+          
         }
       },
-      child: postModel != null ? Container(
+      child:Container(
         color: Colors.grey[200],
-        child: CustomScrollView(
+        child: postModel == null ? EmptyPageContentScreen() : CustomScrollView(
           slivers: <Widget>[
             // sliver app bar
             _VSliverAppBar(
               postModel: postModel,
             ),
-            _LocationWidget(),
-            _TitleWidget(),
-            _RequestButton()
+            _LocationWidget(postModel: postModel,),
+            _TitleWidget(postModel: postModel,),
+            _DisplayLocation(lati: postModel.latitude, long: postModel.longitude,),
+            _RequestButton(distance: postModel.displayDistance(),)
           ],
         ),
-      ) :  new Container(),
+      ),
     );
   }
 }
@@ -163,7 +187,7 @@ class _LocationWidget extends StatelessWidget {
                           ),
                           Expanded(
                             child: Text(
-                              "Pickup Time: " + postModel.pickUpTime,
+                              "Pickup Time: " + postModel.pickupTimeDisplay(),
                               style:
                                   Styles.getSemiboldStyle(14, Colors.black54),
                             ),
@@ -236,7 +260,7 @@ class _LocationWidget extends StatelessWidget {
 
 class _RequestButton extends StatelessWidget {
 
-  final int distance;
+  final double distance;
 
   _RequestButton({this.distance});
 
@@ -321,4 +345,54 @@ class _RequestButton extends StatelessWidget {
         isSeen: false,
         publishedAt: DateTime.now());
   });
+}
+
+
+class _DisplayLocation extends StatelessWidget {
+
+  final double lati;
+  final double long;
+  final String userName;
+
+  GoogleMapController mapController;
+
+  final Set<Marker> _markers = {};
+
+  _DisplayLocation({ this.lati, this.long, this.userName});
+
+  void _onAddMarkerButtonPressed() {
+    _markers.add(Marker(
+        // This marker id can be anything that uniquely identifies each marker.
+        markerId: MarkerId(Uuid().v4()),
+        position: new LatLng(lati, long),
+        infoWindow: InfoWindow(
+          title: userName,
+        ),
+        icon: BitmapDescriptor.defaultMarker,
+      ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    _onAddMarkerButtonPressed();
+
+    return SliverToBoxAdapter(
+      child: SizedBox(
+        height: 300,
+        child: Container(
+          margin: EdgeInsets.only(top: 0, left: 16, right: 16, bottom: 16),
+          child: GoogleMap(
+            onMapCreated: (GoogleMapController controller) {
+              mapController = controller;
+            },
+            markers: _markers,
+            initialCameraPosition: new CameraPosition(target: LatLng(lati, long),
+          ),
+        ),
+        )
+      ),
+    );
+  }
+
 }

@@ -18,7 +18,8 @@ class UserManager {
   }
 
   Future bind() async {
-    final _userProfile = UserProfile.fromJson(await spUtil.readObject(kFirebaseUser));
+    final user = await spUtil.readObject(kFirebaseUser);
+    final _userProfile = UserProfile.fromJson(user);
     _userProfileStream.sink.add(_userProfile);
   }
   
