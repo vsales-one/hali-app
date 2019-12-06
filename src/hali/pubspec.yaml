@@ -61,6 +61,7 @@ dependencies:
   rxdart: ^0.22.6
   loading_indicator: ^1.1.0
   place_picker: ^0.9.10
+  timeago: ^2.0.22
   
 dev_dependencies:
   flutter_test:

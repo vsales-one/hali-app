@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:hali/models/post_model.dart';
+import 'package:hali/models/user_profile.dart';
+import 'package:hali/utils/date_utils.dart';
 import 'package:place_picker/uuid.dart';
 class FeedCard extends StatelessWidget {
 
@@ -23,7 +25,7 @@ class FeedCard extends StatelessWidget {
           //action
           _ActionBox(postModel: this.postModel,),
           //Description
-          _ContainerTop(),
+          this.postModel.userProfile != null ? _ContainerTop(userProfile: this.postModel.userProfile, createdDate: this.postModel.lastModifiedDate,) : new Container(),
         ],
       ),
     );
@@ -31,6 +33,13 @@ class FeedCard extends StatelessWidget {
 }
 
 class _ContainerTop extends StatelessWidget {
+
+  final UserProfile userProfile;
+
+  final String createdDate;
+
+  _ContainerTop({this.userProfile, this.createdDate});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -55,11 +64,11 @@ class _ContainerTop extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Trung vu",
+                        userProfile.email ?? "",
                         style: Styles.getSemiboldStyle(14, Colors.black87),
                         textAlign: TextAlign.left,
                       ),
-                      Text("Last online 3 mins ago",
+                      Text(DateUtils.timeAgo(this.createdDate),
                           style: Styles.getRegularStyle(12, Colors.grey[500]),
                           textAlign: TextAlign.left)
                     ],

@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class DateUtils {
 
@@ -19,4 +20,13 @@ class DateUtils {
       return formatter.format(value);
   }
 
+  static String timeUntil(DateTime date) {
+    var locale = 'vn'; // TODO: change local
+    return timeago.format(date, locale: locale, allowFromNow: true);
+  } 
+
+  static String timeAgo(String target) {
+    DateTime dateTime = dateFromString(target);
+    return timeUntil(dateTime);
+  }
 }
