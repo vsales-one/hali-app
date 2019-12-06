@@ -1,6 +1,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:hali/di/appModule.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SpUtil {
@@ -64,10 +65,14 @@ class SpUtil {
     return _spf.setString(key, json.encode(value));
   }
 
-  Future<dynamic> readObject(String key) {
+  readObject(String key) {
     if (_beforCheck()) return null;
-    final res = json.decode(_spf.getString(key));
-    return res;
+    try {
+      final res = json.decode(_spf.getString(key));
+      return res;
+    } catch(e) {
+      logger.e(e);
+    }
   }
 
   bool getBool(String key) {
