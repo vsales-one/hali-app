@@ -145,7 +145,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
     return new Row(
       children: <Widget>[
         new Container(
-          width: 70.0,
+          width: 70.0, le
           height: 60.0,
           decoration: new BoxDecoration(
             image: new DecorationImage(
