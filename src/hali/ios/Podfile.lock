@@ -230,7 +230,7 @@ DEPENDENCIES:
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - AppAuth
     - BoringSSL-GRPC
     - FBSDKCoreKit
@@ -351,4 +351,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: adf292cb7aa212c0904a1cc249745455b464ab1f
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.7.5
