@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fluro/fluro.dart';
 import 'package:hali/commons/shared_preferences.dart';
@@ -30,10 +31,32 @@ class HeaderInterceptor extends Interceptor {
   }
 }
 
+/// AuthInterceptor
+///
+class TokeInterceptor extends Interceptor {
+
+  @override
+  Future onError(DioError error) async {
+    if (error.response != null && error.response.statusCode == 401) {
+        dio.lock();
+        // get refresh token
+        final user = await FirebaseAuth.instance.currentUser();
+        IdTokenResult idTokenResult = await user.getIdToken(refresh: true);
+        if(idTokenResult != null) {
+          logger.e("Refresh token: ", idTokenResult);
+          spUtil.putString(kFirebaseAuthToken, idTokenResult.token);
+        }
+        dio.unlock();
+    }
+    return super.onError(error);
+  }
+}
+
 final dio = Dio()
   ..options = BaseOptions(baseUrl: kBaseUrl, connectTimeout: 5000, receiveTimeout: 5000)
   ..interceptors.add(AuthInterceptor())
   ..interceptors.add(HeaderInterceptor())
+  ..interceptors.add(TokeInterceptor())
   ..interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
 
 final FirebaseStorage storage = FirebaseStorage(app: FirebaseApp.instance, 

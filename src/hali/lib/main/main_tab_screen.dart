@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/home/index.dart';
 import 'package:hali/messages/message_list_screen.dart';
+import 'package:hali/my_profile/my_profile_page.dart';
 import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/tests/test_list_screen.dart';
 import 'package:hali/user_profile/user_profile_screen.dart';
@@ -69,8 +70,8 @@ class _MainScreenState extends State<MainScreen> {
           children: <Widget>[
             HomePage(userRepository: RepositoryProvider.of<UserRepository>(context), homeRepository: RepositoryProvider.of<HomeRepository>(context),),            
             MessageListScreen(),
-            UserProfileScreen(),
             TestListScreen(),
+            MyProfilePage(userRepository: RepositoryProvider.of<UserRepository>(context),)
           ],
           scrollDirection: Axis.horizontal,
         ),
@@ -84,13 +85,15 @@ class _MainScreenState extends State<MainScreen> {
               icon: Icon(MdiIcons.message),
               title: Text('Messages'),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(MdiIcons.accountCircle),
-              title: Text('Account'),
-            ),
+          
             BottomNavigationBarItem(
               icon: Icon(MdiIcons.testTube),
               title: Text('Testing Posts'),
+            ),
+
+             BottomNavigationBarItem(
+              icon: Icon(MdiIcons.accountCircle),
+              title: Text('Account'),
             ),
           ],
           currentIndex: _selectedIndex,

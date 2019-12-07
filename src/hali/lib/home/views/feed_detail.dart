@@ -67,23 +67,27 @@ class FeedDetailScreenState extends State<FeedDetail> {
           
         }
       },
-      child:Container(
-        color: Colors.grey[200],
-        child: postModel == null ? EmptyPageContentScreen() : CustomScrollView(
-          slivers: <Widget>[
-            // sliver app bar
-            _VSliverAppBar(
-              postModel: postModel,
-            ),
-            _LocationWidget(postModel: postModel,),
-            _TitleWidget(postModel: postModel,),
-            _DisplayLocation(lati: postModel.latitude, long: postModel.longitude,),
-            _RequestButton(distance: postModel.displayDistance(),)
-          ],
+
+      child: Scaffold(
+        body: (postModel == null) ? EmptyPageContentScreen() : Container(
+          color: Colors.grey[200],
+          child : CustomScrollView(
+            slivers: <Widget>[
+              // sliver app bar
+              _VSliverAppBar(
+                postModel: postModel,
+              ),
+              _LocationWidget(postModel: postModel,),
+              _TitleWidget(postModel: postModel,),
+              _DisplayLocation(lati: postModel.latitude, long: postModel.longitude,),
+              _RequestButton(distance: postModel.displayDistance(),)
+            ],
+          ),
         ),
-      ),
+      )
     );
   }
+
 }
 
 class _VSliverAppBar extends StatelessWidget {
@@ -104,11 +108,15 @@ class _VSliverAppBar extends StatelessWidget {
                 color: Colors.white,
                 fontSize: 16.0,
               )),
-          background: Image.network(
+          background: (postModel.imageUrl == null || isDirtyImage()) ? Image.asset("assets/images/placeholder.kpg")  : Image.network(
             postModel.imageUrl ?? "",
             fit: BoxFit.cover,
           )),
     );
+  }
+
+  bool isDirtyImage() {
+    return !this.postModel.imageUrl.contains("https");
   }
 }
 
