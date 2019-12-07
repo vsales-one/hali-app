@@ -9,7 +9,11 @@ class DateUtils {
   }
 
   static DateTime dateFromString(String target) {
-    return DateTime.parse(target);
+    try {
+      return DateTime.parse(target);
+    } catch (e) {
+      return DateTime.now();
+    }
   }
 
   static String formatDateAsString(DateTime value) {

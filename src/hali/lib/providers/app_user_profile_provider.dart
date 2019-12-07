@@ -6,7 +6,7 @@ import 'package:hali/providers/rest_client.dart';
 
 class AppUserProfileProvider {
   Future<UserProfile> getAppUserProfileByUserId(String userId) async {
-    final params = {"userId.equals": userId};
+    final params = {"userId": userId};
     final client = RestClient.create();
     try {
       final response =
