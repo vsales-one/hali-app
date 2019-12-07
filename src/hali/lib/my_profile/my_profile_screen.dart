@@ -149,7 +149,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
           height: 60.0,
           decoration: new BoxDecoration(
             image: new DecorationImage(
-                image: new AssetImage("assets/images/ic-empty.png"),
+                image: new AssetImage("assets/images/ic-avatar.png"),
                 fit: BoxFit.cover),
             borderRadius: new BorderRadius.all(new Radius.circular(20.0)),
             boxShadow: <BoxShadow>[
