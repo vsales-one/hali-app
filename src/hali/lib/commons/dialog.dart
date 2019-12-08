@@ -136,7 +136,8 @@ displayAlertError(BuildContext context, String title, DioError error, String mes
           ),
           onPressed: (){
             Navigator.pop(context);
-            if (error.response.statusCode == 401) {
+            
+            if (error.response == null || error.response.statusCode == 401) {
               BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
             }
           },
