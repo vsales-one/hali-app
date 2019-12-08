@@ -19,12 +19,12 @@ class ChatMessageRepository {
       {@required this.userRepository, @required this.fireStore});
 
   Stream<List<ItemListingMessage>> getItemRequestMessages() async* {
-    final user = await userRepository.getUserProfile();
+    final user = await userRepository.getCurrentUserProfile();
     final activeUsers = await userRepository.getActiveUsers();
 
     await for (QuerySnapshot snap
         in fireStore.collection(ITEM_REQUEST_MESSAGES)          
-          .where("to.userId", isEqualTo: user.userId)
+          .where("to.userId", isEqualTo: user.email)
           .orderBy("publishedAt").snapshots()) {
       try {
         final chats = snap.documents

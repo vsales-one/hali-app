@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:hali/config/application.dart';
+import 'package:hali/di/appModule.dart';
 import 'package:hali/models/user_profile.dart';
 import 'package:meta/meta.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
@@ -55,8 +56,10 @@ class AuthenticationBloc
   }
 
   Future<UserProfile> _loadUserProfile() async {
-    final userInfo = await _userRepository.getUserProfile();
+    final userInfo = await _userRepository.getCurrentUserProfile();
     Application.currentUser = userInfo;
+    await _userRepository.storeFirebaseUserLogged(userInfo);
+    await userManager.bind();
     return userInfo;
   }
 }

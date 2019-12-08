@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:hali/models/item_listing_message.dart';
 import 'package:hali/models/post_model.dart';
 
 abstract class FeedDetailState extends Equatable {
@@ -41,4 +42,13 @@ class FeedDetailLoaded extends FeedDetailState {
   
   @override
   String toString() => 'FeedDetailLoaded';
+}
+
+class RequestListingConfirmationState extends FeedDetailState {
+  final ItemListingMessage message;
+
+  RequestListingConfirmationState({this.message});
+
+  @override
+  String toString() => 'RequestListingConfirmationState';
 }

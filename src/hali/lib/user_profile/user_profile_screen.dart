@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/authentication_bloc/authentication_bloc.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
+import 'package:hali/config/application.dart';
 
 class UserProfileScreen extends StatefulWidget {
   @override
@@ -11,6 +12,7 @@ class UserProfileScreen extends StatefulWidget {
 class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    print(Application.currentUser);
     return Scaffold(      
       body: Center(
         child: RaisedButton(

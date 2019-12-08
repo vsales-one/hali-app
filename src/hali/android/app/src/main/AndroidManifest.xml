@@ -11,8 +11,8 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="hali"
-        android:icon="@mipmap/ic_launcher">
-        <meta-data android:name="com.google.android.geo.AIzaSyBVqdI_6VYHN_kjmftunkxUHSlAdtWNYX4"
+        android:icon="@mipmap/ic_launcher">        
+        <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBVqdI_6VYHN_kjmftunkxUHSlAdtWNYX4"/>
 
         <activity

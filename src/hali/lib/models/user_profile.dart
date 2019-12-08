@@ -41,6 +41,6 @@ class UserProfile {
 
   @override
   String toString() {
-    return "($userId-$email-$displayName)";
+    return "($userId-$email-$displayName-$imageUrl)";
   }
 }
