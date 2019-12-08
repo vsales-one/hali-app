@@ -49,7 +49,7 @@ class CreateFoodFormState extends State<CreateFoodForm> {
   @override
   void initState() {
     super.initState();
-
+    _postLocation = new LatLng(10.7797855,106.6968249);
     _categorySelected = HCategory.generated()[0];
 
   }
@@ -212,7 +212,6 @@ class CreateFoodFormState extends State<CreateFoodForm> {
   }
 
   Future _presentLocationScreen() async {
-    _postLocation = new LatLng(10.7797855,106.6968249);
     LocationResult result = await Navigator.of(context).push(
         CupertinoPageRoute(builder: (context) => PlacePicker(kApiKey, displayLocation: _postLocation,)));
     _postLocation = result.latLng;
@@ -237,10 +236,10 @@ class CreateFoodFormState extends State<CreateFoodForm> {
         endDate: DateUtils.dateToString(_endDate),
         categoryId: _categorySelected.id,
         lastModifiedDate: DateUtils.dateToString(DateTime.now()),
-        latitude: _postLocation.latitude,
-        longitude: _postLocation.longitude,
+        latitude: _postLocation.latitude ?? 0.0,
+        longitude: _postLocation.longitude ?? 0.0,
         pickupAddress: _address,
-        lastModifiedBy: profile.email
+        lastModifiedBy: profile.email ?? ""
       );
       BlocProvider.of<CreatePostBloc>(context).add(AddPostStartEvent(postModel: postModel, image: widget.imageCover));
     }
