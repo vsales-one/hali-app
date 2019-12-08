@@ -106,11 +106,17 @@ class UserRepository {
     return user;
   }
 
-  Future<void> signUp({String email, String password}) async {
-    return await _firebaseAuth.createUserWithEmailAndPassword(
+  Future<AuthResult> signUp({String email, String password, String fullName}) async {
+    final authRes = await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
+    final user = await _firebaseAuth.currentUser();
+    final updateInfo = UserUpdateInfo();
+    updateInfo.displayName = fullName;    
+    await user.updateProfile(updateInfo);
+    await linkFirebaseUserWithAppUser(user);
+    return authRes;
   }
 
   Future<void> signOut() async {

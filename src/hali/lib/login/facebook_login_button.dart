@@ -16,7 +16,7 @@ class FacebookLoginButton extends StatelessWidget {
           LoginWithFacebookPressed(),
         );
       },
-      label: Text('Sign in with Facebook', style: TextStyle(color: Colors.white)),
+      label: Text('Đăng nhập với Facebook', style: TextStyle(color: Colors.white)),
       color: Colors.blueAccent,
     );
   }

@@ -33,20 +33,22 @@ class AppUserProfileProvider {
         email: fbUser.email,
         imageUrl: fbUser.photoUrl);
     try {
-      final response = await dio.post<UserProfile>("/api/user-profiles",
+      final response = await dio.post("/api/user-profiles",
           data: appUser.toJson());
-      return response.data;
-    } on DioError {
+      return UserProfile.fromJson(response.data);
+    } on DioError catch(e) {
+      print(e);
       return null;
     }
   }
 
   Future<UserProfile> updateUserProfile(UserProfile userProfile) async {
     try {
-      final response = await dio.put<UserProfile>("/api/user-profiles",
+      final response = await dio.put("/api/user-profiles",
           data: userProfile.toJson());
-      return response.data;
-    } on DioError {
+      return UserProfile.fromJson(response.data);
+    } on DioError catch(e) {
+      print(e);
       return null;
     }
   }

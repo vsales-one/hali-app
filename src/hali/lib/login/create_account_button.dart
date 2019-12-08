@@ -14,7 +14,7 @@ class CreateAccountButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlatButton(
       child: Text(
-        'Create an Account',
+        'Đăng ký tài khoản',
       ),
       onPressed: () {
         Navigator.of(context).push(
