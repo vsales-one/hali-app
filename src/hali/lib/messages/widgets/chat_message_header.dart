@@ -15,7 +15,7 @@ class ChatMessageHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildChatMessageHeader(UserProfile friend) {
+  Widget _buildChatMessageHeader(UserProfile friend) {    
     return Container(
       key: this.key,
       padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 12.0),
@@ -32,14 +32,14 @@ class ChatMessageHeader extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
-              friend.displayName,
+              friend.displayName ?? friend.userId,
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 4.0),
             child: Text(
-              "${friend.email}",
+              friend.email ?? "",
               style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.w500,

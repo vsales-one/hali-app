@@ -65,7 +65,7 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   void initUser() async {
-    currentUser = await _userRepository.getUserProfile();
+    currentUser = await _userRepository.getCurrentUserProfile();
     if (mounted) {
       setState(() => 0);
     }
@@ -107,9 +107,7 @@ class _MessageScreenState extends State<MessageScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        widget.friend.imageUrl,
-                      ),
+                      backgroundImage: NetworkImage(widget.friend.imageUrl),
                       radius: 14.0,
                     ),
                     Padding(
@@ -188,7 +186,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
   Widget _buildRequestMessageInput() {
     return ChatInputWidget(
-      defaultMessage: "Xin chào ${widget.itemRequestMessage.to.displayName},",
+      defaultMessage: "Xin chào ${widget.itemRequestMessage.to.displayName ?? ''},",
       onSubmitted: (message, type) async {
         print(">>>>>>> sending message: $message");
         setState(() {
@@ -217,7 +215,7 @@ class _MessageScreenState extends State<MessageScreen> {
             children: <Widget>[
               Flexible(child: _buildChatMessages()),
               ChatInputWidget(
-                hintMessage: "Gửi tin nhắn đến ${widget.friend.firstName}",
+                hintMessage: "Gửi tin nhắn đến ${widget.friend.firstName ?? ''}",
                 onSubmitted: (message, type) {
                   if (currentUser.userId == widget.friend.userId) {
                     _scaffoldKey.currentState.showSnackBar(SnackBar(

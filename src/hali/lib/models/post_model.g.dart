@@ -6,7 +6,7 @@ part of 'post_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PostModel _$PostModelFromJson(Map<String, dynamic> json) {
+PostModel _$PostModelFromJson(Map json) {
   return PostModel(
     categoryCategoryName: json['categoryCategoryName'] as String,
     categoryId: json['categoryId'] as int,
@@ -16,14 +16,21 @@ PostModel _$PostModelFromJson(Map<String, dynamic> json) {
     endDate: json['endDate'] as String,
     id: json['id'] as int,
     imageUrl: json['imageUrl'] as String,
-    lastModifiedBy: json['lastModifiedBy'] as String,
-    lastModifiedDate: json['lastModifiedDate'] as String,
+    lastModifiedBy: json['last_modified_by'] as String,
+    lastModifiedDate: json['last_modified_date'] as String,
     latitude: (json['latitude'] as num)?.toDouble(),
     longitude: (json['longitude'] as num)?.toDouble(),
     pickUpTime: json['pickUpTime'] as String,
     pickupAddress: json['pickupAddress'] as String,
     startDate: json['startDate'] as String,
     title: json['title'] as String,
+    userProfile: json['userProfile'] == null
+        ? null
+        : UserProfile.fromJson((json['userProfile'] as Map)?.map(
+            (k, e) => MapEntry(k as String, e),
+          )),
+    numberLike: json['numberLike'] as int,
+    distance: (json['distance'] as num)?.toDouble(),
   );
 }
 
@@ -36,12 +43,15 @@ Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
       'endDate': instance.endDate,
       'id': instance.id,
       'imageUrl': instance.imageUrl,
-      'lastModifiedBy': instance.lastModifiedBy,
-      'lastModifiedDate': instance.lastModifiedDate,
+      'last_modified_by': instance.lastModifiedBy,
+      'last_modified_date': instance.lastModifiedDate,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
       'pickUpTime': instance.pickUpTime,
       'pickupAddress': instance.pickupAddress,
       'startDate': instance.startDate,
       'title': instance.title,
+      'userProfile': instance.userProfile?.toJson(),
+      'numberLike': instance.numberLike,
+      'distance': instance.distance,
     };

@@ -146,31 +146,32 @@ class UserRepository {
     return UserProfile.fromJson(await spUtil.readObject(kFirebaseUser));
   }
 
-  Future<void> linkFirebaseUserWithAppUser(FirebaseUser user) async {
-    print('>>>>>>> Link firebase user with app user: ${user.uid}');
+  Future<UserProfile> linkFirebaseUserWithAppUser(FirebaseUser user) async {
+    print('>>>>>>> Link firebase user with app user: ${user.uid}-${user.email}');
     final appUserProvider = AppUserProfileProvider();
     final profile = await appUserProvider.linkFirebaseUserWithAppUser(user);
-    await storeFirebaseUserLogged(profile);
-    await userManager.bind();
+    return profile;    
   }
 
-  Future<UserProfile> getUserProfile() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();    
+  Future<UserProfile> getCurrentUserProfile() async {
+    final user = await _firebaseAuth.currentUser();    
     if (user == null) {
       return null;
     }
-    return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, user.photoUrl, 
+    final userPhotoUrl = user.photoUrl ?? kDefaultUserPhotoUrl;
+    return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, userPhotoUrl,
       "", "", "", true);
   }
 
   Future<UserProfile> getUserProfileFull() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();    
+    final user = await _firebaseAuth.currentUser();    
     if (user == null) {
       return null;
     }
     final appUserProfileProvider = AppUserProfileProvider();
-    final appUserProfile = await appUserProfileProvider.getAppUserProfileByUserId(user.uid);    
-    return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, user.photoUrl, 
+    final appUserProfile = await appUserProfileProvider.getAppUserProfileByUserId(user.uid);
+    final userPhotoUrl = appUserProfile.imageUrl ?? user.photoUrl ?? kDefaultUserPhotoUrl;
+    return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, userPhotoUrl, 
       appUserProfile?.address, appUserProfile?.district, appUserProfile?.city, true);
   }
 
@@ -178,6 +179,11 @@ class UserRepository {
     final appUserProfileProvider = AppUserProfileProvider();
     await appUserProfileProvider.updateUserProfile(userProfile);
     return await getUserProfileFull();
+  }
+
+  Future<UserProfile> getUserProfileByEmail(String email) async {    
+    final appUserProfileProvider = AppUserProfileProvider();
+    return await appUserProfileProvider.getAppUserProfileByUserId(email);  
   }
 
   Future<List<UserProfile>> getActiveUsers() async {
