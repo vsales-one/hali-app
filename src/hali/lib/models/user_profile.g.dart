@@ -17,6 +17,8 @@ UserProfile _$UserProfileFromJson(Map<String, dynamic> json) {
     json['district'] as String,
     json['city'] as String,
     json['isActive'] as bool,
+    (json['latitude'] as num)?.toDouble(),
+    (json['longitude'] as num)?.toDouble(),
   );
 }
 
@@ -31,4 +33,6 @@ Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
       'district': instance.district,
       'city': instance.city,
       'isActive': instance.isActive,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
     };

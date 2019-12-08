@@ -160,7 +160,7 @@ class UserRepository {
     }
     final userPhotoUrl = user.photoUrl ?? kDefaultUserPhotoUrl;
     return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, userPhotoUrl,
-      "", "", "", true);
+      "", "", "", true, 0, 0);
   }
 
   Future<UserProfile> getUserProfileFull() async {
@@ -172,7 +172,7 @@ class UserRepository {
     final appUserProfile = await appUserProfileProvider.getAppUserProfileByUserId(user.uid);
     final userPhotoUrl = appUserProfile.imageUrl ?? user.photoUrl ?? kDefaultUserPhotoUrl;
     return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, userPhotoUrl, 
-      appUserProfile?.address, appUserProfile?.district, appUserProfile?.city, true);
+      appUserProfile?.address, appUserProfile?.district, appUserProfile?.city, true, appUserProfile.latitude, appUserProfile.longitude);
   }
 
   Future<UserProfile> updateUserProfile(UserProfile userProfile) async {

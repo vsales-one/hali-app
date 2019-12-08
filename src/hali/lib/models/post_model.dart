@@ -1,6 +1,4 @@
 
-import 'dart:ffi';
-
 import 'package:hali/models/user_profile.dart';
 import 'package:hali/utils/date_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
