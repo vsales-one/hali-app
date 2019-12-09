@@ -164,12 +164,11 @@ class UserRepository {
   }
 
   Future<UserProfile> getUserProfileFull() async {
-    final user = await _firebaseAuth.currentUser();    
-    if (user == null) {
-      return null;
-    }
+    final user = await _firebaseAuth.currentUser();
+    assert(user != null);
     final appUserProfileProvider = AppUserProfileProvider();
-    final appUserProfile = await appUserProfileProvider.getAppUserProfileByUserId(user.uid);
+    final appUserProfile = await appUserProfileProvider.getAppUserProfileByUserId(user.email);
+    assert(appUserProfile != null);
     final userPhotoUrl = appUserProfile.imageUrl ?? user.photoUrl ?? kDefaultUserPhotoUrl;
     return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, userPhotoUrl, 
       appUserProfile?.address, appUserProfile?.district, appUserProfile?.city, true, appUserProfile.latitude, appUserProfile.longitude);

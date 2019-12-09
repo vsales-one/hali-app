@@ -14,6 +14,7 @@ import 'package:hali/login/login.dart';
 import 'package:hali/splash_screen.dart';
 import 'package:hali/simple_bloc_delegate.dart';
 import 'package:hali/main/main_tab_screen.dart';
+import 'package:hali/user_profile/bloc/user_profile_bloc.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +53,10 @@ class App extends StatelessWidget {
         BlocProvider<AuthenticationBloc>(
           builder: (_) =>
               AuthenticationBloc(userRepository: userRepo)..add(AppStarted()),
+        ),
+        BlocProvider<UserProfileBloc>(
+          builder: (_) =>
+              UserProfileBloc(userRepository: userRepo),
         ),
       ],
       child: buildMaterialApp(context),

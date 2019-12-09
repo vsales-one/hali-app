@@ -5,7 +5,9 @@ import 'package:hali/user_profile/bloc/user_profile_event.dart';
 import 'package:hali/user_profile/bloc/user_profile_state.dart';
 
 class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
-  final userProfileRepo = UserRepository();
+  final UserRepository userRepository;
+
+  UserProfileBloc({this.userRepository});
 
   @override
   UserProfileState get initialState => UserProfileLoadingState();
@@ -22,17 +24,20 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   Stream<UserProfileState> _mapUserProfileLoadingToState() async* {
     try {
       yield UserProfileLoadingState();
-      final userProfile = await userProfileRepo.getUserProfileFull();
+      final userProfile = await userRepository.getUserProfileFull();
       yield UserProfileLoadedState(userProfile);
-    } catch(_) {
+    } catch(e) {
+      print(e);
       yield UserProfileNotLoadedState();
     }    
   }
 
   Stream<UserProfileState> _mapUserProfileUpdatingToState(UserProfile userProfile) async* {
     try {
+      print(">>>>>>> updating user profile ");
+      print(userProfile.toJson());
       yield UserProfileLoadingState();
-      final updatedUserProfile = await userProfileRepo.updateUserProfile(userProfile);
+      final updatedUserProfile = await userRepository.updateUserProfile(userProfile);
       yield UserProfileUpdatedState(updatedUserProfile);
     } catch(_) {
       yield UserProfileNotLoadedState();
