@@ -3,30 +3,41 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:hali/authentication_bloc/authentication_bloc.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
+import 'package:hali/user_profile/bloc/bloc.dart';
 
-class UserProfileScreen extends StatefulWidget {
+class UserProfileScreen extends StatefulWidget {  
   @override
-  _UserProfileScreenState createState() => _UserProfileScreenState();
+  UserProfileScreenState createState() => UserProfileScreenState();
 }
 
-class _UserProfileScreenState extends State<UserProfileScreen> {
-
+class UserProfileScreenState extends State<UserProfileScreen> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   final GlobalKey<FormFieldState> _specifyTextFieldKey =
-      GlobalKey<FormFieldState>();
+      GlobalKey<FormFieldState>();    
+
+  UserProfileBloc _userProfileBloc;
 
   ValueChanged _onChanged = (val) => print(val);
-  var districts = ['Q1', 'Tân Bình', 'Tân Phú'];
+  final districts = ['Q1', 'Tân Bình', 'Tân Phú'];
   final cities = ["TpHCM", "Cần Thơ", "Vĩnh Long", "Đà Lạt"];
+
+  @override void initState() {
+    super.initState();  
+
+    _userProfileBloc = BlocProvider.of<UserProfileBloc>(context);
+    _userProfileBloc..add(UserProfileLoading());
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
+    return BlocListener<UserProfileBloc, UserProfileState>(
+      listener: (context, state) {},
+      child: Scaffold(
+        body:Padding(
+          padding: EdgeInsets.all(10),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
               FormBuilder(
                 // context,
                 key: _fbKey,
@@ -39,7 +50,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     FormBuilderTextField(
                       attribute: "displayName",
                       decoration: InputDecoration(
-                        labelText: "Display Name",
+                        labelText: "Display Name", 
+                                               
                       ),
                       //onChanged: _onChanged,                      
                       validators: [
@@ -103,33 +115,37 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       decoration: InputDecoration(
                         labelText: "City",
                       ),
-                      attribute: 'city',
-                      onChanged: _onChanged,
+                      attribute: 'city',                      
                       itemBuilder: (context, country) {
                         return ListTile(
                           title: Text(country),
                         );
                       },
                       controller: TextEditingController(text: ''),
-                      initialValue: "TpHCM",
-                      suggestionsCallback: (query) {
-                        if (query.length != 0) {
-                          var lowercaseQuery = query.toLowerCase();
-                          return cities.where((country) {
-                            return country
-                                .toLowerCase()
-                                .contains(lowercaseQuery);
-                          }).toList(growable: false)
-                            ..sort((a, b) => a
-                                .toLowerCase()
-                                .indexOf(lowercaseQuery)
-                                .compareTo(
-                                    b.toLowerCase().indexOf(lowercaseQuery)));
-                        } else {
-                          return cities;
-                        }
-                      },
+                      initialValue: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: BlocBuilder<UserProfileBloc, UserProfileEvent>(builder: (context, _userRepository) {
+                              return Center(child: Text('$count', style: TextStyle(fontSize: 24.0)));},
+
+                        suggestionsCallback: (query) {
+                          if (query.length != 0) {
+                            var lowercaseQuery = query.toLowerCase();
+                            return cities.where((country) {
+                              return country
+                                  .toLowerCase()
+                                  .contains(lowercaseQuery);
+                            }).toList(growable: false)
+                              ..sort((a, b) => a
+                                  .toLowerCase()
+                                  .indexOf(lowercaseQuery)
+                                  .compareTo(
+                                      b.toLowerCase().indexOf(lowercaseQuery)));
+                          } else {
+                            return cities;
+                          }
+                        },
                     ),
+                      ),
                     
                   ],
                 ),

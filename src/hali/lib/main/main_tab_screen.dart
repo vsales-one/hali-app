@@ -71,7 +71,8 @@ class _MainScreenState extends State<MainScreen> {
             HomePage(userRepository: RepositoryProvider.of<UserRepository>(context), homeRepository: RepositoryProvider.of<HomeRepository>(context),),            
             MessageListScreen(),
             TestListScreen(),
-            MyProfilePage(userRepository: RepositoryProvider.of<UserRepository>(context),)
+            //MyProfilePage(userRepository: RepositoryProvider.of<UserRepository>(context),)
+            UserProfileScreen()
           ],
           scrollDirection: Axis.horizontal,
         ),
