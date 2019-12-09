@@ -69,8 +69,8 @@ class _MainScreenState extends State<MainScreen> {
           children: <Widget>[
             HomePage(userRepository: RepositoryProvider.of<UserRepository>(context), homeRepository: RepositoryProvider.of<HomeRepository>(context),),            
             MessageListScreen(),            
-            // MyProfilePage(userRepository: RepositoryProvider.of<UserRepository>(context),),
-            UserProfileScreen()
+            MyProfilePage(userRepository: RepositoryProvider.of<UserRepository>(context),),
+            //UserProfileScreen()
           ],
           scrollDirection: Axis.horizontal,
         ),
