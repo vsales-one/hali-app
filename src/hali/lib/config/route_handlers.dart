@@ -7,6 +7,7 @@ import 'package:hali/posts/create_post_page.dart';
 import 'package:hali/posts/pickup_location.dart';
 import 'package:hali/register/register.dart';
 import 'package:hali/repositories/post_repository.dart';
+import 'package:hali/repositories/user_repository.dart';
 
 var rootHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -27,8 +28,9 @@ var signUpHandler = Handler(
 var showFeedDetailHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       final _postRepository = RepositoryProvider.of<PostRepository>(context);
+      final _userRepository = RepositoryProvider.of<UserRepository>(context);
       String postId = params["postId"]?.first;
-      return FeedDetailPage(postId: int.parse(postId), postRepository: _postRepository,);
+      return FeedDetailPage(postId: int.parse(postId), postRepository: _postRepository, userRepository: _userRepository,);
     });
 
 var showCreatePostScreenHandler = Handler(

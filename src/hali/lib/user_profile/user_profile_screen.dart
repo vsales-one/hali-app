@@ -4,6 +4,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:hali/authentication_bloc/authentication_bloc.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
 import 'package:hali/user_profile/bloc/bloc.dart';
+import 'package:hali/config/application.dart';
+
 
 class UserProfileScreen extends StatefulWidget {  
   @override
@@ -30,168 +32,172 @@ class UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserProfileBloc, UserProfileState>(
-      listener: (context, state) {},
-      child: Scaffold(
-        body:Padding(
-          padding: EdgeInsets.all(10),
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-              FormBuilder(
-                // context,
-                key: _fbKey,
-                autovalidate: true,
-                initialValue: {
-                  'movie_rating': 5,
-                },
-                child: Column(
-                  children: <Widget>[                   
-                    FormBuilderTextField(
-                      attribute: "displayName",
-                      decoration: InputDecoration(
-                        labelText: "Display Name", 
-                                               
-                      ),
-                      //onChanged: _onChanged,                      
-                      validators: [
-                        FormBuilderValidators.required(),
-                        FormBuilderValidators.max(500),
-                      ],
-                      keyboardType: TextInputType.text,
-                    ),
-                    FormBuilderTextField(
-                      attribute: "phoneNumber",
-                      decoration: InputDecoration(
-                        labelText: "Phone Number",
-                      ),
-                      //onChanged: _onChanged,                      
-                      validators: [
-                        FormBuilderValidators.required(),
-                        FormBuilderValidators.max(500),
-                      ],
-                      keyboardType: TextInputType.text,
-                    ),
-                    FormBuilderTextField(
-                      attribute: "email",
-                      decoration: InputDecoration(
-                        labelText: "Email",
-                      ),
-                      onChanged: _onChanged,                      
-                      validators: [
-                        FormBuilderValidators.required(),
-                        FormBuilderValidators.max(500),
-                      ],
-                      keyboardType: TextInputType.text,
-                    ),
-                    FormBuilderTextField(
-                      attribute: "address",
-                      decoration: InputDecoration(
-                        labelText: "Address",
-                      ),
-                      onChanged: _onChanged,                      
-                      validators: [
-                        FormBuilderValidators.required(),
-                        FormBuilderValidators.max(500),
-                      ],
-                      keyboardType: TextInputType.text,
-                    ),
-                    FormBuilderDropdown(
-                      attribute: "district",
-                      decoration: InputDecoration(
-                        labelText: "District",
-                      ),
-                      // initialValue: 'Male',
-                      hint: Text('Select District'),
-                      validators: [FormBuilderValidators.required()],
-                      items: districts
-                          .map((district) => DropdownMenuItem(
-                        value: district,
-                        child: Text('$district'),
-                      ))
-                          .toList(),
-                    ),
-                    FormBuilderTypeAhead(
-                      decoration: InputDecoration(
-                        labelText: "City",
-                      ),
-                      attribute: 'city',                      
-                      itemBuilder: (context, country) {
-                        return ListTile(
-                          title: Text(country),
-                        );
-                      },
-                      controller: TextEditingController(text: ''),
-                      initialValue: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: BlocBuilder<UserProfileBloc, UserProfileEvent>(builder: (context, _userRepository) {
-                              return Center(child: Text('$count', style: TextStyle(fontSize: 24.0)));},
-
-                        suggestionsCallback: (query) {
-                          if (query.length != 0) {
-                            var lowercaseQuery = query.toLowerCase();
-                            return cities.where((country) {
-                              return country
-                                  .toLowerCase()
-                                  .contains(lowercaseQuery);
-                            }).toList(growable: false)
-                              ..sort((a, b) => a
-                                  .toLowerCase()
-                                  .indexOf(lowercaseQuery)
-                                  .compareTo(
-                                      b.toLowerCase().indexOf(lowercaseQuery)));
-                          } else {
-                            return cities;
-                          }
-                        },
-                    ),
-                      ),
-                    
-                  ],
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: MaterialButton(
-                      color: Theme.of(context).accentColor,
-                      child: Text(
-                        "Save",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
-                        if (_fbKey.currentState.saveAndValidate()) {
-                          print(_fbKey.currentState.value);
-                        } else {
-                          print(_fbKey.currentState.value);
-                          print("validation failed");
-                        }
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: MaterialButton(
-                      color: Theme.of(context).accentColor,
-                      child: Text(
-                        "Logout",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
-                        BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    return Center(child: Text("data"),);
   }
+
+
+  // @override
+  // Widget build22(BuildContext context) {
+  //   return BlocListener<UserProfileBloc, UserProfileState>(
+  //     listener: (context, state) {},
+  //     child: Scaffold(
+  //       body:Padding(
+  //         padding: EdgeInsets.all(10),
+  //         child: SingleChildScrollView(
+  //           child: Column(
+  //             children: <Widget>[
+  //             FormBuilder(
+  //               // context,
+  //               key: _fbKey,
+  //               autovalidate: true,
+  //               initialValue: {
+  //                 'movie_rating': 5,
+  //               },
+  //               child: Column(
+  //                 children: <Widget>[                   
+  //                   FormBuilderTextField(
+  //                     attribute: "displayName",
+  //                     decoration: InputDecoration(
+  //                       labelText: "Display Name", 
+                                               
+  //                     ),
+  //                     //onChanged: _onChanged,                      
+  //                     validators: [
+  //                       FormBuilderValidators.required(),
+  //                       FormBuilderValidators.max(500),
+  //                     ],
+  //                     keyboardType: TextInputType.text,
+  //                   ),
+  //                   FormBuilderTextField(
+  //                     attribute: "phoneNumber",
+  //                     decoration: InputDecoration(
+  //                       labelText: "Phone Number",
+  //                     ),
+  //                     //onChanged: _onChanged,                      
+  //                     validators: [
+  //                       FormBuilderValidators.required(),
+  //                       FormBuilderValidators.max(500),
+  //                     ],
+  //                     keyboardType: TextInputType.text,
+  //                   ),
+  //                   FormBuilderTextField(
+  //                     attribute: "email",
+  //                     decoration: InputDecoration(
+  //                       labelText: "Email",
+  //                     ),
+  //                     onChanged: _onChanged,                      
+  //                     validators: [
+  //                       FormBuilderValidators.required(),
+  //                       FormBuilderValidators.max(500),
+  //                     ],
+  //                     keyboardType: TextInputType.text,
+  //                   ),
+  //                   FormBuilderTextField(
+  //                     attribute: "address",
+  //                     decoration: InputDecoration(
+  //                       labelText: "Address",
+  //                     ),
+  //                     onChanged: _onChanged,                      
+  //                     validators: [
+  //                       FormBuilderValidators.required(),
+  //                       FormBuilderValidators.max(500),
+  //                     ],
+  //                     keyboardType: TextInputType.text,
+  //                   ),
+  //                   FormBuilderDropdown(
+  //                     attribute: "district",
+  //                     decoration: InputDecoration(
+  //                       labelText: "District",
+  //                     ),
+  //                     // initialValue: 'Male',
+  //                     hint: Text('Select District'),
+  //                     validators: [FormBuilderValidators.required()],
+  //                     items: districts
+  //                         .map((district) => DropdownMenuItem(
+  //                       value: district,
+  //                       child: Text('$district'),
+  //                     ))
+  //                         .toList(),
+  //                   ),
+  //                   FormBuilderTypeAhead(
+  //                     decoration: InputDecoration(
+  //                       labelText: "City",
+  //                     ),
+  //                     attribute: 'city',                      
+  //                     itemBuilder: (context, country) {
+  //                       return ListTile(
+  //                         title: Text(country),
+  //                       );
+  //                     },
+  //                     controller: TextEditingController(text: ''),
+  //                     initialValue: Padding(
+  //                       padding: const EdgeInsets.all(8.0),
+  //                       child: Center(child: Text('', style: TextStyle(fontSize: 24.0))),
+  //                       suggestionsCallback: (query) {
+  //                         if (query.length != 0) {
+  //                           var lowercaseQuery = query.toLowerCase();
+  //                           return cities.where((country) {
+  //                             return country
+  //                                 .toLowerCase()
+  //                                 .contains(lowercaseQuery);
+  //                           }).toList(growable: false)
+  //                             ..sort((a, b) => a
+  //                                 .toLowerCase()
+  //                                 .indexOf(lowercaseQuery)
+  //                                 .compareTo(
+  //                                     b.toLowerCase().indexOf(lowercaseQuery)));
+  //                         } else {
+  //                           return cities;
+  //                         }
+  //                       },
+  //                   ),
+  //                     ),
+                    
+  //                 ],
+  //               ),
+  //             ),
+  //             Row(
+  //               children: <Widget>[
+  //                 Expanded(
+  //                   child: MaterialButton(
+  //                     color: Theme.of(context).accentColor,
+  //                     child: Text(
+  //                       "Save",
+  //                       style: TextStyle(color: Colors.white),
+  //                     ),
+  //                     onPressed: () {
+  //                       if (_fbKey.currentState.saveAndValidate()) {
+  //                         print(_fbKey.currentState.value);
+  //                       } else {
+  //                         print(_fbKey.currentState.value);
+  //                         print("validation failed");
+  //                       }
+  //                     },
+  //                   ),
+  //                 ),
+  //                 SizedBox(
+  //                   width: 20,
+  //                 ),
+  //                 Expanded(
+  //                   child: MaterialButton(
+  //                     color: Theme.of(context).accentColor,
+  //                     child: Text(
+  //                       "Logout",
+  //                       style: TextStyle(color: Colors.white),
+  //                     ),
+  //                     onPressed: () {
+  //                       BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+  //                     },
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
   
       
   // @override

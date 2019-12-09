@@ -13,9 +13,11 @@ class UserProfile {
   String district;
   String city;  
   bool isActive;
+  double latitude;
+  double longitude;
 
   UserProfile(this.userId, this.displayName, this.phoneNumber, this.email, this.imageUrl,
-    this.address, this.district, this.city, this.isActive);
+    this.address, this.district, this.city, this.isActive, this.latitude, this.longitude);
 
   factory UserProfile.fromJson(Map<String, dynamic> json) =>
       _$UserProfileFromJson(json);
@@ -30,8 +32,10 @@ class UserProfile {
           String address,
           String district,
           String city,
-          bool isActive}) =>
-      UserProfile(userId, displayName, phoneNumber, email, imageUrl, address, district, city, isActive);
+          bool isActive,
+          double latitude,
+          double longitude}) =>
+      UserProfile(userId, displayName, phoneNumber, email, imageUrl, address, district, city, isActive, latitude, longitude);
 
   Map<String, dynamic> toJson() => _$UserProfileToJson(this);
 
@@ -41,6 +45,6 @@ class UserProfile {
 
   @override
   String toString() {
-    return "($userId-$email-$displayName)";
+    return "($userId-$email-$displayName-$imageUrl)";
   }
 }

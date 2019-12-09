@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:hali/messages/message_screen.dart';
 import 'package:hali/models/item_listing_message.dart';
 import 'package:hali/models/item_request_message_type.dart';
 import 'package:hali/utils/color_utils.dart';
 
-class RequestListingConfirmationScreen extends StatelessWidget {
+class RequestListingConfirmationScreen extends StatefulWidget {
   final ItemListingMessage requestItem;
-  const RequestListingConfirmationScreen({Key key, this.requestItem})
+
+  RequestListingConfirmationScreen({Key key, this.requestItem})
       : super(key: key);
 
+  @override
+  _RequestListingConfirmationScreenState createState() =>
+      _RequestListingConfirmationScreenState();
+}
+
+class _RequestListingConfirmationScreenState
+    extends State<RequestListingConfirmationScreen> {
   static const double LineHeight = 20;
   static const List<String> DoItems = [
     "Cho biết thời gian bạn đến nhận quà",
@@ -21,9 +30,13 @@ class RequestListingConfirmationScreen extends StatelessWidget {
     "Đến nhận quà khi \r\n 1. Chưa được người cho xác nhận \r\n 2. Chưa có địa chỉ rõ ràng \r\n 3. Chưa có sự đồng ý về thời gian nhận"
   ];
 
+  final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         backgroundColor: ColorUtils.hexToColor(colorD92c27),
       ),
@@ -35,6 +48,14 @@ class RequestListingConfirmationScreen extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
+    return FormBuilder(
+      key: _fbKey,
+      autovalidate: true,
+      child: _buildFormBody(context),
+    );
+  }
+
+  Widget _buildFormBody(BuildContext context) {
     return Center(
       child: Column(
         children: <Widget>[
@@ -46,7 +67,7 @@ class RequestListingConfirmationScreen extends StatelessWidget {
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.only(right: 4),
-                child: Icon(           
+                child: Icon(
                   Icons.note,
                   color: Colors.white,
                 ),
@@ -82,7 +103,7 @@ class RequestListingConfirmationScreen extends StatelessWidget {
               ],
             ),
           ),
-          _buildCardCheckList(DoItems),
+          _buildCardCheckList("DoItems", DoItems),
           SizedBox(
             height: LineHeight,
           ),
@@ -108,7 +129,7 @@ class RequestListingConfirmationScreen extends StatelessWidget {
               ],
             ),
           ),
-          _buildCardCheckList(DoNotItems),
+          _buildCardCheckList("DoNotItems", DoNotItems),
           SizedBox(
             height: LineHeight,
           ),
@@ -129,15 +150,7 @@ class RequestListingConfirmationScreen extends StatelessWidget {
                 "Tôi Đồng Ý Với Các Điều Khoản Trên",
                 style: TextStyle(color: Colors.blueAccent),
               ),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MessageScreen(
-                          friend: requestItem.to,
-                          itemRequestMessage: requestItem,
-                          viewMode:
-                              ItemRequestMessageViewMode.FirstRequestMessage,
-                        )));
-              },
+              onPressed: _onConfirmButtonPressed,
             ),
           ),
         ],
@@ -145,18 +158,45 @@ class RequestListingConfirmationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCardCheckList(List<String> items) {
+  void _onConfirmButtonPressed() {
+    if (_fbKey.currentState.saveAndValidate()) {
+      final shouldDoItems = _fbKey.currentState.value["DoItems"] as List;
+      final shouldNotDoItems = _fbKey.currentState.value["DoNotItems"] as List;
+      if (shouldDoItems.length != 3 || shouldNotDoItems.length != 3) {
+        _globalKey.currentState
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text("Bạn chưa đồng ý với các điều khoản ở trên"),
+            ),
+          );
+      } else {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => MessageScreen(
+              friend: widget.requestItem.to,
+              itemRequestMessage: widget.requestItem,
+              viewMode: ItemRequestMessageViewMode.FirstRequestMessage,
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  Widget _buildCardCheckList(String attribute, List<String> items) {
+    final options = items.map((title) {
+      return FormBuilderFieldOption(
+        value: title,
+      );
+    }).toList();
     return Card(
       color: Colors.white,
-      child: Column(
-        children: items.map((title) {
-          return CheckboxListTile(
-            controlAffinity: ListTileControlAffinity.leading,
-            title: Text(title),
-            value: false,
-            onChanged: (bool value) {},
-          );
-        }).toList(),
+      child: FormBuilderCheckboxList(
+        decoration: InputDecoration(labelText: ""),
+        leadingInput: true,
+        attribute: attribute,
+        options: options,
       ),
     );
   }

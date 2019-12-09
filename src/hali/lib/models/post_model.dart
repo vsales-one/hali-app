@@ -1,13 +1,11 @@
 
-import 'dart:ffi';
-
 import 'package:hali/models/user_profile.dart';
 import 'package:hali/utils/date_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'post_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(anyMap: true, explicitToJson: true)
 class PostModel {
   String categoryCategoryName;
   int categoryId;
@@ -17,7 +15,9 @@ class PostModel {
   String endDate;
   int id;
   String imageUrl;
+  @JsonKey(name: "last_modified_by")
   String lastModifiedBy;
+  @JsonKey(name: "last_modified_date")
   String lastModifiedDate;
   double latitude;
   double longitude;

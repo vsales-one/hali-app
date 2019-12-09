@@ -106,11 +106,17 @@ class UserRepository {
     return user;
   }
 
-  Future<void> signUp({String email, String password}) async {
-    return await _firebaseAuth.createUserWithEmailAndPassword(
+  Future<AuthResult> signUp({String email, String password, String fullName}) async {
+    final authRes = await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
+    final user = await _firebaseAuth.currentUser();
+    final updateInfo = UserUpdateInfo();
+    updateInfo.displayName = fullName;    
+    await user.updateProfile(updateInfo);
+    await linkFirebaseUserWithAppUser(user);
+    return authRes;
   }
 
   Future<void> signOut() async {
@@ -140,38 +146,44 @@ class UserRepository {
     return UserProfile.fromJson(await spUtil.readObject(kFirebaseUser));
   }
 
-  Future<void> linkFirebaseUserWithAppUser(FirebaseUser user) async {
-    print('>>>>>>> Link firebase user with app user: ${user.uid}');
+  Future<UserProfile> linkFirebaseUserWithAppUser(FirebaseUser user) async {
+    print('>>>>>>> Link firebase user with app user: ${user.uid}-${user.email}');
     final appUserProvider = AppUserProfileProvider();
     final profile = await appUserProvider.linkFirebaseUserWithAppUser(user);
-    await storeFirebaseUserLogged(profile);
-    await userManager.bind();
+    return profile;    
   }
 
-  Future<UserProfile> getUserProfile() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();    
+  Future<UserProfile> getCurrentUserProfile() async {
+    final user = await _firebaseAuth.currentUser();    
     if (user == null) {
       return null;
     }
-    return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, user.photoUrl, 
-      "", "", "", true);
+    final userPhotoUrl = user.photoUrl ?? kDefaultUserPhotoUrl;
+    return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, userPhotoUrl,
+      "", "", "", true, 0, 0);
   }
 
   Future<UserProfile> getUserProfileFull() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();    
+    final user = await _firebaseAuth.currentUser();    
     if (user == null) {
       return null;
     }
     final appUserProfileProvider = AppUserProfileProvider();
-    final appUserProfile = await appUserProfileProvider.getAppUserProfileByUserId(user.uid);    
-    return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, user.photoUrl, 
-      appUserProfile?.address, appUserProfile?.district, appUserProfile?.city, true);
+    final appUserProfile = await appUserProfileProvider.getAppUserProfileByUserId(user.uid);
+    final userPhotoUrl = appUserProfile.imageUrl ?? user.photoUrl ?? kDefaultUserPhotoUrl;
+    return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, userPhotoUrl, 
+      appUserProfile?.address, appUserProfile?.district, appUserProfile?.city, true, appUserProfile.latitude, appUserProfile.longitude);
   }
 
   Future<UserProfile> updateUserProfile(UserProfile userProfile) async {
     final appUserProfileProvider = AppUserProfileProvider();
     await appUserProfileProvider.updateUserProfile(userProfile);
     return await getUserProfileFull();
+  }
+
+  Future<UserProfile> getUserProfileByEmail(String email) async {    
+    final appUserProfileProvider = AppUserProfileProvider();
+    return await appUserProfileProvider.getAppUserProfileByUserId(email);  
   }
 
   Future<List<UserProfile>> getActiveUsers() async {

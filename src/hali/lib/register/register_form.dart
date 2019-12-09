@@ -8,13 +8,14 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
+  final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   RegisterBloc _registerBloc;
 
   bool get isPopulated =>
-      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty && _fullNameController.text.isNotEmpty;
 
   bool isRegisterButtonEnabled(RegisterState state) {
     return state.isFormValid && isPopulated && !state.isSubmitting;
@@ -40,7 +41,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Registering...'),
+                    Text('Đang xử lý...'),
                     CircularProgressIndicator(),
                   ],
                 ),
@@ -59,7 +60,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Registration Failure'),
+                    Text('Đăng ký tài khoản không thành công'),
                     Icon(Icons.error),
                   ],
                 ),
@@ -76,6 +77,19 @@ class _RegisterFormState extends State<RegisterForm> {
               child: ListView(
                 children: <Widget>[
                   TextFormField(
+                    controller: _fullNameController,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.contacts),
+                      labelText: 'Tên gọi',
+                    ),
+                    autocorrect: false,
+                    autovalidate: true,
+                    autofocus: true,
+                    validator: (val) {
+                      return val.isNotEmpty ? null : 'Vui lòng nhập tên của bạn';
+                    },
+                  ),
+                  TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
                       icon: Icon(Icons.email),
@@ -84,20 +98,20 @@ class _RegisterFormState extends State<RegisterForm> {
                     autocorrect: false,
                     autovalidate: true,
                     validator: (_) {
-                      return !state.isEmailValid ? 'Invalid Email' : null;
+                      return !state.isEmailValid ? 'Email không hợp lệ' : null;
                     },
                   ),
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
                       icon: Icon(Icons.lock),
-                      labelText: 'Password',
+                      labelText: 'Mật khẩu',
                     ),
                     obscureText: true,
                     autocorrect: false,
                     autovalidate: true,
                     validator: (_) {
-                      return !state.isPasswordValid ? 'Invalid Password' : null;
+                      return !state.isPasswordValid ? 'Mật khẩu không hợp lệ' : null;
                     },
                   ),
                   RegisterButton(
@@ -116,6 +130,7 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   void dispose() {
+    _fullNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -138,6 +153,7 @@ class _RegisterFormState extends State<RegisterForm> {
       Submitted(
         email: _emailController.text,
         password: _passwordController.text,
+        fullName: _fullNameController.text
       ),
     );
   }

@@ -57,7 +57,13 @@ final dio = Dio()
   ..interceptors.add(AuthInterceptor())
   ..interceptors.add(HeaderInterceptor())
   ..interceptors.add(TokeInterceptor())
-  ..interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
+  ..interceptors.add(LogInterceptor(responseBody: true, requestBody: true))
+  ..interceptors.add(InterceptorsWrapper(
+      onError: (DioError e) {
+        print(e);
+        return e;
+      }
+  ));
 
 final FirebaseStorage storage = FirebaseStorage(app: FirebaseApp.instance, 
     storageBucket: kFirebaseStorageBucket);
