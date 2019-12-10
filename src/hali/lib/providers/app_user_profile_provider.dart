@@ -58,12 +58,24 @@ class AppUserProfileProvider {
 
   Future<UserProfile> updateUserProfile(UserProfile userProfile) async {
     try {
-      final response = await dio.put("/api/user-profiles",
+      final response = await dio.put("/api/user-profiles/",
           data: userProfile.toJson());
       return UserProfile.fromJson(response.data);
     } on DioError catch(e) {
       print(e);
       return null;
     }
+  }
+
+  Future<UserProfile> updateUserProfileByUserId(UserProfile userProfile) async {
+    try {
+      print(">>>>>>>>>user id ${userProfile.userId}");
+      final response = await dio.post("/api/user-profiles/" + userProfile.email +"/update-by-user-id",
+          data: userProfile.toJson());
+      return UserProfile.fromJson(response.data);
+    } on DioError catch(e) {
+      print(e);
+      return null;
+    }    
   }
 }

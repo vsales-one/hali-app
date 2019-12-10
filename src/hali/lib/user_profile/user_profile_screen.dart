@@ -190,10 +190,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () {
-                          print('>>>>>>>>button Save Pressed');
                           if (_fbKey.currentState.saveAndValidate()) {
                             final updatedUser = UserProfile(
-                              model.userId,
+                              model.email,
                               _fbKey.currentState.value['displayName'],
                               _fbKey.currentState.value['phoneNumber'],
                               model.email,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hali/authentication_bloc/authentication_bloc.dart';
+import 'package:hali/authentication_bloc/authentication_event.dart';
 import 'package:hali/home/index.dart';
 import 'package:hali/messages/message_list_screen.dart';
 import 'package:hali/my_profile/my_profile_page.dart';
@@ -36,8 +38,15 @@ class _MainScreenState extends State<MainScreen> {
 
   void onPageViewChanged(int index) {
     setState(() {
-      _selectedIndex = index;
-      controller.jumpToPage(index);
+      if (index == 3) {
+        BlocProvider.of<AuthenticationBloc>(context)
+                              .add(LoggedOut());
+        _selectedIndex = 0;
+      }
+      else{
+        _selectedIndex = index;
+        controller.jumpToPage(index);
+      }
     });
   }
 
@@ -87,6 +96,10 @@ class _MainScreenState extends State<MainScreen> {
              BottomNavigationBarItem(
               icon: Icon(MdiIcons.accountCircle),
               title: Text('Account'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(MdiIcons.logout),
+              title: Text('Log Out'),
             ),
           ],
           currentIndex: _selectedIndex,

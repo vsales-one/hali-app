@@ -37,7 +37,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
       print(">>>>>>> updating user profile ");
       print(userProfile.toJson());
       yield UserProfileLoadingState();
-      final updatedUserProfile = await userRepository.updateUserProfile(userProfile);
+      final updatedUserProfile = await userRepository.updateUserProfileByUserId(userProfile);
       yield UserProfileUpdatedState(updatedUserProfile);
     } catch(_) {
       yield UserProfileNotLoadedState();

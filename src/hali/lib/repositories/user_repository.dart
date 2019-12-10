@@ -180,6 +180,12 @@ class UserRepository {
     return await getUserProfileFull();
   }
 
+  Future<UserProfile> updateUserProfileByUserId(UserProfile userProfile) async {
+    final appUserProfileProvider = AppUserProfileProvider();
+    await appUserProfileProvider.updateUserProfileByUserId(userProfile);
+    return await getUserProfileFull();
+  }
+
   Future<UserProfile> getUserProfileByEmail(String email) async {    
     final appUserProfileProvider = AppUserProfileProvider();
     return await appUserProfileProvider.getAppUserProfileByUserId(email);  
