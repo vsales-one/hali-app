@@ -69,8 +69,7 @@ class AppUserProfileProvider {
 
   Future<UserProfile> updateUserProfileByUserId(UserProfile userProfile) async {
     try {
-      print(">>>>>>>>>user id ${userProfile.userId}");
-      final response = await dio.post("/api/user-profiles/" + userProfile.email +"/update-by-user-id",
+      final response = await dio.post("/api/user-profiles/${userProfile.email}/update-by-user-id",
           data: userProfile.toJson());
       return UserProfile.fromJson(response.data);
     } on DioError catch(e) {

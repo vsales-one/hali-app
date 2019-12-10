@@ -17,6 +17,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   final GlobalKey<FormFieldState> _specifyTextFieldKey =
       GlobalKey<FormFieldState>();
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
 
   UserProfile model;
   UserProfileBloc _userProfileBloc;
@@ -24,6 +25,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   ValueChanged _onChanged = (val) => print(val);
   final districts = ['', 'Q1', 'Tân Bình', 'Tân Phú'];
   final cities = ['', "TpHCM", "Cần Thơ", "Vĩnh Long", "Đà Lạt"];
+
+  void showSnackBar(String msg) {
+    _globalKey.currentState
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Text(msg),
+      ));
+  }
 
   @override
   void initState() {
@@ -44,7 +53,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           if (state is UserProfileLoadedState) {
             this.model = state.userProfile;
             print(">>>>>>> get user profile data:");
-            print(model.toJson());
+            print("displayname = ${model.displayName}");
             return _buildBody(context);
           }
           if (state is UserProfileUpdatedState) {
@@ -65,6 +74,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   Widget _buildBody(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       body: FormBuilder(
         key: _fbKey,
         autovalidate: true,
@@ -72,6 +82,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           padding: EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 FormBuilderTextField(
                   attribute: "displayName",
@@ -80,7 +91,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                   initialValue: model.displayName,
                   validators: [
-                    FormBuilderValidators.required(errorText: "Cần nhập tên hiển thị"),
+                    FormBuilderValidators.required(
+                        errorText: "Cần nhập tên hiển thị"),
                     FormBuilderValidators.maxLength(500),
                   ],
                   keyboardType: TextInputType.text,
@@ -92,7 +104,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                   initialValue: model.phoneNumber,
                   validators: [
-                    FormBuilderValidators.required(errorText: "Cần nhập số điện thoại"),
+                    FormBuilderValidators.required(
+                        errorText: "Cần nhập số điện thoại"),
                     FormBuilderValidators.numeric(),
                     FormBuilderValidators.maxLength(500),
                   ],
@@ -107,7 +120,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   onChanged: _onChanged,
                   validators: [
                     FormBuilderValidators.required(errorText: "Cần nhập email"),
-                    FormBuilderValidators.email(errorText: "Email không hợp lệ"),
+                    FormBuilderValidators.email(
+                        errorText: "Email không hợp lệ"),
                     FormBuilderValidators.maxLength(500),
                   ],
                   keyboardType: TextInputType.text,
@@ -119,7 +133,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                   initialValue: model.address,
                   validators: [
-                    FormBuilderValidators.required(errorText: "Cần cung cấp địa chỉ"),
+                    FormBuilderValidators.required(
+                        errorText: "Cần cung cấp địa chỉ"),
                     FormBuilderValidators.maxLength(500),
                   ],
                   keyboardType: TextInputType.text,
@@ -180,63 +195,60 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 //           ))
                 //       .toList(),
                 // ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: MaterialButton(
-                        color: Theme.of(context).accentColor,
-                        child: Text(
-                          "Save",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {
-                          if (_fbKey.currentState.saveAndValidate()) {
-                            final updatedUser = UserProfile(
-                              model.email,
-                              _fbKey.currentState.value['displayName'],
-                              _fbKey.currentState.value['phoneNumber'],
-                              model.email,
-                              model.imageUrl,
-                              _fbKey.currentState.value['address'],
-                              _fbKey.currentState.value['district'],
-                              _fbKey.currentState.value['city'],
-                              model.isActive,
-                              model.longitude,
-                              model.latitude,
-                            );
-                            //final updatedUser = UserProfile.fromJson(_fbKey.currentState.value);
-                            //updatedUser.email = model.email;
-                            // final updatedUser = UserProfile.fromNamed(
-                            //   id: model.id,
-                            //   email: model.email,
-                            //   displayName: _fbKey.currentState.value["displayName"]
-                            // );
-                            _userProfileBloc.add(
-                                UserProfileUpdating(userProfile: updatedUser));
-                          } else {
-                            print(_fbKey.currentState.value);
-                            print("validation failed");
-                          }
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                      child: MaterialButton(
-                        color: Theme.of(context).accentColor,
-                        child: Text(
-                          "Logout",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {
-                          BlocProvider.of<AuthenticationBloc>(context)
-                              .add(LoggedOut());
-                        },
-                      ),
-                    ),
-                  ],
+                SizedBox(
+                  width: 20,
+                ),
+                MaterialButton(
+                  color: Theme.of(context).accentColor,
+                  child: Text(
+                    "Save",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+                    if (_fbKey.currentState.saveAndValidate()) {
+                      final updatedUser = UserProfile(
+                        model.email,
+                        _fbKey.currentState.value['displayName'],
+                        _fbKey.currentState.value['phoneNumber'],
+                        model.email,
+                        model.imageUrl,
+                        _fbKey.currentState.value['address'],
+                        _fbKey.currentState.value['district'],
+                        _fbKey.currentState.value['city'],
+                        model.isActive,
+                        model.longitude,
+                        model.latitude,
+                      );
+                      //final updatedUser = UserProfile.fromJson(_fbKey.currentState.value);
+                      //updatedUser.email = model.email;
+                      // final updatedUser = UserProfile.fromNamed(
+                      //   id: model.id,
+                      //   email: model.email,
+                      //   displayName: _fbKey.currentState.value["displayName"]
+                      // );
+                      _userProfileBloc
+                          .add(UserProfileUpdating(userProfile: updatedUser));
+                    } else {
+                      print(_fbKey.currentState.value);
+                      print("validation failed");
+                    }
+                  },
+                ),
+
+                SizedBox(
+                  width: 20,
+                ),
+                MaterialButton(
+                  color: Theme.of(context).accentColor,
+                  child: Text(
+                    "Logout",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+                    //showSnackBar("logging out");
+                    BlocProvider.of<AuthenticationBloc>(context)
+                        .add(LoggedOut());
+                  },
                 ),
               ],
             ),
@@ -244,5 +256,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
       ),
     );
+    
   }
 }
