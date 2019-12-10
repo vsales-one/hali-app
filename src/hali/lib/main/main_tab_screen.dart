@@ -38,15 +38,8 @@ class _MainScreenState extends State<MainScreen> {
 
   void onPageViewChanged(int index) {
     setState(() {
-      if (index == 3) {
-        BlocProvider.of<AuthenticationBloc>(context)
-                              .add(LoggedOut());
-        _selectedIndex = 0;
-      }
-      else{
         _selectedIndex = index;
         controller.jumpToPage(index);
-      }
     });
   }
 
@@ -96,10 +89,6 @@ class _MainScreenState extends State<MainScreen> {
              BottomNavigationBarItem(
               icon: Icon(MdiIcons.accountCircle),
               title: Text('Account'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(MdiIcons.logout),
-              title: Text('Log Out'),
             ),
           ],
           currentIndex: _selectedIndex,
