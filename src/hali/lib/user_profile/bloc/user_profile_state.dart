@@ -24,8 +24,13 @@ class UserProfileLoadedState extends UserProfileState {
 }
 
 @immutable
-class UserProfileUpdatedState extends UserProfileLoadedState {
-  UserProfileUpdatedState(UserProfile userProfile) : super(userProfile);
+class UserProfileUpdatedState extends UserProfileState {
+  final UserProfile userProfile;
+  
+  UserProfileUpdatedState(this.userProfile) ;
+
+  @override
+  List<Object> get props => [userProfile];
 }
 
 @immutable
