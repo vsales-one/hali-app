@@ -26,6 +26,9 @@ class PostModel {
   UserProfile userProfile;
   int numberLike;
   double distance;
+  String userProfileDisplayName;
+  String userProfileImageUrl;
+  String status;
 
   PostModel({
     this.categoryCategoryName,
@@ -46,7 +49,10 @@ class PostModel {
     this.title,
     this.userProfile,
     this.numberLike,
-    this.distance
+    this.distance,
+    this.userProfileDisplayName,
+    this.userProfileImageUrl,
+    this.status,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) =>

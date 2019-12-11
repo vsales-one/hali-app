@@ -239,7 +239,11 @@ class CreateFoodFormState extends State<CreateFoodForm> {
         latitude: _postLocation.latitude ?? 0.0,
         longitude: _postLocation.longitude ?? 0.0,
         pickupAddress: _address,
-        lastModifiedBy: profile.email ?? ""
+        lastModifiedBy: profile.email ?? profile.userId ?? "",
+        // userProfile: profile,
+        userProfileDisplayName: profile.displayName,
+        userProfileImageUrl: profile.imageUrl,
+        status: "open"
       );
       BlocProvider.of<CreatePostBloc>(context).add(AddPostStartEvent(postModel: postModel, image: widget.imageCover));
     }

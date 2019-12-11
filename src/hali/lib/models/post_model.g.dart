@@ -31,6 +31,9 @@ PostModel _$PostModelFromJson(Map json) {
           )),
     numberLike: json['numberLike'] as int,
     distance: (json['distance'] as num)?.toDouble(),
+    userProfileDisplayName: json['userProfileDisplayName'] as String,
+    userProfileImageUrl: json['userProfileImageUrl'] as String,
+    status: json['status'] as String,
   );
 }
 
@@ -54,4 +57,7 @@ Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
       'userProfile': instance.userProfile?.toJson(),
       'numberLike': instance.numberLike,
       'distance': instance.distance,
+      'userProfileDisplayName': instance.userProfileDisplayName,
+      'userProfileImageUrl': instance.userProfileImageUrl,
+      'status': instance.status,
     };
