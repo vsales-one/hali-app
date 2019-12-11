@@ -164,7 +164,8 @@ class UserRepository {
   }
 
   Future<UserProfile> linkFirebaseUserWithAppUser(FirebaseUser user) async {
-    print('>>>>>>> Link firebase user with app user: ${user.uid}-${user.email}');
+    print(
+        '>>>>>>> Link firebase user with app user: ${user.uid}-${user.email}');
     final profile =
         await _appUserProfileProvider.linkFirebaseUserWithAppUser(user);
     return profile;
@@ -180,17 +181,18 @@ class UserRepository {
     final userPhotoUrl =
         appUserProfile.imageUrl ?? user.photoUrl ?? kDefaultUserPhotoUrl;
     return UserProfile(
-        user.uid,
-        user.displayName,
-        user.phoneNumber,
-        user.email,
-        userPhotoUrl,
-        appUserProfile?.address,
-        appUserProfile?.district,
-        appUserProfile?.city,
-        true,
-        appUserProfile.latitude,
-        appUserProfile.longitude);
+      user.uid,
+      appUserProfile.displayName,
+      appUserProfile.phoneNumber,
+      user.email,
+      userPhotoUrl,
+      appUserProfile?.address,
+      appUserProfile?.district,
+      appUserProfile?.city,
+      appUserProfile.isActive,
+      appUserProfile.latitude,
+      appUserProfile.longitude,
+    );
   }
 
   Future<UserProfile> updateUserProfile(UserProfile userProfile) async {

@@ -70,16 +70,26 @@ class App extends StatelessWidget {
       theme: appRedTheme,
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
+          if (state is AppNeedInternetAccessState) {
+            return AppStartupCheckResultPage(message: state.message,);
+          }
+
+          if (state is AppNeedLocationAccessState) {
+            return AppStartupCheckResultPage(message: state.message,);
+          }
+
           if (state is Unauthenticated) {
             return LoginScreen(
               userRepository: RepositoryProvider.of<UserRepository>(context),
             );
           }
+
           if (state is Authenticated) {
             return MainScreen(
               title: "Hali",
             );
           }
+          
           return SplashScreen();
         },
       ),

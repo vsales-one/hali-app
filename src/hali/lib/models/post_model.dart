@@ -15,9 +15,7 @@ class PostModel {
   String endDate;
   int id;
   String imageUrl;
-  @JsonKey(name: "last_modified_by")
   String lastModifiedBy;
-  @JsonKey(name: "last_modified_date")
   String lastModifiedDate;
   double latitude;
   double longitude;

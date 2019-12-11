@@ -22,4 +22,30 @@ class Authenticated extends AuthenticationState {
   String toString() => 'Authenticated { uid: ${userInfo.id} displayName: ${userInfo.displayName} }';
 }
 
-class Unauthenticated extends AuthenticationState {}
+class Unauthenticated extends AuthenticationState {
+  @override
+  String toString() => 'Unauthenticated';
+}
+
+class AppNeedInternetAccessState extends AuthenticationState {
+  final String message;
+
+  AppNeedInternetAccessState(this.message);
+
+  @override
+  String toString() => 'AppNeedInternetAccessState';
+}
+
+class AppNeedLocationAccessState extends AuthenticationState {
+  final String message;
+
+  AppNeedLocationAccessState(this.message);
+
+  @override
+  String toString() => 'AppNeedLocationAccessState';
+}
+
+class AppNeedUpdateState extends AuthenticationState {
+  @override
+  String toString() => 'AppNeedUpdateState';
+}
