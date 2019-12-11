@@ -19,7 +19,7 @@ class ChatMessageRepository {
       {@required this.userRepository, @required this.fireStore});
 
   Stream<List<ItemListingMessage>> getItemRequestMessages() async* {
-    final user = await userRepository.getCurrentUserProfile();
+    final user = await userRepository.getCurrentUserProfileFull();
     final activeUsers = await userRepository.getActiveUsers();
 
     await for (QuerySnapshot snap

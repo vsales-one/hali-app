@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:hali/commons/app_error.dart';
+import 'package:hali/di/appModule.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:hali/login/login.dart';
@@ -68,10 +69,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       await _userRepository.signInWithGoogle();
       yield LoginState.success();
-    } on AppError catch(e) {
+    } on AppError catch (e) {
       yield LoginState.failure(e.message);
-    }
-     catch (_) {
+    } catch (e) {
+      logger.d(e);
       yield LoginState.failure("Đăng nhập không thành công");
     }
   }
@@ -80,10 +81,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       await _userRepository.signInWithFacebook();
       yield LoginState.success();
-    } on AppError catch(e) {
+    } on AppError catch (e) {
       yield LoginState.failure(e.message);
-    }
-    catch (_) {
+    } catch (e) {
+      logger.d(e);
       yield LoginState.failure("Đăng nhập không thành công");
     }
   }
@@ -96,9 +97,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       await _userRepository.signInWithCredentials(email, password);
       yield LoginState.success();
-    } on AppError catch(e) {
+    } on AppError catch (e) {
       yield LoginState.failure(e.message);
     } catch (e) {
+      logger.d(e);
       yield LoginState.failure("Đăng nhập không thành công");
     }
   }

@@ -24,7 +24,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   Stream<UserProfileState> _mapUserProfileLoadingToState() async* {
     try {
       yield UserProfileLoadingState();
-      final userProfile = await userRepository.getUserProfileFull();
+      final userProfile = await userRepository.getCurrentUserProfileFull();
       yield UserProfileLoadedState(userProfile);
     } catch(e) {
       print(e);

@@ -34,20 +34,21 @@ class AuthenticationBloc
   Stream<AuthenticationState> _mapAppStartedToState() async* {
     try {
       final isSignedIn = await _userRepository.isSignedIn();
-      if (isSignedIn) {             
+      if (isSignedIn) {
         await _loadUserProfile();
         yield Authenticated(Application.currentUser);
       } else {
         yield Unauthenticated();
       }
-    } catch (_) {
+    } catch (e) {
+      logger.e(e);
       yield Unauthenticated();
     }
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
     await _loadUserProfile();
-    yield Authenticated(Application.currentUser);    
+    yield Authenticated(Application.currentUser);
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
@@ -56,7 +57,8 @@ class AuthenticationBloc
   }
 
   Future<UserProfile> _loadUserProfile() async {
-    final userInfo = await _userRepository.getCurrentUserProfile();
+    final userInfo = await _userRepository.getCurrentUserProfileFull();
+    assert(userInfo != null);
     Application.currentUser = userInfo;
     await _userRepository.storeFirebaseUserLogged(userInfo);
     await userManager.bind();

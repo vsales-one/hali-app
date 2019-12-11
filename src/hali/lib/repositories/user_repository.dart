@@ -9,30 +9,41 @@ import 'package:hali/constants/constants.dart';
 import 'package:hali/di/appModule.dart';
 import 'package:hali/models/user_profile.dart';
 import 'package:hali/providers/app_user_profile_provider.dart';
+import 'package:hali/providers/user_profile_provider_factory.dart';
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
   final FacebookLogin _facebookLogin;
-  final Firestore _fireStore;  
+  final Firestore _fireStore;
+  final IAppUserProfileProvider _appUserProfileProvider;
   static UserProfile currentUser;
 
-  UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin, FacebookLogin facebookLogin, Firestore fireStore})
-      : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+  UserRepository({
+    FirebaseAuth firebaseAuth,
+    GoogleSignIn googleSignin,
+    FacebookLogin facebookLogin,
+    Firestore fireStore,
+    IAppUserProfileProvider appUserProfileProvider,
+  })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignin ?? GoogleSignIn(),
         _facebookLogin = facebookLogin ?? FacebookLogin(),
-        _fireStore = fireStore ?? Firestore.instance;
-  
+        _fireStore = fireStore ?? Firestore.instance,
+        _appUserProfileProvider =
+            appUserProfileProvider ?? UserProfileProviderFactory.instance();
+
   Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    final signinMethods = await _firebaseAuth.fetchSignInMethodsForEmail(email: googleUser.email);
+    final signinMethods =
+        await _firebaseAuth.fetchSignInMethodsForEmail(email: googleUser.email);
 
-    if(signinMethods.isNotEmpty && signinMethods.indexOf("google.com") < 0) {
-        throw AppError(
-          statusCode: 200, 
-          message: "Email đã tồn tại với phương thức đăng nhập ${signinMethods.join(",")}"
-        );
-      }
+    if (signinMethods.isNotEmpty && signinMethods.indexOf("google.com") < 0) {
+      throw AppError(
+        statusCode: 200,
+        message:
+            "Email đã tồn tại với phương thức đăng nhập ${signinMethods.join(",")}",
+      );
+    }
 
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
@@ -40,80 +51,86 @@ class UserRepository {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    await _firebaseAuth.signInWithCredential(credential);    
+    await _firebaseAuth.signInWithCredential(credential);
     final user = await _firebaseAuth.currentUser();
-    await storeFirebaseAuthToken(user);    
+    await storeFirebaseAuthToken(user);
     await linkFirebaseUserWithAppUser(user);
     return user;
   }
 
-  Future<dynamic> _getUserEmailFromFacebookToken(String token) async { 
+  Future<dynamic> _getUserEmailFromFacebookToken(String token) async {
     final dioClient = Dio();
-    final graphResponse = await dioClient.get("https://graph.facebook.com/v2.12/me?fields=email&access_token=$token");
-    if(graphResponse.statusCode != 200) {
+    final graphResponse = await dioClient.get(
+        "https://graph.facebook.com/v2.12/me?fields=email&access_token=$token");
+    if (graphResponse.statusCode != 200) {
       return null;
-    }    
+    }
     return jsonDecode(graphResponse.data);
   }
 
   Future<FirebaseUser> signInWithFacebook() async {
     final fbLoginResult = await _facebookLogin.logIn(['email']);
     switch (fbLoginResult.status) {
-    case FacebookLoginStatus.loggedIn:
-      final token = fbLoginResult.accessToken.token;
-      final fbProfile = await _getUserEmailFromFacebookToken(token);
-      if(fbProfile == null)
+      case FacebookLoginStatus.loggedIn:
+        final token = fbLoginResult.accessToken.token;
+        final fbProfile = await _getUserEmailFromFacebookToken(token);
+        if (fbProfile == null) return null;
+        final signinMethods = await _firebaseAuth.fetchSignInMethodsForEmail(
+            email: fbProfile["email"]);
+
+        if (signinMethods.isNotEmpty &&
+            signinMethods.indexOf("facebook.com") < 0) {
+          throw AppError(
+              statusCode: 200,
+              message:
+                  "Email đã tồn tại với phương thức đăng nhập ${signinMethods.join(",")}");
+        }
+
+        final AuthCredential credential =
+            FacebookAuthProvider.getCredential(accessToken: token);
+        await _firebaseAuth.signInWithCredential(credential);
+        final user = await _firebaseAuth.currentUser();
+        await storeFirebaseAuthToken(user);
+        await linkFirebaseUserWithAppUser(user);
+        return user;
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+      case FacebookLoginStatus.error:
         return null;
-      final signinMethods = await _firebaseAuth.fetchSignInMethodsForEmail(email: fbProfile["email"]);
-
-      if(signinMethods.isNotEmpty && signinMethods.indexOf("facebook.com") < 0) {        
-        throw AppError(
-          statusCode: 200, 
-          message: "Email đã tồn tại với phương thức đăng nhập ${signinMethods.join(",")}"
-        );
-      }
-
-      final AuthCredential credential = FacebookAuthProvider.getCredential(accessToken: token);
-      await _firebaseAuth.signInWithCredential(credential);
-      final user = await _firebaseAuth.currentUser();
-      await storeFirebaseAuthToken(user);
-      await linkFirebaseUserWithAppUser(user);
-      return user;
-      break;
-    case FacebookLoginStatus.cancelledByUser:
-    case FacebookLoginStatus.error:
-      return null;
-      break;
+        break;
     }
     return null;
   }
 
-  Future<FirebaseUser> signInWithCredentials(String email, String password) async {
-    await  _firebaseAuth.signInWithEmailAndPassword(
+  Future<FirebaseUser> signInWithCredentials(
+      String email, String password) async {
+    await _firebaseAuth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
-    final signinMethods = await _firebaseAuth.fetchSignInMethodsForEmail(email: email);
-    if(signinMethods.isNotEmpty && signinMethods.indexOf("password") < 0) {
-        throw AppError(
-          statusCode: 200, 
-          message: "Email đã tồn tại với phương thức đăng nhập ${signinMethods.join(",")}"
-        );
-      }
-    final user = await FirebaseAuth.instance.currentUser();    
+    final signinMethods =
+        await _firebaseAuth.fetchSignInMethodsForEmail(email: email);
+    if (signinMethods.isNotEmpty && signinMethods.indexOf("password") < 0) {
+      throw AppError(
+          statusCode: 200,
+          message:
+              "Email đã tồn tại với phương thức đăng nhập ${signinMethods.join(",")}");
+    }
+    final user = await FirebaseAuth.instance.currentUser();
     await storeFirebaseAuthToken(user);
     await linkFirebaseUserWithAppUser(user);
     return user;
   }
 
-  Future<AuthResult> signUp({String email, String password, String fullName}) async {
+  Future<AuthResult> signUp(
+      {String email, String password, String fullName}) async {
     final authRes = await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
     final user = await _firebaseAuth.currentUser();
     final updateInfo = UserUpdateInfo();
-    updateInfo.displayName = fullName;    
+    updateInfo.displayName = fullName;
     await user.updateProfile(updateInfo);
     await linkFirebaseUserWithAppUser(user);
     return authRes;
@@ -148,47 +165,46 @@ class UserRepository {
 
   Future<UserProfile> linkFirebaseUserWithAppUser(FirebaseUser user) async {
     print('>>>>>>> Link firebase user with app user: ${user.uid}-${user.email}');
-    final appUserProvider = AppUserProfileProvider();
-    final profile = await appUserProvider.linkFirebaseUserWithAppUser(user);
-    return profile;    
+    final profile =
+        await _appUserProfileProvider.linkFirebaseUserWithAppUser(user);
+    return profile;
   }
 
-  Future<UserProfile> getCurrentUserProfile() async {
-    final user = await _firebaseAuth.currentUser();    
-    if (user == null) {
-      return null;
-    }
-    final userPhotoUrl = user.photoUrl ?? kDefaultUserPhotoUrl;
-    return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, userPhotoUrl,
-      "", "", "", true, 0, 0);
-  }
-
-  Future<UserProfile> getUserProfileFull() async {
+  Future<UserProfile> getCurrentUserProfileFull() async {
     final user = await _firebaseAuth.currentUser();
     assert(user != null);
-    final appUserProfileProvider = AppUserProfileProvider();
-    final appUserProfile = await appUserProfileProvider.getAppUserProfileByUserId(user.email);
+
+    final appUserProfile =
+        await _appUserProfileProvider.getAppUserProfileByUserId(user.email);
     assert(appUserProfile != null);
-    final userPhotoUrl = appUserProfile.imageUrl ?? user.photoUrl ?? kDefaultUserPhotoUrl;
-    return UserProfile(user.uid, user.displayName, user.phoneNumber, user.email, userPhotoUrl, 
-      appUserProfile?.address, appUserProfile?.district, appUserProfile?.city, true, appUserProfile.latitude, appUserProfile.longitude);
+    final userPhotoUrl =
+        appUserProfile.imageUrl ?? user.photoUrl ?? kDefaultUserPhotoUrl;
+    return UserProfile(
+        user.uid,
+        user.displayName,
+        user.phoneNumber,
+        user.email,
+        userPhotoUrl,
+        appUserProfile?.address,
+        appUserProfile?.district,
+        appUserProfile?.city,
+        true,
+        appUserProfile.latitude,
+        appUserProfile.longitude);
   }
 
   Future<UserProfile> updateUserProfile(UserProfile userProfile) async {
-    final appUserProfileProvider = AppUserProfileProvider();
-    await appUserProfileProvider.updateUserProfile(userProfile);
-    return await getUserProfileFull();
+    await _appUserProfileProvider.updateUserProfile(userProfile);
+    return await getCurrentUserProfileFull();
   }
 
   Future<UserProfile> updateUserProfileByUserId(UserProfile userProfile) async {
-    final appUserProfileProvider = AppUserProfileProvider();
-    await appUserProfileProvider.updateUserProfileByUserId(userProfile);
-    return await getUserProfileFull();
+    await _appUserProfileProvider.updateUserProfileByUserId(userProfile);
+    return await getCurrentUserProfileFull();
   }
 
-  Future<UserProfile> getUserProfileByEmail(String email) async {    
-    final appUserProfileProvider = AppUserProfileProvider();
-    return await appUserProfileProvider.getAppUserProfileByUserId(email);  
+  Future<UserProfile> getUserProfileByEmail(String email) async {
+    return await _appUserProfileProvider.getAppUserProfileByUserId(email);
   }
 
   Future<List<UserProfile>> getActiveUsers() async {

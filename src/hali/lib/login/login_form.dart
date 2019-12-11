@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hali/constants/constants.dart';
 import 'package:hali/login/facebook_login_button.dart';
 import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
@@ -115,6 +116,10 @@ class _LoginFormState extends State<LoginForm> {
                         GoogleLoginButton(),
                         FacebookLoginButton(),
                         CreateAccountButton(userRepository: _userRepository),
+                        Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Text("Phiên bản $kAppVersion"),
+                        ),
                       ],
                     ),
                   ),
