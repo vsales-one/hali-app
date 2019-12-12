@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hali/authentication_bloc/authentication_bloc.dart';
-import 'package:hali/authentication_bloc/authentication_event.dart';
 import 'package:hali/constants/constants.dart';
 import 'package:hali/home/index.dart';
 import 'package:hali/messages/message_list_screen.dart';
-import 'package:hali/my_profile/my_profile_page.dart';
 import 'package:hali/repositories/user_repository.dart';
-import 'package:hali/user_profile/user_profile_screen.dart';
+import 'package:hali/user_profile/my_public_profile_page.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -78,8 +75,8 @@ class _MainScreenState extends State<MainScreen> {
             homeRepository: RepositoryProvider.of<HomeRepository>(context),
           ),
           MessageListScreen(),
-          //MyProfilePage(userRepository: RepositoryProvider.of<UserRepository>(context),),
-          UserProfileScreen(),
+          MyPublicProfilePage(userRepository: RepositoryProvider.of<UserRepository>(context),),
+          // UserProfileScreen(),
         ],
         scrollDirection: Axis.horizontal,
       ),

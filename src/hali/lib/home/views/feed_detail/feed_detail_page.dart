@@ -7,11 +7,11 @@ import 'package:hali/repositories/user_repository.dart';
 
 class FeedDetailPage extends StatelessWidget {
   final UserRepository _userRepository;
-  final PostRepository _postRepository;
+  final AbstractPostRepository _postRepository;
 
   final int postId;
 
-  const FeedDetailPage({Key key, this.postId, PostRepository postRepository, UserRepository userRepository}) 
+  const FeedDetailPage({Key key, this.postId, AbstractPostRepository postRepository, UserRepository userRepository}) 
   : assert(postRepository != null),
     assert(userRepository != null),
     _postRepository = postRepository,

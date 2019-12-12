@@ -1,9 +1,8 @@
-import 'dart:async';
-import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:hali/models/create_post_command.dart';
 import 'package:hali/models/post_model.dart';
 import 'package:meta/meta.dart';
 
@@ -18,7 +17,7 @@ abstract class CreatePostEvent extends Equatable {
 
 class AddPostStartEvent extends CreatePostEvent {
   final File image;
-  final PostModel postModel;
+  final CreatePostCommand postModel;
 
   AddPostStartEvent({ this.image, this.postModel});
 
@@ -36,3 +35,12 @@ class CreatePostError extends CreatePostEvent {
   String toString() => 'CreatePostError { todo: $error }';
 }
 
+class UploadPostImageEvent extends CreatePostEvent {
+  final File image;
+  final PostModel postModel;
+
+  UploadPostImageEvent({this.image, this.postModel});
+
+  @override
+  List<Object> get props => [image];
+}

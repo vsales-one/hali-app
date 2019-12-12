@@ -4,13 +4,13 @@ import 'package:hali/repositories/post_repository.dart';
 import 'package:hali/posts/bloc/index.dart';
 
 import 'bloc/index.dart';
-import 'create_post.dart';
+import 'create_post_screen.dart';
 
 class CreatePostPage extends StatelessWidget {
 
-  final PostRepository _postRepository;
+  final AbstractPostRepository _postRepository;
 
-  const CreatePostPage({Key key, @required PostRepository postRepository}) 
+  const CreatePostPage({Key key, @required AbstractPostRepository postRepository}) 
   : assert(postRepository != null), 
   _postRepository = postRepository,
    super(key: key);

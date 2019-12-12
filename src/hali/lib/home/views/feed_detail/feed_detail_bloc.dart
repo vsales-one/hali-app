@@ -8,7 +8,7 @@ import 'package:hali/repositories/user_repository.dart';
 
 class FeedDetailBloc extends Bloc<FeedDetailEvent, FeedDetailState> {
   
-  final PostRepository postRepository;
+  final AbstractPostRepository postRepository;
   final UserRepository userRepository;
 
   FeedDetailBloc({ this.postRepository, this.userRepository });

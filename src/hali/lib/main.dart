@@ -9,6 +9,7 @@ import 'package:hali/di/appModule.dart';
 import 'package:hali/home/index.dart';
 import 'package:hali/repositories/chat_message_repository.dart';
 import 'package:hali/repositories/post_repository.dart';
+import 'package:hali/repositories/post_repository_factory.dart';
 import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/login/login.dart';
 import 'package:hali/splash_screen.dart';
@@ -22,6 +23,7 @@ Future main() async {
 
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final userRepo = UserRepository();
+  final postRepo = PostRepositoryFactory.instance();
   
   runApp(
     MultiRepositoryProvider(providers: [
@@ -32,10 +34,10 @@ Future main() async {
         builder: (_) => ChatMessageRepository(userRepository: userRepo, fireStore: Firestore.instance),
       ),
       RepositoryProvider<HomeRepository>(
-        builder: (_) => HomeRepository(),
+        builder: (_) => HomeRepository(postRepository: postRepo),
       ),
-      RepositoryProvider<PostRepository>(
-        builder: (_) => PostRepository(),
+      RepositoryProvider<AbstractPostRepository>(
+        builder: (_) => postRepo,
       )
     ], child: App()),
   );

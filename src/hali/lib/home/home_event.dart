@@ -10,6 +10,6 @@ class LoadHomeEvent extends HomeEvent {
   String toString() => 'LoadHomeEvent';
 }
 
-class Fetch extends HomeEvent {
+class HomeFetchEvent extends HomeEvent {
   String toString() => 'HomeFetch';
 }

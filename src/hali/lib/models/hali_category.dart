@@ -5,6 +5,6 @@ class HCategory {
   HCategory(this.id, this.categoryName);
 
   static List<HCategory> generated() {
-    return [new HCategory(1, "FOOD"), new HCategory(2, "NON-FOOD")];
+    return [new HCategory(1, "Thực Phẩm"), new HCategory(2, "Đồ Dùng Khác Thực Phẩm")];
   }
 }

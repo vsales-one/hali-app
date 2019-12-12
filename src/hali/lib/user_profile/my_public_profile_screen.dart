@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/commons/styles.dart';
-import 'package:hali/my_profile/index.dart';
 import 'package:hali/repositories/user_repository.dart';
+import 'package:hali/user_profile/bloc/user_profile_bloc.dart';
+import 'package:hali/user_profile/bloc/user_profile_state.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-class MyProfileScreen extends StatefulWidget {
-  const MyProfileScreen({
+class MyPublicProfileScreen extends StatefulWidget {
+  const MyPublicProfileScreen({
     Key key,
     @required UserRepository userRepository,
   })  : _userRepository = userRepository,
@@ -16,15 +17,14 @@ class MyProfileScreen extends StatefulWidget {
   final UserRepository _userRepository;
 
   @override
-  MyProfileScreenState createState() {
-    return MyProfileScreenState(_userRepository);
-  }
+  MyPublicProfileScreenState createState() =>
+      MyPublicProfileScreenState(_userRepository);
 }
 
-class MyProfileScreenState extends State<MyProfileScreen> {
+class MyPublicProfileScreenState extends State<MyPublicProfileScreen> {
   final UserRepository _userRepository;
 
-  MyProfileScreenState(this._userRepository);
+  MyPublicProfileScreenState(this._userRepository);
 
   @override
   void initState() {
@@ -56,30 +56,31 @@ class MyProfileScreenState extends State<MyProfileScreen> {
 
     const headerHeight = 290.0;
 
-    return BlocBuilder<MyProfileBloc, MyProfileState>(builder: (
+    return BlocBuilder<UserProfileBloc, UserProfileState>(builder: (
       BuildContext context,
-      MyProfileState currentState,
+      UserProfileState currentState,
     ) {
-      return new Container(
+      return Container(
         height: headerHeight,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: ColorUtils.hexToColor(colorD92c27),
           boxShadow: <BoxShadow>[
-            new BoxShadow(
-                spreadRadius: 2.0,
-                blurRadius: 4.0,
-                offset: new Offset(0.0, 1.0),
-                color: Colors.black38),
+            BoxShadow(
+              spreadRadius: 2.0,
+              blurRadius: 4.0,
+              offset: Offset(0.0, 1.0),
+              color: Colors.black38,
+            ),
           ],
         ),
-        child: new Stack(
+        child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
             // linear gradient
-            new Container(
+            Container(
               height: headerHeight,
-              decoration: new BoxDecoration(
-                gradient: new LinearGradient(colors: <Color>[
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: <Color>[
                   //7928D1
                   const Color(0xFF7928D1), const Color(0xFF9A4DFF)
                 ], stops: <double>[
@@ -89,22 +90,22 @@ class MyProfileScreenState extends State<MyProfileScreen> {
               ),
             ),
             // radial gradient
-            new CustomPaint(
-              painter: new HeaderGradientPainter(),
+            CustomPaint(
+              painter: HeaderGradientPainter(),
             ),
-            new Padding(
-              padding: new EdgeInsets.only(
+            Padding(
+              padding: EdgeInsets.only(
                   top: topPadding, left: 15.0, right: 15.0, bottom: 20.0),
-              child: new Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   _buildBellIcon(),
-                  new Padding(
+                  Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: _buildTitle(),
                   ),
-                  new Padding(
+                  Padding(
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: _buildAvatar(),
                   ),
@@ -120,12 +121,12 @@ class MyProfileScreenState extends State<MyProfileScreen> {
 
   /// Build the bell icon at the top right corner of the header
   Widget _buildBellIcon() {
-    return new Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        new IconButton(
-            icon: new Icon(
+        IconButton(
+            icon: Icon(
               MdiIcons.bell,
               color: Colors.white,
               size: 30.0,
@@ -136,35 +137,33 @@ class MyProfileScreenState extends State<MyProfileScreen> {
   }
 
   Widget _buildTitle() {
-    return new Text("Profile",
-        style: Styles.getSemiboldStyle(40, Colors.white));
+    return Text("Profile", style: Styles.getSemiboldStyle(40, Colors.white));
   }
 
   /// The avatar consists of the profile image, the users name and location
   Widget _buildAvatar() {
-    return new Row(
+    return Row(
       children: <Widget>[
-        new Container(
+        Container(
           width: 70.0,
           height: 60.0,
-          decoration: new BoxDecoration(
-            image: new DecorationImage(
-                image: new AssetImage("assets/images/ic-avatar.png"),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/ic-avatar.png"),
                 fit: BoxFit.cover),
-            borderRadius: new BorderRadius.all(new Radius.circular(20.0)),
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
             boxShadow: <BoxShadow>[
-              new BoxShadow(
+              BoxShadow(
                   color: Colors.black26, blurRadius: 5.0, spreadRadius: 1.0),
             ],
           ),
         ),
-        new Padding(padding: const EdgeInsets.only(right: 20.0)),
-        new Column(
+        Padding(padding: const EdgeInsets.only(right: 20.0)),
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new Text("Trung Vu",
-                style: Styles.getSemiboldStyle(16, Colors.white)),
-            new Text("91 Ng", style: Styles.getRegularStyle(16, Colors.white)),
+            Text("Trung Vu", style: Styles.getSemiboldStyle(16, Colors.white)),
+            Text("91 Ng", style: Styles.getRegularStyle(16, Colors.white)),
           ],
         ),
       ],
@@ -172,7 +171,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
   }
 
   Widget _buildFollowerStats() {
-    return new Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -186,18 +185,18 @@ class MyProfileScreenState extends State<MyProfileScreen> {
   }
 
   Widget _buildFollowerStat(String title, String value) {
-    return new Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        new Text(title, style: Styles.getSemiboldStyle(16, Colors.white)),
-        new Text(value, style: Styles.getRegularStyle(16, Colors.white)),
+        Text(title, style: Styles.getSemiboldStyle(16, Colors.white)),
+        Text(value, style: Styles.getRegularStyle(16, Colors.white)),
       ],
     );
   }
 
   Widget _buildVerticalDivider() {
-    return new Container(
+    return Container(
       height: 30.0,
       width: 1.0,
       color: Colors.white30,

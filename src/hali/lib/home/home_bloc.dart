@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hali/home/index.dart';
@@ -32,7 +31,7 @@ Stream<HomeState> transformEvents(
     HomeEvent event,
   ) async* {
     final currentState = state;
-    if (event is Fetch && !_hasReachedMax(currentState)) {
+    if (event is HomeFetchEvent && !_hasReachedMax(currentState)) {
       try {
         if (currentState is HomeUninitialized) {
           var currentPage = 0;

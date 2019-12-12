@@ -2,7 +2,6 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/commons/bottom_loader.dart';
-import 'package:hali/commons/dialog.dart';
 import 'package:hali/config/application.dart';
 import 'package:hali/config/routes.dart';
 import 'package:hali/home/index.dart';
@@ -13,6 +12,7 @@ import 'package:hali/commons/styles.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'views/feed_card.dart';
+
 class HomeScreen extends StatefulWidget {
   final String name;
 
@@ -25,7 +25,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-
   bool isHiddenBannerInvite = false;
 
   List<PostModel> _posts = [];
@@ -36,65 +35,79 @@ class HomeScreenState extends State<HomeScreen> {
   int _currentPage = 0;
   bool _isReachMax = false;
 
-@override
+  @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
     _homeBloc = BlocProvider.of<HomeBloc>(context);
-    _homeBloc.add(Fetch());
+    _homeBloc.add(HomeFetchEvent());
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<HomeBloc, HomeState>(
-       listener: (context, state) {
-        if(state is HomeUninitialized) {
-          return LoadingIndicator(indicatorType: Indicator.ballPulse, color: Colors.red,);
-        }
-        if (state is HomeError) {
-          return dispatchFailure(context, state.error);
-        }
+        listener: (context, state) {
+          if (state is HomeUninitialized) {
+            return LoadingIndicator(
+              indicatorType: Indicator.ballPulse,
+              color: Colors.red,
+            );
+          }
+          if (state is HomeError) {
+            return dispatchFailure(context, state.error);
+          }
 
-        if (state is HomeLoaded) {
+          if (state is HomeLoaded) {
             _isReachMax = state.hasReachedMax;
             setState(() {
               _posts = state.posts;
             });
-            
-        }
-      },
-      child: Scaffold(
-        body: _posts.isEmpty ? EmptyPageContentScreen() : ListView.builder(
+          }
+        },
+        child: Scaffold(
+          body: BlocBuilder<HomeBloc, HomeState>(
+            builder: (context, state) {
+              return _buildHomeBody();
+            },
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: _presentCreatePostScreen,
+            child: Icon(
+              Icons.create,
+            ),
+            backgroundColor: ColorUtils.hexToColor(colorD92c27),
+          ),
+        ));
+  }
+
+  Widget _buildHomeBody() {
+    return _posts.isEmpty
+        ? EmptyPageContentScreen()
+        : ListView.builder(
             itemBuilder: (BuildContext context, int index) {
               return index >= _posts.length
                   ? BottomLoader()
                   : FeedCard(
-                    onTapCard: (){
-                      _navigateToDetailPost(_posts[index].id);
-                    },
+                      onTapCard: () {
+                        _navigateToDetailPost(_posts[index].id);
+                      },
                       postModel: _posts[index],
-                     );
+                    );
             },
-            itemCount: _isReachMax
-                ? _posts.length
-                : _posts.length + 1,
+            itemCount: _isReachMax ? _posts.length : _posts.length + 1,
             controller: _scrollController,
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: _presentCreatePostScreen,
-            child: Icon(Icons.create,),
-            backgroundColor: ColorUtils.hexToColor(colorD92c27),
-          ),
-      )
-    );
-
+          );
   }
 
   _presentCreatePostScreen() {
-    Application.router.navigateTo(context, Routes.createPost, transition: TransitionType.fadeIn);
+    Application.router.navigateTo(context, Routes.createPost,
+        transition: TransitionType.fadeIn);
   }
 
   _navigateToDetailPost(int postId) {
-    Application.router.navigateTo(context, Routes.feedDetail + "?postId=$postId", transition: TransitionType.fadeIn);
+    Application.router.navigateTo(
+        context, Routes.feedDetail + "?postId=$postId",
+        transition: TransitionType.fadeIn);
   }
 
   @override
@@ -108,13 +121,11 @@ class HomeScreenState extends State<HomeScreen> {
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= _scrollThreshold) {
       if (!_isReachMax) {
-        _homeBloc.add(Fetch());
+        _homeBloc.add(HomeFetchEvent());
       }
     }
   }
-
 }
-
 
 class _SliverCategory extends StatelessWidget {
   @override
@@ -123,19 +134,18 @@ class _SliverCategory extends StatelessWidget {
         child: SizedBox(
             height: 50,
             child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  IconButton(icon: Icon(MdiIcons.filterMenuOutline), onPressed: null),
-                  IconButton(icon: Icon(Icons.dashboard),)
-                ],
-              )
-            )
-        )
-    );
+                decoration: BoxDecoration(color: Colors.white),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    IconButton(
+                        icon: Icon(MdiIcons.filterMenuOutline),
+                        onPressed: null),
+                    IconButton(
+                      icon: Icon(Icons.dashboard),
+                    )
+                  ],
+                ))));
   }
 }
 
@@ -161,7 +171,6 @@ class EmptyPageContentScreen extends StatelessWidget {
 }
 
 class _SliverEmptyPost extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -173,7 +182,10 @@ class _SliverEmptyPost extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.all(16),
-                  child: Text("Recruit places, become a ambassador!", style: Styles.getSemiboldStyle(16, Colors.black87),),
+                  child: Text(
+                    "Recruit places, become a ambassador!",
+                    style: Styles.getSemiboldStyle(16, Colors.black87),
+                  ),
                 ),
                 EmptyPageContentScreen()
               ],
@@ -181,14 +193,12 @@ class _SliverEmptyPost extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),
-          )
-      ),
+          )),
     );
   }
 }
 
 class _InvitationBanner extends StatelessWidget {
-
   VoidCallback closeInvitationBanner;
 
   _InvitationBanner({this.closeInvitationBanner});
@@ -203,46 +213,57 @@ class _InvitationBanner extends StatelessWidget {
           child: Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
-
               children: <Widget>[
                 new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.all(16),
-                      child: Text("Make it great together!", style: Styles.getSemiboldStyle(16, Colors.white),),
+                      child: Text(
+                        "Make it great together!",
+                        style: Styles.getSemiboldStyle(16, Colors.white),
+                      ),
                     ),
-                    IconButton(icon: Icon(Icons.close, color: Colors.white,), color: Colors.white, onPressed: closeInvitationBanner,),
+                    IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                      color: Colors.white,
+                      onPressed: closeInvitationBanner,
+                    ),
                   ],
                 ),
                 Expanded(
-                  child: Container(
-                    margin: EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Container(
-                          height: 35,
-                          child: FlatButton(
-                              onPressed: null,
-                              child: Text("Invite your friends", style: Styles.getSemiboldStyle(16, Colors.black54))),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15)
-                          ),
-                        ),
-                      ],
-                    ),
-
-                  )
-                )
+                    child: Container(
+                  margin: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Container(
+                        height: 35,
+                        child: FlatButton(
+                            onPressed: null,
+                            child: Text("Invite your friends",
+                                style: Styles.getSemiboldStyle(
+                                    16, Colors.black54))),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15)),
+                      ),
+                    ],
+                  ),
+                ))
               ],
             ),
             decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage("assets/images/invitation.png",), fit: BoxFit.cover),
-              borderRadius: BorderRadius.circular(8)
-            ),
+                image: DecorationImage(
+                    image: AssetImage(
+                      "assets/images/invitation.png",
+                    ),
+                    fit: BoxFit.cover),
+                borderRadius: BorderRadius.circular(8)),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -254,7 +275,6 @@ class _InvitationBanner extends StatelessWidget {
 }
 
 class _ListPost extends StatelessWidget {
-
   final List<PostModel> posts;
 
   _ListPost(this.posts);
@@ -263,16 +283,17 @@ class _ListPost extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-        (context, index) => _renderPostItem(context, index),
-        childCount: posts.length
-        ),
+          (context, index) => _renderPostItem(context, index),
+          childCount: posts.length),
     );
   }
 
   _renderPostItem(BuildContext context, int index) {
-    return FeedCard(onTapCard: (){
-      Application.router.navigateTo(context, Routes.feedDetail, transition: TransitionType.fadeIn);
-    },);
+    return FeedCard(
+      onTapCard: () {
+        Application.router.navigateTo(context, Routes.feedDetail,
+            transition: TransitionType.fadeIn);
+      },
+    );
   }
-
 }

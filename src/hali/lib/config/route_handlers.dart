@@ -11,35 +11,49 @@ import 'package:hali/repositories/user_repository.dart';
 
 var rootHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  return LoginScreen();
+  final _userRepository = RepositoryProvider.of<UserRepository>(context);
+  return LoginScreen(
+    userRepository: _userRepository,
+  );
 });
-
 
 var loginHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  return LoginScreen();
+  final _userRepository = RepositoryProvider.of<UserRepository>(context);
+  return LoginScreen(
+    userRepository: _userRepository,
+  );
 });
 
 var signUpHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return RegisterScreen();
-    });
+  final _userRepository = RepositoryProvider.of<UserRepository>(context);
+  return RegisterScreen(
+    userRepository: _userRepository,
+  );
+});
 
 var showFeedDetailHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      final _postRepository = RepositoryProvider.of<PostRepository>(context);
-      final _userRepository = RepositoryProvider.of<UserRepository>(context);
-      String postId = params["postId"]?.first;
-      return FeedDetailPage(postId: int.parse(postId), postRepository: _postRepository, userRepository: _userRepository,);
-    });
+  final _postRepository = RepositoryProvider.of<AbstractPostRepository>(context);
+  final _userRepository = RepositoryProvider.of<UserRepository>(context);
+  String postId = params["postId"]?.first;
+  return FeedDetailPage(
+    postId: int.parse(postId),
+    postRepository: _postRepository,
+    userRepository: _userRepository,
+  );
+});
 
 var showCreatePostScreenHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      final _postRepository = RepositoryProvider.of<PostRepository>(context);
-      return CreatePostPage(postRepository: _postRepository,);
-    });
+  final _postRepository = RepositoryProvider.of<AbstractPostRepository>(context);
+  return CreatePostPage(
+    postRepository: _postRepository,
+  );
+});
 
 var showPickupLocationScreenHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return PickupLocationScreen();
-    });
+  return PickupLocationScreen();
+});

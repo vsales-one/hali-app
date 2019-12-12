@@ -43,6 +43,8 @@ class UserProfile {
 
   String get id => userId;
 
+  String get fullAddress => "$address, $district, $city".trim();
+
   @override
   String toString() {
     return "($userId-$email-$displayName-$imageUrl)";
