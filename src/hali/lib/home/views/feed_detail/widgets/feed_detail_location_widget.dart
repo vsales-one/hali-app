@@ -36,7 +36,7 @@ class FeedDetailLocationWidget extends StatelessWidget {
                           ),
                           Expanded(
                             child: Text(
-                              "Pickup Time: " + postModel.pickupTimeDisplay(),
+                              "Giờ nhận quà: " + postModel.pickupTimeDisplay(),
                               style:
                                   Styles.getSemiboldStyle(14, Colors.black54),
                             ),

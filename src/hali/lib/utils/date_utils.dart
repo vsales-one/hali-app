@@ -4,7 +4,7 @@ import 'package:timeago/timeago.dart' as timeago;
 class DateUtils {
   // colors
   static String dateToString(DateTime target) {
-    return new DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(target);
+    return new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(target);
   }
 
   static DateTime dateFromString(String target) {
@@ -35,7 +35,7 @@ class DateUtils {
 }
 
 String dateToJsonString(DateTime target) {
-  return DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(target);
+  return DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(target);
 }
 
 DateTime jsonStringToDate(String target) {

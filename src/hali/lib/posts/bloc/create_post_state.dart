@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:hali/models/address_dto.dart';
 import 'package:hali/models/post_model.dart';
 import 'package:meta/meta.dart';
+import 'package:place_picker/place_picker.dart';
 
 @immutable
 class CreatePostState {
@@ -9,6 +11,9 @@ class CreatePostState {
   final bool isLoading;
   final bool isPostImageUploadedSuccess;
   final bool isPostCreatedSuccess;
+  final bool isPostLocationChanged;
+  final AddressDto addressDto;
+  final LocationResult locationResult;
 
   bool get isFormValid =>
       postModel.title != null && postModel.description != null;
@@ -18,7 +23,10 @@ class CreatePostState {
       @required this.error,
       @required this.isLoading,
       this.isPostImageUploadedSuccess,
-      this.isPostCreatedSuccess});
+      this.isPostCreatedSuccess,
+      this.isPostLocationChanged,
+      this.addressDto,
+      this.locationResult});
 
   factory CreatePostState.empty() {
     return CreatePostState(
@@ -27,6 +35,7 @@ class CreatePostState {
       isLoading: false,
       isPostImageUploadedSuccess: false,
       isPostCreatedSuccess: false,
+      isPostLocationChanged: false,
     );
   }
 
@@ -37,6 +46,7 @@ class CreatePostState {
       isLoading: true,
       isPostImageUploadedSuccess: false,
       isPostCreatedSuccess: false,
+      isPostLocationChanged: false,
     );
   }
 
@@ -47,6 +57,7 @@ class CreatePostState {
       isLoading: false,
       isPostImageUploadedSuccess: false,
       isPostCreatedSuccess: false,
+      isPostLocationChanged: false,
     );
   }
 
@@ -57,25 +68,44 @@ class CreatePostState {
       isLoading: false,
       isPostImageUploadedSuccess: false,
       isPostCreatedSuccess: false,
+      isPostLocationChanged: false,
     );
   }
 
   factory CreatePostState.postImageUploadedSuccess(PostModel model) {
     return CreatePostState(
-        postModel: model,
-        error: null,
-        isLoading: false,
-        isPostImageUploadedSuccess: true,
-        isPostCreatedSuccess: false);
+      postModel: model,
+      error: null,
+      isLoading: false,
+      isPostImageUploadedSuccess: true,
+      isPostCreatedSuccess: false,
+      isPostLocationChanged: false,
+    );
+  }
+
+  factory CreatePostState.postLocationChangedSuccess(
+      AddressDto addressDto, LocationResult locationResult) {
+    return CreatePostState(
+      postModel: null,
+      error: null,
+      isLoading: false,
+      isPostImageUploadedSuccess: false,
+      isPostCreatedSuccess: false,
+      isPostLocationChanged: true,
+      addressDto: addressDto,
+      locationResult: locationResult,
+    );
   }
 
   factory CreatePostState.postCreatedSuccess(PostModel model) {
     return CreatePostState(
-        postModel: model,
-        error: null,
-        isLoading: false,
-        isPostImageUploadedSuccess: false,
-        isPostCreatedSuccess: true);
+      postModel: model,
+      error: null,
+      isLoading: false,
+      isPostImageUploadedSuccess: false,
+      isPostCreatedSuccess: true,
+      isPostLocationChanged: false,
+    );
   }
 
   @override
@@ -85,7 +115,8 @@ class CreatePostState {
       error: $error,
       isLoading: $isLoading,
       isPostImageUploadedSuccess: $isPostImageUploadedSuccess,
-      isPostCreatedSuccess: $isPostCreatedSuccess
+      isPostCreatedSuccess: $isPostCreatedSuccess,
+      isPostLocationChanged: $isPostLocationChanged,
     }''';
   }
 
@@ -94,13 +125,15 @@ class CreatePostState {
       DioError error,
       bool isLoading,
       bool isPostImageUploadedSuccess,
-      bool isPostCreatedSuccess}) {
+      bool isPostCreatedSuccess,
+      bool isPostLocationChanged}) {
     return copyWith(
         postModel: postModel,
         error: error,
         isLoading: isLoading,
         isPostImageUploadedSuccess: isPostImageUploadedSuccess,
-        isPostCreatedSuccess: isPostCreatedSuccess);
+        isPostCreatedSuccess: isPostCreatedSuccess,
+        isPostLocationChanged: isPostLocationChanged);
   }
 
   CreatePostState copyWith(
@@ -108,12 +141,14 @@ class CreatePostState {
       DioError error,
       bool isLoading,
       bool isPostImageUploadedSuccess,
-      bool isPostCreatedSuccess}) {
+      bool isPostCreatedSuccess,
+      bool isPostLocationChanged}) {
     return CreatePostState(
         postModel: postModel,
         error: error,
         isLoading: isLoading,
         isPostImageUploadedSuccess: isPostImageUploadedSuccess,
-        isPostCreatedSuccess: isPostCreatedSuccess);
+        isPostCreatedSuccess: isPostCreatedSuccess,
+        isPostLocationChanged: isPostLocationChanged);
   }
 }

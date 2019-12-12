@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hali/models/post_model.dart';
 
@@ -21,9 +22,11 @@ class FeedDetailSliverAppBar extends StatelessWidget {
               )),
           background: (postModel.imageUrl == null || isDirtyImage())
               ? Image.asset("assets/images/placeholder.kpg")
-              : Image.network(
-                  postModel.imageUrl ?? "",
-                  fit: BoxFit.cover,
+              : CachedNetworkImage(
+                imageUrl: postModel.imageUrl ?? "",
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+                fit: BoxFit.cover,
                 )),
     );
   }

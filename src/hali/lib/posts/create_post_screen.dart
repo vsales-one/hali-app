@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/di/appModule.dart';
+import 'package:hali/home/index.dart';
 import 'package:hali/models/post_model.dart';
 import 'package:hali/posts/post_widgets/photo_cover.dart';
 import 'package:hali/posts/post_widgets/post_form.dart';
@@ -47,8 +48,8 @@ class CreatePostScreenState extends State<CreatePostScreen> {
   Future getImage() async {
     final image = await ImagePicker.pickImage(
       source: ImageSource.camera,
-      maxWidth: 1024,
-      maxHeight: 1024,
+      maxWidth: 512,
+      maxHeight: 512,
       imageQuality: 80,
     );
     _createPostBloc
@@ -62,8 +63,8 @@ class CreatePostScreenState extends State<CreatePostScreen> {
   Future getGallery() async {
     var image = await ImagePicker.pickImage(
       source: ImageSource.gallery,
-      maxWidth: 1024,
-      maxHeight: 1024,
+      maxWidth: 512,
+      maxHeight: 512,
       imageQuality: 80,
     );
     _createPostBloc
@@ -116,6 +117,7 @@ class CreatePostScreenState extends State<CreatePostScreen> {
         if (state.error != null) {
           dispatchFailure(context, state.error);
         } else if (state.postModel != null && state.isPostCreatedSuccess) {
+          BlocProvider.of<HomeBloc>(context).add(HomeFetchEvent());
           Navigator.of(context).pop();
         } else if (state.postModel != null &&
             state.isPostImageUploadedSuccess &&

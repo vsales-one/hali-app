@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:hali/models/create_post_command.dart';
 import 'package:hali/models/post_model.dart';
 import 'package:meta/meta.dart';
+import 'package:place_picker/place_picker.dart';
 
 @immutable
 abstract class CreatePostEvent extends Equatable {
@@ -43,4 +44,14 @@ class UploadPostImageEvent extends CreatePostEvent {
 
   @override
   List<Object> get props => [image];
+}
+
+class ChangePostPickupLocationEvent extends CreatePostEvent {
+  final LocationResult locationResult;
+
+  ChangePostPickupLocationEvent({this.locationResult});
+
+  @override
+  List<Object> get props => [locationResult];
+
 }

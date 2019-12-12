@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hali/app_widgets/fab_bottom_app_bar.dart';
 import 'package:hali/constants/constants.dart';
 import 'package:hali/home/index.dart';
 import 'package:hali/messages/message_list_screen.dart';
@@ -42,7 +43,7 @@ class _MainScreenState extends State<MainScreen> {
       child: IconButton(
         icon: Icon(
           MdiIcons.bellRingOutline,
-          color: Colors.black38,
+          color: Colors.white,
         ),
         onPressed: () {
           final repo = RepositoryProvider.of<UserRepository>(context);
@@ -59,9 +60,11 @@ class _MainScreenState extends State<MainScreen> {
         title: Text(
           widget.title,
           style: TextStyle(
-              fontSize: 20, color: ColorUtils.hexToColor(color1D1D1D)),
+            fontSize: 20,
+            color: Colors.white,
+          ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: ColorUtils.hexToColor(colorD92c27),
         actions: <Widget>[
           _renderNotify(),
         ],
@@ -75,37 +78,40 @@ class _MainScreenState extends State<MainScreen> {
             homeRepository: RepositoryProvider.of<HomeRepository>(context),
           ),
           MessageListScreen(),
-          MyPublicProfilePage(userRepository: RepositoryProvider.of<UserRepository>(context),),
-          // UserProfileScreen(),
+          MyPublicProfilePage(),
         ],
         scrollDirection: Axis.horizontal,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(MdiIcons.foodForkDrink),
-            title: Text('Hali'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(MdiIcons.message),
-            title: Text('Tin Nhắn'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(MdiIcons.accountCircle),
-            title: Text('Người Dùng'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(MdiIcons.information),
-            title: Text('Thông Tin'),
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: ColorUtils.hexToColor(colorD92c27),
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        onTap: onPageViewChanged,
-      ),
+      bottomNavigationBar: _buildBottomNavBar(),
+    );
+  }
+
+  Widget _buildBottomNavBar() {
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(MdiIcons.foodForkDrink),
+          title: Text('Hali'),
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(MdiIcons.message),
+          title: Text('Tin Nhắn'),
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(MdiIcons.accountCircle),
+          title: Text('Người Dùng'),
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(MdiIcons.information),
+          title: Text('Thông Tin'),
+        ),
+      ],
+      currentIndex: _selectedIndex,
+      selectedItemColor: ColorUtils.hexToColor(colorD92c27),
+      unselectedItemColor: Colors.grey,
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      onTap: onPageViewChanged,
     );
   }
 
@@ -115,7 +121,11 @@ class _MainScreenState extends State<MainScreen> {
       applicationName: "Hali",
       applicationVersion: kAppVersion,
       applicationLegalese: "© 2019 The Hali Team",
-      applicationIcon: Image.asset('assets/images/hali_logo_199.png', width: 64, height: 64,),
+      applicationIcon: Image.asset(
+        'assets/images/hali_logo_199.png',
+        width: 64,
+        height: 64,
+      ),
     );
   }
 }

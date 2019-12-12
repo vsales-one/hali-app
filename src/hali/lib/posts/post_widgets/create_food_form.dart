@@ -8,7 +8,6 @@ import 'package:hali/commons/styles.dart';
 import 'package:hali/config/application.dart';
 import 'package:hali/constants/constants.dart';
 import 'package:hali/di/appModule.dart';
-import 'package:hali/models/address_dto.dart';
 import 'package:hali/models/create_post_command.dart';
 import 'package:hali/models/hali_category.dart';
 import 'package:hali/posts/bloc/index.dart';
@@ -42,8 +41,10 @@ class CreateFoodFormState extends State<CreateFoodForm> {
   String _pickup = "Từ 9h sáng đến 5h chiều";
   LatLng _postLocation;
   HCategory _categorySelected;
+  String _city;
+  String _district;
   String _address = "";
-  bool _isCheckingLocation = false;
+  bool _isCheckingCurrentLocation = false;
 
   @override
   void didUpdateWidget(Widget oldWidget) {
@@ -61,7 +62,7 @@ class CreateFoodFormState extends State<CreateFoodForm> {
 
     setState(() {
       _postLocation = LatLng(position.latitude, position.longitude);
-      _isCheckingLocation = false;
+      _isCheckingCurrentLocation = false;
       _address = defaultPickupAddress;
     });
   }
@@ -75,7 +76,29 @@ class CreateFoodFormState extends State<CreateFoodForm> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isCheckingLocation) {
+    return BlocBuilder<CreatePostBloc, CreatePostState>(
+      builder: (context, state) {
+        if (state.isLoading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (state.isPostLocationChanged) {
+          _postLocation = state.locationResult.latLng;
+          _address = state.addressDto.streetAddress;//state.locationResult.formattedAddress;
+          _district = state.addressDto.district;
+          _city = state.addressDto.city;
+          logger.d(">>>>>>> pickup address: $_address");
+        }
+
+        return _buildFormBody(context);
+      },
+    );
+  }
+
+  Widget _buildFormBody(BuildContext context) {
+    if (_isCheckingCurrentLocation) {
       return Center(
         child: CircularProgressIndicator(),
       );
@@ -223,15 +246,20 @@ class CreateFoodFormState extends State<CreateFoodForm> {
                                     child:
                                         Text("Hãy chọn địa điểm cho nhận quà"),
                                   )
-                                : Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 16, right: 16, top: 8, bottom: 8),
-                                    child: Text(
-                                      _address,
-                                      style: Styles.getRegularStyle(
-                                          12, Colors.grey),
+                                : Flexible(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 16,
+                                          right: 16,
+                                          top: 8,
+                                          bottom: 8),
+                                      child: Text(
+                                        _address,
+                                        style: Styles.getRegularStyle(
+                                            12, Colors.grey),
+                                      ),
                                     ),
-                                  ),
+                                  )
                           ],
                         ),
                       ),
@@ -277,13 +305,8 @@ class CreateFoodFormState extends State<CreateFoodForm> {
               kApiKey,
               displayLocation: _postLocation,
             )));
-    assert(result.formattedAddress != null);
-    final addressDto = AddressDto.fromFullAddress(result.formattedAddress);
-    setState(() {
-      _postLocation = result.latLng;
-      _address = addressDto?.streetAddress;
-      logger.d(">>>>>>> pickup address: $_address");
-    });
+    BlocProvider.of<CreatePostBloc>(context)
+        .add(ChangePostPickupLocationEvent(locationResult: result));
   }
 
   void _handleCreatePost() {
@@ -300,18 +323,19 @@ class CreateFoodFormState extends State<CreateFoodForm> {
           imageUrl: widget.postImageUrl,
           description: _description,
           pickUpTime: _pickup,
-          startDate: "2019-12-12T04:11:00.000Z", //_startDate,
+          startDate:
+              DateUtils.dateToString(_startDate), //"2019-12-12T04:11:00.000Z"
           endDate:
-              "2019-12-12T04:11:00.000Z", //DateUtils.dateToString(_endDate),
+              DateUtils.dateToString(_endDate), //"2019-12-12T04:11:00.000Z"
           categoryId: _categorySelected.id,
-          lastModifiedDate:
-              "2019-12-12T04:11:00.000Z", //DateUtils.dateToString(DateTime.now()),
+          lastModifiedDate: DateUtils.dateToString(
+              DateTime.now()), //"2019-12-12T04:11:00.000Z"
           lastModifiedBy: profile.email ?? profile.userId ?? "",
           latitude: _postLocation.latitude ?? 0.0,
           longitude: _postLocation.longitude ?? 0.0,
           pickupAddress: _address ?? "",
-          city: "",
-          district: "",
+          city: _city,
+          district: _district,
           userProfileDisplayName:
               profile.displayName ?? profile.email ?? profile.userId,
           userProfileImageUrl: profile.imageUrl ?? kDefaultUserPhotoUrl,

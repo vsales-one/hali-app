@@ -25,7 +25,7 @@ class FeedDetailRequestButton extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      "Request listing",
+                      "Gửi yêu cầu nhận quà",
                       style: Styles.getRegularStyle(14, Colors.white),
                     ),
                     Container(
@@ -37,7 +37,7 @@ class FeedDetailRequestButton extends StatelessWidget {
                             color: Colors.white,
                           ),
                           Text(
-                            "$distance km away",
+                            "$distance km",
                             style: Styles.getRegularStyle(14, Colors.white),
                           ),
                         ],

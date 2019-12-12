@@ -8,6 +8,7 @@
  */
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:hali/app_widgets/empty_page_content_screen.dart';
 import 'package:hali/di/appModule.dart';
 import './route_handlers.dart';
 
@@ -22,8 +23,9 @@ class Routes {
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = Handler(
-        handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       logger.d("ROUTE WAS NOT FOUND !!!");
+      return EmptyPageContentScreen();
     });
     router.define(root, handler: rootHandler);
     router.define(login, handler: loginHandler);

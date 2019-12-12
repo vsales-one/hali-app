@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:hali/models/user_profile.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
@@ -36,4 +38,14 @@ class UserProfileUpdated extends UserProfileEvent {
 
   @override
   String toString() => 'UserProfileUpdated { email :${userProfile.email} }';
+}
+
+class UpdateUserAvatarImageUrlEvent extends UserProfileEvent {
+  final UserProfile userProfile;
+  final File newUserImage;
+
+  const UpdateUserAvatarImageUrlEvent({@required this.userProfile, @required this.newUserImage});
+
+  @override
+  List<Object> get props => [userProfile, newUserImage];
 }

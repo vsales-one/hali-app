@@ -68,7 +68,7 @@ class _LoginFormState extends State<LoginForm> {
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
-        builder: (context, state) {
+        builder: (context, state) {          
           return Padding(
             padding: EdgeInsets.all(20.0),
             child: Form(

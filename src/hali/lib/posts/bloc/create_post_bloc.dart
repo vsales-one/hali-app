@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:hali/di/appModule.dart';
+import 'package:hali/models/address_dto.dart';
 import 'package:hali/posts/bloc/index.dart';
 import 'package:hali/repositories/post_repository.dart';
 import 'package:meta/meta.dart';
@@ -27,6 +28,8 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       yield* _mapAddPostToState(event);
     } else if (event is UploadPostImageEvent) {
       yield* _mapUploadPostImageEventToState(event);
+    } else if(event is ChangePostPickupLocationEvent) {
+      yield* _mapChangePostPickupLocationEventToState(event);
     }
   }
 
@@ -65,5 +68,13 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
       logger.e(e);
       yield CreatePostState.failureWithMessage(e.toString());
     }
+  }
+
+  Stream<CreatePostState> _mapChangePostPickupLocationEventToState(ChangePostPickupLocationEvent event) async* {
+    yield CreatePostState.loading();
+    final result = event.locationResult;
+    assert(result.formattedAddress != null);
+    final addressDto = AddressDto.fromFullAddress(result.formattedAddress);
+    yield CreatePostState.postLocationChangedSuccess(addressDto, result);
   }
 }

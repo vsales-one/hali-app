@@ -1,33 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hali/constants/constants.dart';
 import 'package:uuid/uuid.dart';
 
-class FeedDetailDisplayLocation extends StatelessWidget {
-  final double lati;
-  final double long;
+class FeedDetailDisplayLocation extends StatefulWidget {
+  final double latitude;
+  final double longitude;
   final String userName;
+
+  FeedDetailDisplayLocation(
+      {Key key, this.latitude, this.longitude, this.userName})
+      : super(key: key);
+
+  @override
+  _FeedDetailDisplayLocationtate createState() =>
+      _FeedDetailDisplayLocationtate();
+}
+
+class _FeedDetailDisplayLocationtate extends State<FeedDetailDisplayLocation> {
   GoogleMapController mapController;
-
   final Set<Marker> _markers = {};
-
-  FeedDetailDisplayLocation({this.lati, this.long, this.userName});
 
   void _onAddMarkerButtonPressed() {
     _markers.add(Marker(
       // This marker id can be anything that uniquely identifies each marker.
       markerId: MarkerId(Uuid().v4()),
-      position: new LatLng(lati, long),
+      position: LatLng(widget.latitude ?? kDefaultLatitude, widget.longitude ?? kDefaultLongitude),
       infoWindow: InfoWindow(
-        title: userName,
+        title: widget.userName,
       ),
       icon: BitmapDescriptor.defaultMarker,
     ));
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     _onAddMarkerButtonPressed();
+  }
 
+  @override
+  void dispose() {    
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: SizedBox(
           height: 300,
@@ -38,8 +56,9 @@ class FeedDetailDisplayLocation extends StatelessWidget {
                 mapController = controller;
               },
               markers: _markers,
-              initialCameraPosition: new CameraPosition(
-                target: LatLng(lati, long),
+              initialCameraPosition: CameraPosition(
+                target: LatLng(widget.latitude ?? kDefaultLatitude, widget.longitude ?? kDefaultLongitude),
+                zoom: 15
               ),
             ),
           )),

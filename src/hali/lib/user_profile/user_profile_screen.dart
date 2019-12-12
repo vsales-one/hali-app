@@ -6,7 +6,7 @@ import 'package:hali/authentication_bloc/authentication_bloc.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
 import 'package:hali/models/user_profile.dart';
 import 'package:hali/user_profile/bloc/bloc.dart';
-import 'package:hali/config/application.dart';
+import 'package:hali/utils/color_utils.dart';
 
 class UserProfileScreen extends StatefulWidget {
   @override
@@ -15,16 +15,11 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
-  final GlobalKey<FormFieldState> _specifyTextFieldKey =
-      GlobalKey<FormFieldState>();
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
 
   UserProfile model;
   UserProfileBloc _userProfileBloc;
-
   ValueChanged _onChanged = (val) => print(val);
-  final districts = ['', 'Q1', 'Tân Bình', 'Tân Phú'];
-  final cities = ['', "TpHCM", "Cần Thơ", "Vĩnh Long", "Đà Lạt"];
 
   void showSnackBar(String msg) {
     _globalKey.currentState
@@ -67,14 +62,41 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Widget _buildLoadingBody() {
-    return Center(
-      child: CircularProgressIndicator(),
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget _buildAppBar() {
+    return AppBar(
+      title: Text(
+        "Cập nhật thông tin cá nhân",
+        style: TextStyle(
+          fontSize: 20,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: ColorUtils.hexToColor(colorD92c27),
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
     );
   }
 
   Widget _buildBody(BuildContext context) {
     return Scaffold(
       key: _globalKey,
+      appBar: _buildAppBar(),
       body: FormBuilder(
         key: _fbKey,
         autovalidate: true,
@@ -163,45 +185,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ],
                   keyboardType: TextInputType.text,
                 ),
-                // FormBuilderDropdown(
-                //   attribute: "district",
-                //   decoration: InputDecoration(
-                //     labelText: "District",
-                //   ),
-                //   //initialValue: model.district,
-                //   initialValue: 'Q1',
-                //   hint: Text('Select District'),
-                //   validators: [FormBuilderValidators.required()],
-                //   items: districts
-                //       .map((district) => DropdownMenuItem(
-                //             value: district,
-                //             child: Text('$district'),
-                //           ))
-                //       .toList(),
-                // ),
-                // FormBuilderDropdown(
-                //   attribute: "city",
-                //   decoration: InputDecoration(
-                //     labelText: "City",
-                //   ),
-                //   //initialValue: model.city,
-                //   initialValue: 'TpHCM',
-                //   hint: Text('Select City'),
-                //   validators: [FormBuilderValidators.required()],
-                //   items: cities
-                //       .map((city) => DropdownMenuItem(
-                //             value: city,
-                //             child: Text('$city'),
-                //           ))
-                //       .toList(),
-                // ),
                 SizedBox(
                   width: 20,
                 ),
                 MaterialButton(
-                  color: Theme.of(context).accentColor,
+                  color: Colors.blueAccent,
                   child: Text(
-                    "Save",
+                    "Lưu",
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
@@ -219,13 +209,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         model.longitude,
                         model.latitude,
                       );
-                      //final updatedUser = UserProfile.fromJson(_fbKey.currentState.value);
-                      //updatedUser.email = model.email;
-                      // final updatedUser = UserProfile.fromNamed(
-                      //   id: model.id,
-                      //   email: model.email,
-                      //   displayName: _fbKey.currentState.value["displayName"]
-                      // );
                       _userProfileBloc
                           .add(UserProfileUpdating(userProfile: updatedUser));
                     } else {
@@ -234,14 +217,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     }
                   },
                 ),
-
                 SizedBox(
                   width: 20,
                 ),
                 MaterialButton(
                   color: Theme.of(context).accentColor,
                   child: Text(
-                    "Logout",
+                    "Thoát ứng dụng",
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
@@ -256,6 +238,5 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
       ),
     );
-    
   }
 }

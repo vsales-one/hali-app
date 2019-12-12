@@ -9,3 +9,5 @@ const String kDefaultUserPhotoUrl = "https://firebasestorage.googleapis.com/v0/b
 // const String kDbProvider = "firestore";
 const String kDbProvider = "mysql";
 const int kPageSize = 10;
+const double kDefaultLatitude = 10.762622;
+const double kDefaultLongitude = 106.660172;
