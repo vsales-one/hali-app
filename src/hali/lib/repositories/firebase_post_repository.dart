@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:hali/constants/constants.dart';
 import 'package:hali/di/appModule.dart';
 import 'package:hali/models/api_response.dart';
 import 'package:hali/models/create_post_command.dart';
@@ -24,14 +23,18 @@ class FirebasePostRepository implements AbstractPostRepository {
           .collection(POST_COLLECTIONS)
           .where("status", isEqualTo: "open")
           .orderBy("lastModifiedDate")
-          .limit(50)
+          .startAt([(pageNumber - 1) * pageSize])
+          .limit(pageSize)
           .snapshots()
           .first;
-      
+
       logger.d(">>>>>>>: fetchPosts from firestore ${query.documents.length}");
 
       final posts = query.documents.map((doc) {
-        return PostModel.fromJson(doc.data);
+        logger.d(">>>>>> fetchPosts map document: ${doc.data}");        
+        final post = PostModel.fromJson(doc.data);
+        post.id = doc.documentID;
+        return post;
       }).toList();
 
       return ApiResponse(data: posts);
@@ -55,13 +58,13 @@ class FirebasePostRepository implements AbstractPostRepository {
   }
 
   @override
-  Future<ApiResponse<PostModel>> getPostById(int id) async {
-    throw Exception(
-        "Database provider $kDbProvider does not support get by id: $id");
+  Future<ApiResponse<PostModel>> getPostById(String id) async {
+    return getPostByIdString(id);
   }
 
   @override
   Future<ApiResponse<PostModel>> getPostByIdString(String id) async {
+    logger.d(">>>>>>> getPostByIdString: $id");
     final doc = await _fireStore
         .collection(POST_COLLECTIONS)
         .document(id)

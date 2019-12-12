@@ -39,7 +39,7 @@ var showFeedDetailHandler = Handler(
   final _userRepository = RepositoryProvider.of<UserRepository>(context);
   String postId = params["postId"]?.first;
   return FeedDetailPage(
-    postId: int.parse(postId),
+    postId: postId,
     postRepository: _postRepository,
     userRepository: _userRepository,
   );

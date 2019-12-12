@@ -13,7 +13,7 @@ import 'package:uuid/uuid.dart';
 import '../home_screen.dart';
 
 class FeedDetail extends StatefulWidget {
-  final int postId;
+  final String postId;
 
   FeedDetail({this.postId});
 

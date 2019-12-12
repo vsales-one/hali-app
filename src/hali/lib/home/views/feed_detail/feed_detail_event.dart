@@ -10,7 +10,7 @@ abstract class FeedDetailEvent extends Equatable {
 
 class FeedEventFetch extends FeedDetailEvent {
 
-  final int postId;
+  final String postId;
 
   FeedEventFetch({ this.postId });
 

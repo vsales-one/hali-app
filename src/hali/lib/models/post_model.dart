@@ -5,6 +5,10 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'post_model.g.dart';
 
+String intToString(int i) => i.toString();
+
+String stringToJsonString(String i) => i;
+
 @JsonSerializable(anyMap: true, explicitToJson: true)
 class PostModel {
   String categoryCategoryName;
@@ -13,7 +17,8 @@ class PostModel {
   String description;
   String district;
   String endDate;
-  int id;
+  @JsonKey(fromJson: intToString, toJson: stringToJsonString)
+  String id;  
   String imageUrl;
   String lastModifiedBy;
   String lastModifiedDate;

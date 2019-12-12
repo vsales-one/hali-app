@@ -9,7 +9,7 @@ class FeedDetailPage extends StatelessWidget {
   final UserRepository _userRepository;
   final AbstractPostRepository _postRepository;
 
-  final int postId;
+  final String postId;
 
   const FeedDetailPage({Key key, this.postId, AbstractPostRepository postRepository, UserRepository userRepository}) 
   : assert(postRepository != null),

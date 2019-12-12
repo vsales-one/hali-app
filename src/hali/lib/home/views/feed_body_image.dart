@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 
 class FeedBodyImage extends StatelessWidget {
   final VoidCallback onTap;
-  final int id;
+  final String id;
   final String imageUrl;
 
   const FeedBodyImage({Key key, this.onTap, this.imageUrl, this.id }) : super(key: key);

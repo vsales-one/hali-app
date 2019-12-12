@@ -104,7 +104,7 @@ class HomeScreenState extends State<HomeScreen> {
         transition: TransitionType.fadeIn);
   }
 
-  _navigateToDetailPost(int postId) {
+  _navigateToDetailPost(String postId) {
     Application.router.navigateTo(
         context, Routes.feedDetail + "?postId=$postId",
         transition: TransitionType.fadeIn);

@@ -9,8 +9,7 @@ class CreatePostCommand {
   String description;
   String district;
   String startDate;
-  String endDate;
-  int id;
+  String endDate;  
   String imageUrl;
   String lastModifiedBy;
   String lastModifiedDate;
@@ -28,8 +27,7 @@ class CreatePostCommand {
     this.city,
     this.description,
     this.district,
-    this.endDate,
-    this.id,
+    this.endDate,    
     this.imageUrl,
     this.lastModifiedBy,
     this.lastModifiedDate,

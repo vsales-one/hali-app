@@ -16,7 +16,7 @@ abstract class AbstractPostRepository {
 
   Future<StorageTaskSnapshot> uploadImage(File image, String _fileName);
 
-  Future<ApiResponse<PostModel>> getPostById(int id);
+  Future<ApiResponse<PostModel>> getPostById(String id);
 
   Future<ApiResponse<PostModel>> getPostByIdString(String id);
 
@@ -77,7 +77,7 @@ class PostRepository implements AbstractPostRepository {
   }
 
   @override
-  Future<ApiResponse<PostModel>> getPostById(int id) async {
+  Future<ApiResponse<PostModel>> getPostById(String id) async {
     try {
       final response = await dio.get("/api/posting-items/$id");
       return ApiResponse(data: PostModel.fromJson(response.data));
