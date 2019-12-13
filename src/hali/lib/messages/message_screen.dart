@@ -54,7 +54,8 @@ class _MessageScreenState extends State<MessageScreen> {
     initUser();
     var messageStatus = widget.itemRequestMessage.status;
     print(">>>>>>> message status: $messageStatus");
-    if ((messageStatus == ItemRequestMessageStatus.Open || messageStatus == null ||
+    if ((messageStatus == ItemRequestMessageStatus.Open ||
+        messageStatus == null ||
         messageStatus.toString().isEmpty)) {
       isPickupPendingApproval = true;
     } else {
@@ -64,6 +65,9 @@ class _MessageScreenState extends State<MessageScreen> {
 
   void initUser() async {
     currentUser = await _userRepository.getCurrentUserProfileFull();
+    if (mounted) {
+      setState(() => 0);
+    }
   }
 
   @override
@@ -181,7 +185,8 @@ class _MessageScreenState extends State<MessageScreen> {
 
   Widget _buildRequestMessageInput() {
     return ChatInputWidget(
-      defaultMessage: "Xin chào ${widget.itemRequestMessage.to.displayName ?? ''},",
+      defaultMessage:
+          "Xin chào ${widget.itemRequestMessage.to.displayName ?? ''},",
       onSubmitted: (message, type) async {
         print(">>>>>>> sending message: $message");
         setState(() {
@@ -210,7 +215,8 @@ class _MessageScreenState extends State<MessageScreen> {
             children: <Widget>[
               Flexible(child: _buildChatMessages()),
               ChatInputWidget(
-                hintMessage: "Gửi tin nhắn đến ${widget.friend.firstName ?? ''}",
+                hintMessage:
+                    "Gửi tin nhắn đến ${widget.friend.firstName ?? ''}",
                 onSubmitted: (message, type) {
                   if (currentUser.userId == widget.friend.userId) {
                     _scaffoldKey.currentState.showSnackBar(SnackBar(
