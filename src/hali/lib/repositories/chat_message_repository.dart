@@ -20,6 +20,7 @@ class ChatMessageRepository {
 
   Stream<List<ItemListingMessage>> getItemRequestMessages() async* {
     final user = await userRepository.getCurrentUserProfileFull();
+    final messageList = List<ItemListingMessage>();
 
     // query request messages belong to item owner
     await for (QuerySnapshot snap in fireStore
@@ -32,7 +33,8 @@ class ChatMessageRepository {
         final chats = snap.documents
             .map((doc) => ItemListingMessage.fromJson(doc.data))
             .toList();
-        yield chats;
+        messageList.addAll(chats);
+        // yield chats;
       } catch (e) {
         logger.e(e);
       }
@@ -49,11 +51,14 @@ class ChatMessageRepository {
         final chats = snap.documents
             .map((doc) => ItemListingMessage.fromJson(doc.data))
             .toList();
-        yield chats;
+        messageList.addAll(chats);
+        // yield chats;
       } catch (e) {
         logger.e(e);
       }
     }
+
+    yield messageList;
   }
 
   Future<bool> sendMessage(ChatMessage chat) async {
