@@ -183,7 +183,7 @@ class UserRepository {
     final userPhotoUrl =
         appUserProfile.imageUrl ?? user.photoUrl ?? kDefaultUserPhotoUrl;
     return UserProfile(
-      user.uid,
+      user.email,
       appUserProfile.displayName,
       appUserProfile.phoneNumber,
       user.email,
