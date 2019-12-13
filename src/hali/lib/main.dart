@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/app_theme.dart';
+import 'package:hali/app_widgets/generic_loading_screen.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
 import 'package:hali/config/application.dart';
 import 'package:hali/di/appModule.dart';
@@ -24,14 +25,15 @@ Future main() async {
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final userRepo = UserRepository();
   final postRepo = PostRepositoryFactory.instance();
-  
+
   runApp(
     MultiRepositoryProvider(providers: [
       RepositoryProvider<UserRepository>(
         builder: (_) => userRepo,
       ),
       RepositoryProvider<ChatMessageRepository>(
-        builder: (_) => ChatMessageRepository(userRepository: userRepo, fireStore: Firestore.instance),
+        builder: (_) => ChatMessageRepository(
+            userRepository: userRepo, fireStore: Firestore.instance),
       ),
       RepositoryProvider<HomeRepository>(
         builder: (_) => HomeRepository(postRepository: postRepo),
@@ -57,8 +59,7 @@ class App extends StatelessWidget {
               AuthenticationBloc(userRepository: userRepo)..add(AppStarted()),
         ),
         BlocProvider<UserProfileBloc>(
-          builder: (_) =>
-              UserProfileBloc(userRepository: userRepo),
+          builder: (_) => UserProfileBloc(userRepository: userRepo),
         ),
       ],
       child: buildMaterialApp(context),
@@ -73,11 +74,15 @@ class App extends StatelessWidget {
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           if (state is AppNeedInternetAccessState) {
-            return AppStartupCheckResultPage(message: state.message,);
+            return AppStartupCheckResultPage(
+              message: state.message,
+            );
           }
 
           if (state is AppNeedLocationAccessState) {
-            return AppStartupCheckResultPage(message: state.message,);
+            return AppStartupCheckResultPage(
+              message: state.message,
+            );
           }
 
           if (state is Unauthenticated) {
@@ -86,12 +91,18 @@ class App extends StatelessWidget {
             );
           }
 
+          if (state is AuthenticationUninitializedState ||
+              state is PreAuthenticatedState) {
+            logger.d(">>>>>>> prepare to load user profile.");
+            return GenericLoadingScreen();
+          }
+
           if (state is Authenticated) {
             return MainScreen(
               title: "Hali",
             );
           }
-          
+
           return SplashScreen();
         },
       ),

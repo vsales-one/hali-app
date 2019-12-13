@@ -1,9 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:hali/app_widgets/empty_listing.dart';
-import 'package:hali/authentication_bloc/authentication_bloc.dart';
-import 'package:hali/authentication_bloc/bloc.dart';
 import 'package:hali/models/user_profile.dart';
 import 'package:hali/user_profile/bloc/bloc.dart';
 import 'package:hali/utils/color_utils.dart';
@@ -15,11 +14,9 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
-  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
-
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>(); 
   UserProfile model;
   UserProfileBloc _userProfileBloc;
-  ValueChanged _onChanged = (val) => print(val);
 
   void showSnackBar(String msg) {
     _globalKey.currentState
@@ -31,7 +28,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState();    
     _userProfileBloc = BlocProvider.of<UserProfileBloc>(context);
     _userProfileBloc..add(UserProfileLoading());
   }
@@ -39,22 +36,23 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<UserProfileBloc, UserProfileState>(
-      listener: (ctx, s) {},
+      listener: (ctx, state) {
+        if (state is UserProfileUpdatedState) {
+          _userProfileBloc.add(UserProfileLoading());
+          Navigator.of(context).pop();
+        }
+      },
       child: BlocBuilder<UserProfileBloc, UserProfileState>(
         builder: (context, state) {
           if (state is UserProfileLoadingState) {
             return _buildLoadingBody();
           }
+
           if (state is UserProfileLoadedState) {
             this.model = state.userProfile;
-            print(">>>>>>> get user profile data:");
-            print("displayname = ${model.displayName}");
             return _buildBody(context);
           }
-          if (state is UserProfileUpdatedState) {
-            model = state.userProfile;
-            return _buildBody(context);
-          }
+
           return EmptyListing();
         },
       ),
@@ -139,7 +137,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     labelText: "Email",
                   ),
                   initialValue: model.email,
-                  onChanged: _onChanged,
                   validators: [
                     FormBuilderValidators.required(errorText: "Cần nhập email"),
                     FormBuilderValidators.email(
@@ -215,21 +212,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       print(_fbKey.currentState.value);
                       print("validation failed");
                     }
-                  },
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                MaterialButton(
-                  color: Theme.of(context).accentColor,
-                  child: Text(
-                    "Thoát ứng dụng",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {
-                    //showSnackBar("logging out");
-                    BlocProvider.of<AuthenticationBloc>(context)
-                        .add(LoggedOut());
                   },
                 ),
               ],

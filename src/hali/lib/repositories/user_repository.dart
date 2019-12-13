@@ -41,7 +41,7 @@ class UserRepository {
       throw AppError(
         statusCode: 200,
         message:
-            "Email đã tồn tại với phương thức đăng nhập ${signinMethods.join(",")}",
+            "${googleUser.email} đã tồn tại với phương thức đăng nhập ${signinMethods.join(",")}",
       );
     }
 
@@ -75,15 +75,17 @@ class UserRepository {
         final token = fbLoginResult.accessToken.token;
         final fbProfile = await _getUserEmailFromFacebookToken(token);
         if (fbProfile == null) return null;
-        final signinMethods = await _firebaseAuth.fetchSignInMethodsForEmail(
-            email: fbProfile["email"]);
+        final userEmail = fbProfile["email"];
+        final signinMethods =
+            await _firebaseAuth.fetchSignInMethodsForEmail(email: userEmail);
 
         if (signinMethods.isNotEmpty &&
             signinMethods.indexOf("facebook.com") < 0) {
           throw AppError(
-              statusCode: 200,
-              message:
-                  "Email đã tồn tại với phương thức đăng nhập ${signinMethods.join(",")}");
+            statusCode: 200,
+            message:
+                "$userEmail đã tồn tại với phương thức đăng nhập ${signinMethods.join(",")}",
+          );
         }
 
         final AuthCredential credential =

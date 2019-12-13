@@ -86,7 +86,8 @@ class CreateFoodFormState extends State<CreateFoodForm> {
 
         if (state.isPostLocationChanged) {
           _postLocation = state.locationResult.latLng;
-          _address = state.addressDto.streetAddress;//state.locationResult.formattedAddress;
+          _address = state.addressDto
+              .streetAddress; //state.locationResult.formattedAddress;
           _district = state.addressDto.district;
           _city = state.addressDto.city;
           logger.d(">>>>>>> pickup address: $_address");
@@ -300,11 +301,14 @@ class CreateFoodFormState extends State<CreateFoodForm> {
   }
 
   Future _presentLocationScreen() async {
-    LocationResult result = await Navigator.of(context).push(CupertinoPageRoute(
+    LocationResult result = await Navigator.of(context).push(
+      CupertinoPageRoute(
         builder: (context) => PlacePicker(
-              kApiKey,
-              displayLocation: _postLocation,
-            )));
+          kGMapApiKey,
+          displayLocation: _postLocation,
+        ),
+      ),
+    );
     BlocProvider.of<CreatePostBloc>(context)
         .add(ChangePostPickupLocationEvent(locationResult: result));
   }

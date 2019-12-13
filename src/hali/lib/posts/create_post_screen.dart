@@ -19,7 +19,8 @@ import 'bloc/index.dart';
 class CreatePostScreen extends StatefulWidget {
   final AbstractPostRepository _postRepository;
 
-  const CreatePostScreen({Key key, @required AbstractPostRepository postRepository})
+  const CreatePostScreen(
+      {Key key, @required AbstractPostRepository postRepository})
       : assert(postRepository != null),
         _postRepository = postRepository,
         super(key: key);
