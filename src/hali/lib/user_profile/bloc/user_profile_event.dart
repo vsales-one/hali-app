@@ -11,7 +11,7 @@ abstract class UserProfileEvent extends Equatable {
 }
 
 
-class UserProfileLoading extends UserProfileEvent { 
+class UserProfileLoading extends UserProfileEvent {
 }
 
 

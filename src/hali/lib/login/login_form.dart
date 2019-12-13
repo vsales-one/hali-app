@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/constants/constants.dart';
+import 'package:hali/di/appModule.dart';
 import 'package:hali/login/facebook_login_button.dart';
 import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
@@ -18,7 +19,7 @@ class LoginForm extends StatefulWidget {
   State<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {  
+class _LoginFormState extends State<LoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -41,12 +42,28 @@ class _LoginFormState extends State<LoginForm> {
     _passwordController.addListener(_onPasswordChanged);
   }
 
+  void _showLoginProgressIndicator() {
+    Scaffold.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Đang Đăng Nhập...'),
+              CircularProgressIndicator(),
+            ],
+          ),
+        ),
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.isFailure) {
-          AlertHelper.showAlertError(context, state.message);          
+          AlertHelper.showAlertError(context, state.message);
         }
         if (state.isSubmitting) {
           Scaffold.of(context)
@@ -64,11 +81,13 @@ class _LoginFormState extends State<LoginForm> {
             );
         }
         if (state.isSuccess) {
+          logger.d(">>>>>>> Authentication success -> load user profile.");
+          _showLoginProgressIndicator();
           BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn());
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
-        builder: (context, state) {          
+        builder: (context, state) {
           return Padding(
             padding: EdgeInsets.all(20.0),
             child: Form(
@@ -76,7 +95,8 @@ class _LoginFormState extends State<LoginForm> {
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Image.asset('assets/images/hali_logo_199.png', height: 200),
+                    child: Image.asset('assets/images/hali_logo_199.png',
+                        height: 200),
                   ),
                   TextFormField(
                     controller: _emailController,
@@ -100,7 +120,9 @@ class _LoginFormState extends State<LoginForm> {
                     autovalidate: true,
                     autocorrect: false,
                     validator: (_) {
-                      return !state.isPasswordValid ? 'Mật khẩu không hợp lệ' : null;
+                      return !state.isPasswordValid
+                          ? 'Mật khẩu không hợp lệ'
+                          : null;
                     },
                   ),
                   Padding(

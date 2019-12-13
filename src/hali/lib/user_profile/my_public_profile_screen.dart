@@ -1,10 +1,7 @@
-import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/app_widgets/generic_error_screen.dart';
+import 'package:hali/authentication_bloc/bloc.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:hali/di/appModule.dart';
 import 'package:hali/models/user_profile.dart';
@@ -22,13 +19,13 @@ class MyPublicProfileScreen extends StatefulWidget {
 
 class _MyPublicProfileScreenState extends State<MyPublicProfileScreen> {
   UserProfile model;
-  UserProfileBloc _userProfileBloc;  
+  UserProfileBloc _userProfileBloc;
 
   @override
   void initState() {
     super.initState();
     _userProfileBloc = BlocProvider.of<UserProfileBloc>(context);
-    _userProfileBloc..add(UserProfileLoading());
+    _userProfileBloc..add(UserProfileLoading());    
   }
 
   @override
@@ -47,17 +44,15 @@ class _MyPublicProfileScreenState extends State<MyPublicProfileScreen> {
     return BlocBuilder<UserProfileBloc, UserProfileState>(builder: (
       BuildContext context,
       UserProfileState currentState,
-    ) {
-      if (currentState is UserProfileLoadingState) {
-        return _buildLoadingBody();
-      }
+    ) {      
       if (currentState is UserProfileLoadedState) {
-        this.model = currentState.userProfile;        
+        this.model = currentState.userProfile;
         return _buildBody();
       }
-      if(currentState is UserProfileNotUpdatedState) {
+      if (currentState is UserProfileNotUpdatedState) {
         return GenericErrorScreen();
       }
+      return _buildLoadingBody();
     });
   }
 
@@ -67,7 +62,7 @@ class _MyPublicProfileScreenState extends State<MyPublicProfileScreen> {
         _buildProfileCard(),
         Container(
           padding: EdgeInsets.all(8),
-          child: RaisedButton(
+          child: MaterialButton(
             color: Colors.blueAccent,
             child: Text(
               "Cập Nhật Thông Tin Cá Nhân",
@@ -76,6 +71,18 @@ class _MyPublicProfileScreenState extends State<MyPublicProfileScreen> {
             onPressed: () {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (_) => UserProfileScreen()));
+            },
+          ),
+        ),
+        Container(
+          child: MaterialButton(
+            color: Theme.of(context).accentColor,
+            child: Text(
+              "Thoát",
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
             },
           ),
         ),
@@ -110,8 +117,6 @@ class _MyPublicProfileScreenState extends State<MyPublicProfileScreen> {
                 colors: <Color>[
                   ColorUtils.hexToColor(colorF0857A),
                   ColorUtils.hexToColor(colorD92c27),
-                  // const Color(0xFF7928D1),
-                  // const Color(0xFF9A4DFF)
                 ],
                 stops: <double>[0.3, 0.5],
                 begin: Alignment.topRight,
@@ -157,20 +162,22 @@ class _MyPublicProfileScreenState extends State<MyPublicProfileScreen> {
   /// The avatar consists of the profile image, the users name and location
   Widget _buildAvatar() {
     final userImage = model.imageUrl.isNotEmpty
-        ? NetworkImage(model.imageUrl,)
+        ? NetworkImage(
+            model.imageUrl,
+          )
         : AssetImage("assets/images/ic-avatar.png");
     return Row(
       children: <Widget>[
         GestureDetector(
           child: Container(
-            width: 64.0,
-            height: 64.0,
+            width: 128.0,
+            height: 128.0,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: userImage,
                 fit: BoxFit.cover,
               ),
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              borderRadius: BorderRadius.all(Radius.circular(64.0)),
               boxShadow: <BoxShadow>[
                 BoxShadow(
                   color: Colors.black26,
@@ -187,26 +194,28 @@ class _MyPublicProfileScreenState extends State<MyPublicProfileScreen> {
         Padding(
           padding: const EdgeInsets.only(right: 20.0),
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              model.displayName ?? model.email,
-              style: Styles.getSemiboldStyle(16, Colors.white),
-            ),
-            Text(
-              model.address,
-              style: Styles.getRegularStyle(16, Colors.white),
-            ),
-            Text(
-              model.district,
-              style: Styles.getRegularStyle(16, Colors.white),
-            ),
-            Text(
-              model.city,
-              style: Styles.getRegularStyle(16, Colors.white),
-            ),
-          ],
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                model.displayName ?? model.email ?? "",
+                style: Styles.getSemiboldStyle(16, Colors.white),
+              ),
+              Text(
+                model.address ?? "Chưa thiết lập địa chỉ",
+                style: Styles.getRegularStyle(16, Colors.white),
+              ),
+              Text(
+                model.district ?? "",
+                style: Styles.getRegularStyle(16, Colors.white),
+              ),
+              Text(
+                model.city ?? "",
+                style: Styles.getRegularStyle(16, Colors.white),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -254,7 +263,8 @@ class _MyPublicProfileScreenState extends State<MyPublicProfileScreen> {
       maxHeight: 512,
       imageQuality: 80,
     );
-    _userProfileBloc.add(UpdateUserAvatarImageUrlEvent(userProfile: model, newUserImage: image));
+    _userProfileBloc.add(
+        UpdateUserAvatarImageUrlEvent(userProfile: model, newUserImage: image));
   }
 }
 

@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:hali/constants/constants.dart';
-import 'package:hali/models/location_result.dart';
 import 'package:hali/utils/color_utils.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:hali/utils/loading_builder.dart';
 import 'package:hali/utils/location_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class PickupLocationScreen extends StatefulWidget {
@@ -20,14 +17,9 @@ class PickupLocationScreen extends StatefulWidget {
 
 class _PickupLocationState extends State<PickupLocationScreen> {
   Completer<GoogleMapController> _controller = Completer();
-
   static const LatLng _center =  LatLng(10.779783, 106.6968148);
-
   final Set<Marker> _markers = {};
-
   LatLng _lastMapPosition = _center;
-
-  String _address;
 
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
@@ -161,7 +153,7 @@ class _PickupLocationState extends State<PickupLocationScreen> {
   Future<String> getAddress(LatLng location) async {
     try {
       var endPoint =
-          'https://maps.googleapis.com/maps/api/geocode/json?latlng=${location?.latitude},${location?.longitude}&key=$kApiKey';
+          'https://maps.googleapis.com/maps/api/geocode/json?latlng=${location?.latitude},${location?.longitude}&key=$kGMapApiKey';
       var response = jsonDecode((await http.get(endPoint)).body);
 
       return response['results'][0]['formatted_address'];

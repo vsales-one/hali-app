@@ -18,7 +18,7 @@ class AuthenticationBloc
         _userRepository = userRepository;
 
   @override
-  AuthenticationState get initialState => Uninitialized();
+  AuthenticationState get initialState => AuthenticationUninitializedState();
 
   @override
   Stream<AuthenticationState> mapEventToState(
@@ -65,6 +65,7 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
+    yield PreAuthenticatedState();
     await _loadUserProfile();
     yield Authenticated(Application.currentUser);
   }
