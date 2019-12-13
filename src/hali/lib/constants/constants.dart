@@ -8,6 +8,6 @@ const String kFirebaseUser = "firebase-user-app";
 const String kDefaultUserPhotoUrl = "https://firebasestorage.googleapis.com/v0/b/hali-ca190.appspot.com/o/public_images%2Fic-avatar.png?alt=media&token=dce7d106-701c-4a9b-8c38-a29ce0509582";
 const String kDbProvider = "firestore";
 // const String kDbProvider = "mysql";
-const int kPageSize = 10;
+const int kPageSize = 20;
 const double kDefaultLatitude = 10.762622;
 const double kDefaultLongitude = 106.660172;

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:hali/models/post_model.dart';
+import 'package:meta/meta.dart';
 
 
 abstract class FeedDetailEvent extends Equatable {
@@ -21,12 +22,13 @@ class FeedEventFetch extends FeedDetailEvent {
 }
 
 class RequestListingConfirmationEvent extends FeedDetailEvent {
+  final String postId;
   final PostModel post;
 
-  RequestListingConfirmationEvent({this.post});
+  RequestListingConfirmationEvent({@required this.postId, @required this.post});
 
   @override
-  List<Object> get props => [post];
+  List<Object> get props => [postId, post];
 
   String toString() => 'RequestListingConfirmationEvent: ${post.id}';
 }

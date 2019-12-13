@@ -65,7 +65,7 @@ class PostRepository implements AbstractPostRepository {
 
   @override
   Future<StorageTaskSnapshot> uploadImage(File image, String _fileName) async {
-    final StorageReference ref = storage.ref().child('public_images').child("posts").child(_fileName);
+    final StorageReference ref = storage.ref().child('public_images').child("itemposts").child(_fileName);
     // upload task
     final StorageUploadTask uploadTask = ref.putFile(
       image,

@@ -115,6 +115,6 @@ class FeedDetailScreenState extends State<FeedDetailScreen> {
     // 1) open request listing confirmation screen
     // 2) on confirmed at confirmation screen send a message from requestor to owner
     // 3) Then goes to message screen
-    _bloc.add(RequestListingConfirmationEvent(post: post));
+    _bloc.add(RequestListingConfirmationEvent(postId: widget.postId, post: post));
   }
 }

@@ -64,9 +64,6 @@ class _MessageScreenState extends State<MessageScreen> {
 
   void initUser() async {
     currentUser = await _userRepository.getCurrentUserProfileFull();
-    if (mounted) {
-      setState(() => 0);
-    }
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:hali/di/appModule.dart';
 import 'package:hali/messages/message_screen.dart';
 import 'package:hali/models/item_listing_message.dart';
 import 'package:hali/models/item_request_message_type.dart';
@@ -32,6 +33,12 @@ class _RequestListingConfirmationScreenState
 
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    logger.d(">>>>>>> confirm to request for item ${widget.requestItem.toJson()}");
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -163,7 +163,7 @@ class ChatMessageRepository {
 
   Future<bool> updatePostStatus(String id, String status) async {
     try {
-      final docRef = fireStore.collection("posts").document(id);
+      final docRef = fireStore.collection("itemposts").document(id);
       final data = {"status": status};
       await docRef.updateData(data);
       return true;

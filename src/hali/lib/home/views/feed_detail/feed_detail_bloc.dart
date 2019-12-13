@@ -35,7 +35,7 @@ class FeedDetailBloc extends Bloc<FeedDetailEvent, FeedDetailState> {
       final toUser = await userRepository.getUserProfileByEmail(post.lastModifiedBy);
       final requestItem = ItemListingMessage.fromNamed(
         itemType: post.categoryCategoryName,
-        itemId: post.id.toString(),
+        itemId: event.postId,
         itemTitle: post.title,
         itemImageUrl: post.imageUrl,
         from: requestor,

@@ -10,7 +10,7 @@ import 'package:hali/repositories/post_repository.dart';
 
 class FirebasePostRepository implements AbstractPostRepository {
   final Firestore _fireStore;
-  static const String POST_COLLECTIONS = "posts";
+  static const String POST_COLLECTIONS = "itemposts";
 
   FirebasePostRepository({Firestore firestore})
       : this._fireStore = firestore ?? Firestore.instance;
@@ -23,20 +23,21 @@ class FirebasePostRepository implements AbstractPostRepository {
   ) async {
     final categoryId = params["categoryId.equals"];
     final status = params["status.equals"];
+    logger.d(
+        ">>>>>>>: fetchPosts from firestore pageSize: $pageSize-pageNumber: $pageNumber-status: $status-categoryId: $categoryId");
     try {
-      final query = await _fireStore
+      final query = _fireStore
           .collection(POST_COLLECTIONS)
           .where("status", isEqualTo: status)
           .where("categoryId", isEqualTo: categoryId)
           .orderBy("lastModifiedDate", descending: true)
-          .startAt([(pageNumber - 1) * pageSize])
-          .limit(pageSize)
-          .snapshots()
-          .first;
+          .limit(pageSize);
+      
+      final docs = await query.getDocuments();
 
-      logger.d(">>>>>>>: fetchPosts from firestore ${query.documents.length}");
+      logger.d(">>>>>>>: fetchPosts from firestore ${docs.documents.length}");
 
-      final posts = query.documents.map((doc) {
+      final posts = docs.documents.map((doc) {
         logger.d(">>>>>> fetchPosts map document: ${doc.data}");
         final post = PostModel.fromJson(doc.data);
         post.id = doc.documentID;
@@ -86,8 +87,11 @@ class FirebasePostRepository implements AbstractPostRepository {
 
   @override
   Future<StorageTaskSnapshot> uploadImage(File image, String _fileName) async {
-    final StorageReference ref =
-        storage.ref().child("public_images").child("posts").child(_fileName);
+    final StorageReference ref = storage
+        .ref()
+        .child("public_images")
+        .child("itemposts")
+        .child(_fileName);
     // upload task
     final StorageUploadTask uploadTask = ref.putFile(
       image,
