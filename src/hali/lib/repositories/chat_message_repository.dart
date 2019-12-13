@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hali/di/appModule.dart';
 import 'package:hali/models/chat_message.dart';
 import 'package:hali/models/item_listing_message.dart';
 import 'package:hali/repositories/user_repository.dart';
@@ -19,39 +20,38 @@ class ChatMessageRepository {
 
   Stream<List<ItemListingMessage>> getItemRequestMessages() async* {
     final user = await userRepository.getCurrentUserProfileFull();
-    final activeUsers = await userRepository.getActiveUsers();
 
+    // query request messages belong to item owner
     await for (QuerySnapshot snap in fireStore
         .collection(ITEM_REQUEST_MESSAGES)
         .where("to.userId", isEqualTo: user.email)
+        .where("status", isEqualTo: "Open")
         .orderBy("publishedAt")
         .snapshots()) {
       try {
         final chats = snap.documents
             .map((doc) => ItemListingMessage.fromJson(doc.data))
             .toList();
-
-        chats.forEach((chat) {
-          chat.to.isActive = false;
-          chat.from.isActive = false;
-          if (chat.to.id != user.id) {
-            activeUsers.forEach((temp) {
-              if (temp.id == chat.to.id) {
-                chat.to.isActive = true;
-              }
-            });
-          } else {
-            activeUsers.forEach((temp) {
-              if (temp.id == chat.from.id) {
-                chat.from.isActive = true;
-              }
-            });
-          }
-        });
-
         yield chats;
       } catch (e) {
-        print(e);
+        logger.e(e);
+      }
+    }
+
+    // query request messages belong to requestor
+    await for (QuerySnapshot snap in fireStore
+        .collection(ITEM_REQUEST_MESSAGES)
+        .where("from.userId", isEqualTo: user.email)
+        .where("status", isEqualTo: "Open")
+        .orderBy("publishedAt")
+        .snapshots()) {
+      try {
+        final chats = snap.documents
+            .map((doc) => ItemListingMessage.fromJson(doc.data))
+            .toList();
+        yield chats;
+      } catch (e) {
+        logger.e(e);
       }
     }
   }
@@ -62,7 +62,7 @@ class ChatMessageRepository {
       await saveRecentChat(chat);
       return true;
     } catch (e) {
-      print("Exception $e");
+      logger.e("Exception $e");
       return false;
     }
   }
@@ -101,7 +101,7 @@ class ChatMessageRepository {
       await fireStore.collection(MESSAGES).add(itemRequestMessage.toJson());
       return true;
     } catch (e) {
-      print("Exception $e");
+      logger.e("Exception $e");
       return false;
     }
   }

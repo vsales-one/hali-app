@@ -218,18 +218,15 @@ class UserRepository {
         .where("isActive", isEqualTo: true)
         .getDocuments();
     var documents = val.documents;
-    print("Documents ${documents.length}");
     if (documents.length > 0) {
       try {
-        print("Active ${documents.length}");
         return documents.map((document) {
           UserProfile user =
               UserProfile.fromJson(Map<String, dynamic>.from(document.data));
-          print("User ${user.displayName}");
           return user;
         }).toList();
       } catch (e) {
-        print("Exception $e");
+        logger.e("Exception $e");
         return [];
       }
     }
