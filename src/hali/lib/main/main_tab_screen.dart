@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hali/app_widgets/fab_bottom_app_bar.dart';
 import 'package:hali/constants/constants.dart';
 import 'package:hali/home/index.dart';
 import 'package:hali/messages/message_list_screen.dart';
@@ -29,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
   void onPageViewChanged(int index) {
     setState(() {
       _selectedIndex = index;
-      if (index < 3) {
+      if (index < 4) {
         controller.jumpToPage(index);
       } else {
         _showAppInfo();
@@ -76,6 +75,14 @@ class _MainScreenState extends State<MainScreen> {
           HomePage(
             userRepository: RepositoryProvider.of<UserRepository>(context),
             homeRepository: RepositoryProvider.of<HomeRepository>(context),
+            categoryId: 1,
+            title: "Thực Phẩm",
+          ),
+          HomePage(
+            userRepository: RepositoryProvider.of<UserRepository>(context),
+            homeRepository: RepositoryProvider.of<HomeRepository>(context),
+            categoryId: 2,
+            title: "Đồ Dùng",
           ),
           MessageListScreen(),
           MyPublicProfilePage(),
@@ -91,7 +98,11 @@ class _MainScreenState extends State<MainScreen> {
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(MdiIcons.foodForkDrink),
-          title: Text('Hali'),
+          title: Text('Thực Phẩm'),
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(MdiIcons.shopping),
+          title: Text('Đồ Dùng Khác'),
         ),
         BottomNavigationBarItem(
           icon: Icon(MdiIcons.message),

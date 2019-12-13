@@ -11,5 +11,12 @@ class LoadHomeEvent extends HomeEvent {
 }
 
 class HomeFetchEvent extends HomeEvent {
+  final int categoryId;
+
+  HomeFetchEvent({this.categoryId});
+
+  @override
+  List<Object> get props => [categoryId];
+
   String toString() => 'HomeFetch';
 }

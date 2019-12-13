@@ -323,27 +323,30 @@ class CreateFoodFormState extends State<CreateFoodForm> {
       final profile = userManager.userProfile.value;
 
       final postModel = CreatePostCommand(
-          title: _title,
-          imageUrl: widget.postImageUrl,
-          description: _description,
-          pickUpTime: _pickup,
-          startDate:
-              DateUtils.dateToString(_startDate), //"2019-12-12T04:11:00.000Z"
-          endDate:
-              DateUtils.dateToString(_endDate), //"2019-12-12T04:11:00.000Z"
-          categoryId: _categorySelected.id,
-          lastModifiedDate: DateUtils.dateToString(
-              DateTime.now()), //"2019-12-12T04:11:00.000Z"
-          lastModifiedBy: profile.email ?? profile.userId ?? "",
-          latitude: _postLocation.latitude ?? 0.0,
-          longitude: _postLocation.longitude ?? 0.0,
-          pickupAddress: _address ?? "",
-          city: _city,
-          district: _district,
-          userProfileDisplayName:
-              profile.displayName ?? profile.email ?? profile.userId,
-          userProfileImageUrl: profile.imageUrl ?? kDefaultUserPhotoUrl,
-          status: "open");
+        title: _title,
+        imageUrl: widget.postImageUrl,
+        description: _description,
+        pickUpTime: _pickup,
+        startDate: DateUtils.dateToString(_startDate),
+        // startDate: "2019-12-13T04:11:00.000Z",
+        endDate: DateUtils.dateToString(_endDate),
+        // endDate: "2019-12-13T04:11:00.000Z",
+        categoryId: _categorySelected.id,
+        lastModifiedDate: DateUtils.dateToString(
+          DateTime.now(),
+        ),
+        // lastModifiedDate: "2019-12-13T04:11:00.000Z",
+        lastModifiedBy: profile.email ?? profile.userId ?? "",
+        latitude: _postLocation.latitude ?? 0.0,
+        longitude: _postLocation.longitude ?? 0.0,
+        pickupAddress: _address ?? "",
+        city: _city,
+        district: _district,
+        userProfileDisplayName:
+            profile.displayName ?? profile.email ?? profile.userId,
+        userProfileImageUrl: profile.imageUrl ?? kDefaultUserPhotoUrl,
+        status: "open",
+      );
       BlocProvider.of<CreatePostBloc>(context).add(
           AddPostStartEvent(postModel: postModel, image: widget.imageCover));
     }

@@ -17,11 +17,17 @@ class FirebasePostRepository implements AbstractPostRepository {
 
   @override
   Future<ApiResponse<List<PostModel>>> fetchPosts(
-      int pageNumber, int pageSize) async {
+    Map<String, dynamic> params,
+    int pageNumber,
+    int pageSize,
+  ) async {
+    final categoryId = params["categoryId.equals"];
+    final status = params["status.equals"];
     try {
       final query = await _fireStore
           .collection(POST_COLLECTIONS)
-          .where("status", isEqualTo: "open")
+          .where("status", isEqualTo: status)
+          .where("categoryId", isEqualTo: categoryId)
           .orderBy("lastModifiedDate")
           .startAt([(pageNumber - 1) * pageSize])
           .limit(pageSize)
@@ -31,7 +37,7 @@ class FirebasePostRepository implements AbstractPostRepository {
       logger.d(">>>>>>>: fetchPosts from firestore ${query.documents.length}");
 
       final posts = query.documents.map((doc) {
-        logger.d(">>>>>> fetchPosts map document: ${doc.data}");        
+        logger.d(">>>>>> fetchPosts map document: ${doc.data}");
         final post = PostModel.fromJson(doc.data);
         post.id = doc.documentID;
         return post;

@@ -38,8 +38,6 @@ class _MessageScreenState extends State<MessageScreen> {
   ScrollController scrollController = ScrollController();
   UserRepository _userRepository;
   ChatMessageRepository _chatMessageRepository;
-  // final GlobalKey _firstRequestMessageHeaderKey = GlobalKey();
-  // final GlobalKey _messageHeaderKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<ChatMessage> chats = [];
   UserProfile currentUser;

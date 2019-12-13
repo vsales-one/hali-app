@@ -2,7 +2,6 @@ import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hali/models/chat_message.dart';
 import 'package:hali/models/item_listing_message.dart';
-import 'package:hali/models/user_profile.dart';
 import 'package:hali/repositories/user_repository.dart';
 import 'package:meta/meta.dart';
 
@@ -22,10 +21,11 @@ class ChatMessageRepository {
     final user = await userRepository.getCurrentUserProfileFull();
     final activeUsers = await userRepository.getActiveUsers();
 
-    await for (QuerySnapshot snap
-        in fireStore.collection(ITEM_REQUEST_MESSAGES)          
-          .where("to.userId", isEqualTo: user.email)
-          .orderBy("publishedAt").snapshots()) {
+    await for (QuerySnapshot snap in fireStore
+        .collection(ITEM_REQUEST_MESSAGES)
+        .where("to.userId", isEqualTo: user.email)
+        .orderBy("publishedAt")
+        .snapshots()) {
       try {
         final chats = snap.documents
             .map((doc) => ItemListingMessage.fromJson(doc.data))
@@ -57,7 +57,7 @@ class ChatMessageRepository {
   }
 
   Future<bool> sendMessage(ChatMessage chat) async {
-    try {            
+    try {
       fireStore.collection(MESSAGES).add(chat.toJson());
       await saveRecentChat(chat);
       return true;
@@ -89,12 +89,14 @@ class ChatMessageRepository {
     }
   }
 
-  Future<bool> sendItemRequestMessage(String messageContent,
-      ItemListingMessage itemRequestMessage) async {
+  Future<bool> sendItemRequestMessage(
+      String messageContent, ItemListingMessage itemRequestMessage) async {
     print(
         "Sending message to request item ${itemRequestMessage.itemId}-${itemRequestMessage.itemTitle}");
-    try {      
-      await fireStore.collection(ITEM_REQUEST_MESSAGES).add(itemRequestMessage.toJson());
+    try {
+      await fireStore
+          .collection(ITEM_REQUEST_MESSAGES)
+          .add(itemRequestMessage.toJson());
       itemRequestMessage.content = messageContent;
       await fireStore.collection(MESSAGES).add(itemRequestMessage.toJson());
       return true;
@@ -123,31 +125,35 @@ class ChatMessageRepository {
   }
 
   /// confirm item pick up and close the post
-  Future<bool> confirmItemPickupAndClosePost(ItemListingMessage itemRequestMessage) async {
+  Future<bool> confirmItemPickupAndClosePost(
+      ItemListingMessage itemRequestMessage) async {
     final snapShot = await fireStore
-      .collection(ITEM_REQUEST_MESSAGES)
-      .where("itemId", isEqualTo: itemRequestMessage.itemId)
-      .snapshots().first;
+        .collection(ITEM_REQUEST_MESSAGES)
+        .where("itemId", isEqualTo: itemRequestMessage.itemId)
+        .snapshots()
+        .first;
 
-    if(snapShot.documents.first != null) {      
-      final data = {
-        "status": "Closed"
-      };
+    if (snapShot.documents.first != null) {
+      final data = {"status": "closed"};
 
-      await fireStore.collection(ITEM_REQUEST_MESSAGES)
-        .document(snapShot.documents.first.documentID)
-        .setData(data, merge: true);
+      await fireStore
+          .collection(ITEM_REQUEST_MESSAGES)
+          .document(snapShot.documents.first.documentID)
+          .setData(data, merge: true);
 
       // send message to requestor
       final toRequestorMessage = ChatMessage.fromNamed(
-        content: "${itemRequestMessage.from.firstName} đã xác nhận bạn nhận được quà",
-        from: itemRequestMessage.from,
-        to: itemRequestMessage.to,
-        isSeen: false,
-        publishedAt: DateTime.now(),
-        groupId: itemRequestMessage.groupId
-      );
+          content:
+              "${itemRequestMessage.from.firstName} đã xác nhận bạn nhận được quà",
+          from: itemRequestMessage.from,
+          to: itemRequestMessage.to,
+          isSeen: false,
+          publishedAt: DateTime.now(),
+          groupId: itemRequestMessage.groupId);
+
       await fireStore.collection(MESSAGES).add(toRequestorMessage.toJson());
+
+      await updatePostStatus(itemRequestMessage.itemId, "closed");
 
       return true;
     }
@@ -155,32 +161,47 @@ class ChatMessageRepository {
     return false;
   }
 
-  /// Cancel item pickup and reopen post  
-  Future<bool> cancelItemPickupAndReopenPost(ItemListingMessage itemRequestMessage) async {
+  Future<bool> updatePostStatus(String id, String status) async {
+    try {
+      final docRef = fireStore.collection("posts").document(id);
+      final data = {"status": status};
+      await docRef.updateData(data);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Cancel item pickup and reopen post
+  Future<bool> cancelItemPickupAndReopenPost(
+      ItemListingMessage itemRequestMessage) async {
     final snapShot = await fireStore
-      .collection(ITEM_REQUEST_MESSAGES)
-      .where("itemId", isEqualTo: itemRequestMessage.itemId)
-      .snapshots().first;
+        .collection(ITEM_REQUEST_MESSAGES)
+        .where("itemId", isEqualTo: itemRequestMessage.itemId)
+        .snapshots()
+        .first;
 
-    if(snapShot.documents.first != null) {      
-      final data = {
-        "status": "Open"
-      };
+    if (snapShot.documents.first != null) {
+      final data = {"status": "open"};
 
-      await fireStore.collection(ITEM_REQUEST_MESSAGES)
-        .document(snapShot.documents.first.documentID)
-        .setData(data, merge: true);
+      await fireStore
+          .collection(ITEM_REQUEST_MESSAGES)
+          .document(snapShot.documents.first.documentID)
+          .setData(data, merge: true);
 
       // send message to requestor
       final toRequestorMessage = ChatMessage.fromNamed(
-        content: "${itemRequestMessage.from.firstName} đã huỷ xác nhận cho bạn được nhận quà",
-        from: itemRequestMessage.from,
-        to: itemRequestMessage.to,
-        isSeen: false,
-        publishedAt: DateTime.now(),
-        groupId: itemRequestMessage.groupId
-      );
+          content:
+              "${itemRequestMessage.from.firstName} đã huỷ xác nhận cho bạn được nhận quà",
+          from: itemRequestMessage.from,
+          to: itemRequestMessage.to,
+          isSeen: false,
+          publishedAt: DateTime.now(),
+          groupId: itemRequestMessage.groupId);
+
       await fireStore.collection(MESSAGES).add(toRequestorMessage.toJson());
+
+      await updatePostStatus(itemRequestMessage.itemId, "open");
 
       return true;
     }

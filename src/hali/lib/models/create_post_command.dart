@@ -46,4 +46,9 @@ class CreatePostCommand {
       _$CreatePostCommandFromJson(json);
 
   Map<String, dynamic> toJson() => _$CreatePostCommandToJson(this);
+
+  @override
+  String toString() {
+    return "$categoryId-$title-$status";
+  }
 }

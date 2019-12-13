@@ -5,6 +5,7 @@ import 'package:hali/app_widgets/empty_page_content_screen.dart';
 import 'package:hali/commons/bottom_loader.dart';
 import 'package:hali/config/application.dart';
 import 'package:hali/config/routes.dart';
+import 'package:hali/di/appModule.dart';
 import 'package:hali/home/index.dart';
 import 'package:hali/models/post_model.dart';
 import 'package:hali/utils/app_utils.dart';
@@ -14,8 +15,13 @@ import 'package:hali/home/views/feed_card.dart';
 
 class HomeScreen extends StatefulWidget {
   final String name;
+  final int categoryId;
 
-  HomeScreen({Key key, @required this.name}) : super(key: key);
+  HomeScreen({
+    Key key,
+    @required this.name,
+    @required this.categoryId,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -38,7 +44,7 @@ class HomeScreenState extends State<HomeScreen> {
     super.initState();
     _scrollController.addListener(_onScroll);
     _homeBloc = BlocProvider.of<HomeBloc>(context);
-    _homeBloc.add(HomeFetchEvent());
+    _homeBloc.add(HomeFetchEvent(categoryId: widget.categoryId));
   }
 
   @override
@@ -73,8 +79,7 @@ class HomeScreenState extends State<HomeScreen> {
               return _buildHomeBody();
             },
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.endDocked,
+          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
           floatingActionButton: _buildFab(context),
         ));
   }
@@ -110,7 +115,11 @@ class HomeScreenState extends State<HomeScreen> {
 
   _presentCreatePostScreen() {
     Application.router.navigateTo(context, Routes.createPost,
-        transition: TransitionType.fadeIn);
+        transition: TransitionType.fadeIn)
+    .then((_) {
+      logger.d(">>>>>>> return from create post");
+      _homeBloc.add(HomeFetchEvent(categoryId: widget.categoryId));
+    });
   }
 
   _navigateToDetailPost(String postId) {
@@ -130,7 +139,7 @@ class HomeScreenState extends State<HomeScreen> {
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= _scrollThreshold) {
       if (!_isReachMax) {
-        _homeBloc.add(HomeFetchEvent());
+        _homeBloc.add(HomeFetchEvent(categoryId: widget.categoryId));
       }
     }
   }

@@ -33,13 +33,21 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async* {
     final currentState = state;
     if (event is HomeFetchEvent && !_hasReachedMax(currentState)) {
+      final queryParams = {
+        "categoryId.equals": event.categoryId,
+        "status.equals": "open"
+      };
       try {
         if (currentState is HomeUninitialized) {
           var currentPage = 0;
-          final responsePost =
-              await homeRepository.fetchPosts(currentPage, kPageSize);
+          final responsePost = await homeRepository.fetchPosts(
+            queryParams,
+            currentPage,
+            kPageSize,
+          );
           if (responsePost.data != null) {
-            final bHasReachedMax = currentPage <= 1 && (responsePost.data.length <= kPageSize);
+            final bHasReachedMax =
+                currentPage <= 1 && (responsePost.data.length <= kPageSize);
             yield HomeLoaded(
               posts: responsePost.data,
               hasReachedMax: bHasReachedMax ? true : false,
@@ -52,9 +60,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
         if (currentState is HomeLoaded) {
           final res = await homeRepository.fetchPosts(
-              currentState.currentPage, kPageSize);
+            queryParams,
+            currentState.currentPage,
+            kPageSize,
+          );
           final posts = res.data;
-          final bHasReachedMax = currentState.currentPage == 1 && (posts.length <= kPageSize);
+          final bHasReachedMax =
+              currentState.currentPage == 1 && (posts.length <= kPageSize);
           if (posts != null) {
             yield posts.isEmpty
                 ? currentState.copyWith(hasReachedMax: true)

@@ -51,7 +51,10 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userRepo = RepositoryProvider.of<UserRepository>(context);
+    final homeRepo = RepositoryProvider.of<HomeRepository>(context);
     assert(userRepo != null);
+    assert(homeRepo != null);
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthenticationBloc>(
@@ -60,6 +63,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider<UserProfileBloc>(
           builder: (_) => UserProfileBloc(userRepository: userRepo),
+        ),
+        BlocProvider<HomeBloc>(
+          builder: (_) => HomeBloc(userRepository: userRepo, homeRepository: homeRepo),
         ),
       ],
       child: buildMaterialApp(context),
