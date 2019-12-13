@@ -28,7 +28,7 @@ class FirebasePostRepository implements AbstractPostRepository {
           .collection(POST_COLLECTIONS)
           .where("status", isEqualTo: status)
           .where("categoryId", isEqualTo: categoryId)
-          .orderBy("lastModifiedDate")
+          .orderBy("lastModifiedDate", descending: true)
           .startAt([(pageNumber - 1) * pageSize])
           .limit(pageSize)
           .snapshots()

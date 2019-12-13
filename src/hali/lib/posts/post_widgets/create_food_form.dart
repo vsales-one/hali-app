@@ -10,6 +10,7 @@ import 'package:hali/constants/constants.dart';
 import 'package:hali/di/appModule.dart';
 import 'package:hali/models/create_post_command.dart';
 import 'package:hali/models/hali_category.dart';
+import 'package:hali/models/item_listing_message.dart';
 import 'package:hali/posts/bloc/index.dart';
 import 'package:hali/repositories/app_location_manager.dart';
 import 'package:hali/utils/alert_helper.dart';
@@ -345,7 +346,7 @@ class CreateFoodFormState extends State<CreateFoodForm> {
         userProfileDisplayName:
             profile.displayName ?? profile.email ?? profile.userId,
         userProfileImageUrl: profile.imageUrl ?? kDefaultUserPhotoUrl,
-        status: "open",
+        status: ItemRequestMessageStatus.Open.toString(),
       );
       BlocProvider.of<CreatePostBloc>(context).add(
           AddPostStartEvent(postModel: postModel, image: widget.imageCover));

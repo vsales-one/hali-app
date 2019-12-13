@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:hali/constants/constants.dart';
 import 'package:hali/models/user_profile.dart';
 
 class ChatMessageHeader extends StatelessWidget {
@@ -23,10 +25,12 @@ class ChatMessageHeader extends StatelessWidget {
         children: <Widget>[
           ClipRRect(
             borderRadius: BorderRadius.circular(125.0),
-            child: Image.network(
-              friend.imageUrl,
-              height: 125.0,
-              fit: BoxFit.cover,
+            child: CachedNetworkImage(
+              imageUrl: friend.imageUrl ?? kDefaultUserPhotoUrl,
+              placeholder: (ctx, _) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+              width: 64,
+              height: 64,
             ),
           ),
           Padding(

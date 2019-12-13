@@ -134,7 +134,7 @@ class ChatMessageRepository {
         .first;
 
     if (snapShot.documents.first != null) {
-      final data = {"status": "closed"};
+      final data = {"status": ItemRequestMessageStatus.Closed.toString()};
 
       await fireStore
           .collection(ITEM_REQUEST_MESSAGES)
@@ -153,7 +153,7 @@ class ChatMessageRepository {
 
       await fireStore.collection(MESSAGES).add(toRequestorMessage.toJson());
 
-      await updatePostStatus(itemRequestMessage.itemId, "closed");
+      await updatePostStatus(itemRequestMessage.itemId, ItemRequestMessageStatus.Closed.toString());
 
       return true;
     }
@@ -182,7 +182,7 @@ class ChatMessageRepository {
         .first;
 
     if (snapShot.documents.first != null) {
-      final data = {"status": "open"};
+      final data = {"status": ItemRequestMessageStatus.Open.toString()};
 
       await fireStore
           .collection(ITEM_REQUEST_MESSAGES)
@@ -201,7 +201,7 @@ class ChatMessageRepository {
 
       await fireStore.collection(MESSAGES).add(toRequestorMessage.toJson());
 
-      await updatePostStatus(itemRequestMessage.itemId, "open");
+      await updatePostStatus(itemRequestMessage.itemId, ItemRequestMessageStatus.Open.toString());
 
       return true;
     }

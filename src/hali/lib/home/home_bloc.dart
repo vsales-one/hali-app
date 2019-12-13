@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hali/constants/constants.dart';
 import 'package:hali/home/index.dart';
+import 'package:hali/models/item_listing_message.dart';
 import 'package:hali/repositories/user_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -35,7 +36,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (event is HomeFetchEvent && !_hasReachedMax(currentState)) {
       final queryParams = {
         "categoryId.equals": event.categoryId,
-        "status.equals": "open"
+        "status.equals": ItemRequestMessageStatus.Open.toString()
       };
       try {
         if (currentState is HomeUninitialized) {
