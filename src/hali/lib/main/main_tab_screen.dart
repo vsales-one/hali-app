@@ -18,20 +18,41 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   PageController controller = PageController();
   int _selectedIndex = 0;
+  String _screenTitle = "Thực Phẩm";
+  int _categoryId = 1;
+  static const Map<int, String> ScreenTitle = {
+    0: "Thực Phẩm & Đồ Dùng",    
+    1: "Tin Nhắn",
+    2: "Người Dùng",
+    3: "Thông Tin"
+  };
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = 0;
+    _selectedIndex = 0;    
+  }
+
+  @override
+  void dispose() {        
+    controller.dispose();
+    super.dispose();
   }
 
   void onPageViewChanged(int index) {
+    print(">>>>>>> onPageViewChanged: $index");
     setState(() {
+      _screenTitle = ScreenTitle[index];
       _selectedIndex = index;
-      if (index < 4) {
-        controller.jumpToPage(index);
-      } else {
+      if(index <= 1) {
+        // food category = 1, non-food = 2
+        _categoryId = index + 1;
+      }      
+      if (index == 3) {
         _showAppInfo();
+      } else {
+        // controller.jumpToPage(index);
+        controller.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
       }
     });
   }
@@ -45,8 +66,6 @@ class _MainScreenState extends State<MainScreen> {
           color: Colors.white,
         ),
         onPressed: () {
-          final repo = RepositoryProvider.of<UserRepository>(context);
-          repo.signOut();
         },
       ),
     );
@@ -57,7 +76,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.title,
+          _screenTitle,
           style: TextStyle(
             fontSize: 20,
             color: Colors.white,
@@ -75,14 +94,8 @@ class _MainScreenState extends State<MainScreen> {
           HomePage(
             userRepository: RepositoryProvider.of<UserRepository>(context),
             homeRepository: RepositoryProvider.of<HomeRepository>(context),
-            categoryId: 1,
-            title: "Thực Phẩm",
-          ),
-          HomePage(
-            userRepository: RepositoryProvider.of<UserRepository>(context),
-            homeRepository: RepositoryProvider.of<HomeRepository>(context),
-            categoryId: 2,
-            title: "Đồ Dùng",
+            categoryId: _categoryId,
+            title: _screenTitle,
           ),
           MessageListScreen(),
           MyPublicProfilePage(),
@@ -94,27 +107,23 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildBottomNavBar() {
-    return BottomNavigationBar(
+    return BottomNavigationBar(      
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(MdiIcons.foodForkDrink),
-          title: Text('Thực Phẩm'),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(MdiIcons.shopping),
-          title: Text('Đồ Dùng Khác'),
+          title: Text("Thực Phẩm & Đồ Dùng Khác"),
         ),
         BottomNavigationBarItem(
           icon: Icon(MdiIcons.message),
-          title: Text('Tin Nhắn'),
+          title: Text("Tin Nhắn"),
         ),
         BottomNavigationBarItem(
           icon: Icon(MdiIcons.accountCircle),
-          title: Text('Người Dùng'),
+          title: Text("Người Dùng"),
         ),
         BottomNavigationBarItem(
           icon: Icon(MdiIcons.information),
-          title: Text('Thông Tin'),
+          title: Text("Thông Tin"),
         ),
       ],
       currentIndex: _selectedIndex,

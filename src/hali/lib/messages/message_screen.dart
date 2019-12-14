@@ -55,7 +55,7 @@ class _MessageScreenState extends State<MessageScreen> {
     var messageStatus = widget.itemRequestMessage.status;
     print(">>>>>>> message status: $messageStatus");
     if ((messageStatus == ItemRequestMessageStatus.Open ||
-        messageStatus == null ||
+        messageStatus == null ||        
         messageStatus.toString().isEmpty)) {
       isPickupPendingApproval = true;
     } else {
@@ -223,7 +223,7 @@ class _MessageScreenState extends State<MessageScreen> {
                         content:
                             Text("Bạn không thể gửi tin nhắn cho chính mình")));
                     return;
-                  }
+                  }                  
                   ChatMessage chat = ChatMessage.fromNamed(
                       from: currentUser,
                       to: widget.friend,

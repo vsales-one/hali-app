@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:hali/constants/constants.dart';
 import 'package:hali/di/appModule.dart';
 import 'package:hali/models/api_response.dart';
 import 'package:hali/models/create_post_command.dart';
 import 'package:hali/models/post_model.dart';
+import 'package:hali/models/user_profile.dart';
 import 'package:hali/repositories/post_repository.dart';
 
 class FirebasePostRepository implements AbstractPostRepository {
@@ -20,19 +22,35 @@ class FirebasePostRepository implements AbstractPostRepository {
     Map<String, dynamic> params,
     int pageNumber,
     int pageSize,
+    String lastDocRef,
   ) async {
-    final categoryId = params["categoryId.equals"];
+    // final categoryId = params["categoryId.equals"];
     final status = params["status.equals"];
     logger.d(
-        ">>>>>>>: fetchPosts from firestore pageSize: $pageSize-pageNumber: $pageNumber-status: $status-categoryId: $categoryId");
+        ">>>>>>>: fetchPosts from firestore pageSize: $pageSize-pageNumber: $pageNumber-status: $status");
     try {
-      final query = _fireStore
-          .collection(POST_COLLECTIONS)
-          .where("status", isEqualTo: status)
-          .where("categoryId", isEqualTo: categoryId)
-          .orderBy("lastModifiedDate", descending: true)
-          .limit(pageSize);
-      
+      final lastDoc = lastDocRef == null || lastDocRef.isEmpty
+          ? null
+          : await _fireStore
+              .collection(POST_COLLECTIONS)
+              .document(lastDocRef)
+              .snapshots()
+              .first;
+
+      final query = lastDoc == null || !lastDoc.exists
+          ? _fireStore
+              .collection(POST_COLLECTIONS)
+              .where("status", isEqualTo: status)
+              // .where("categoryId", isEqualTo: categoryId)
+              .orderBy("lastModifiedDate", descending: true)
+              .limit(pageSize)
+          : _fireStore
+              .collection(POST_COLLECTIONS)
+              .where("status", isEqualTo: status)
+              .orderBy("lastModifiedDate", descending: true)
+              .startAfterDocument(lastDoc)
+              .limit(pageSize);
+
       final docs = await query.getDocuments();
 
       logger.d(">>>>>>>: fetchPosts from firestore ${docs.documents.length}");
@@ -41,6 +59,9 @@ class FirebasePostRepository implements AbstractPostRepository {
         logger.d(">>>>>> fetchPosts map document: ${doc.data}");
         final post = PostModel.fromJson(doc.data);
         post.id = doc.documentID;
+        post.userProfile = UserProfile.fromNamed(
+            imageUrl: post.userProfileImageUrl ?? kDefaultUserPhotoUrl,
+            displayName: post.userProfileDisplayName);
         return post;
       }).toList();
 

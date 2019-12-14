@@ -24,13 +24,12 @@ class DateUtils {
   }
 
   static String timeUntil(DateTime date) {
-    var locale = 'vn'; // TODO: change local
-    return timeago.format(date, locale: locale, allowFromNow: true);
+    return timeago.format(date, locale: 'vi', clock: DateTime.now(), allowFromNow: true);
   }
 
   static String timeAgo(String target) {
     DateTime dateTime = dateFromString(target);
-    return timeUntil(dateTime);
+    return timeUntil(dateTime.toLocal());
   }
 }
 

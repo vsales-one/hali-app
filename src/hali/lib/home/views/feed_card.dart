@@ -15,6 +15,8 @@ class FeedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white,
+      elevation: 4,
+      margin: EdgeInsets.all(16),
       child: Column(
         children: <Widget>[
           FeedDescriptionEvent(title: this.postModel.title),
@@ -29,7 +31,7 @@ class FeedCard extends StatelessWidget {
             postModel: this.postModel,
           ),
           //Description
-          this.postModel.userProfile != null
+          this.postModel.userProfileDisplayName != null
               ? FeedCardContainerTop(
                   userProfile: this.postModel.userProfile,
                   createdDate: this.postModel.lastModifiedDate,

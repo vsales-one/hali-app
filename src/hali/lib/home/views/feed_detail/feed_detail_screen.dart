@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/app_widgets/empty_page_content_screen.dart';
+import 'package:hali/config/application.dart';
 import 'package:hali/home/views/feed_detail/widgets/index.dart';
 import 'package:hali/messages/request_listing_confirmation_screen.dart';
 import 'package:hali/models/post_model.dart';
+import 'package:hali/utils/alert_helper.dart';
 import 'package:hali/utils/app_utils.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:hali/home/views/feed_detail/index.dart';
@@ -22,6 +24,7 @@ class FeedDetailScreen extends StatefulWidget {
 class FeedDetailScreenState extends State<FeedDetailScreen> {
   PostModel postModel;
   FeedDetailBloc _bloc;
+  bool isPostOwnedByCurrentUser;
 
   @override
   void initState() {
@@ -48,6 +51,8 @@ class FeedDetailScreenState extends State<FeedDetailScreen> {
         if (state is FeedDetailLoaded) {
           setState(() {
             postModel = state.postModel;
+            isPostOwnedByCurrentUser =
+                postModel.lastModifiedBy == Application.currentUser.email;
           });
         }
 
@@ -115,6 +120,12 @@ class FeedDetailScreenState extends State<FeedDetailScreen> {
     // 1) open request listing confirmation screen
     // 2) on confirmed at confirmation screen send a message from requestor to owner
     // 3) Then goes to message screen
-    _bloc.add(RequestListingConfirmationEvent(postId: widget.postId, post: post));
+    if (isPostOwnedByCurrentUser) {
+      AlertHelper.showAlertInfo(
+          context, "Không thể yêu cầu nhận món đồ của chính bạn.");
+      return;
+    }
+    _bloc.add(
+        RequestListingConfirmationEvent(postId: widget.postId, post: post));
   }
 }

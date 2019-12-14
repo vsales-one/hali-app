@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hali/models/post_model.dart';
 
@@ -16,7 +15,7 @@ class HomeUninitialized extends HomeState {
 }
 
 class HomeError extends HomeState {
-  final DioError error;
+  final dynamic error;  
 
   HomeError(this.error);
 
@@ -25,32 +24,40 @@ class HomeError extends HomeState {
 }
 
 class HomeLoaded extends HomeState { 
-
   final List<PostModel> posts;
   final bool hasReachedMax;
   final int currentPage;
+  final String lastDocumentOrderFieldRef;
 
   const HomeLoaded({
     this.posts,
     this.hasReachedMax,
-    this.currentPage
+    this.currentPage,
+    this.lastDocumentOrderFieldRef,
   });
 
   HomeLoaded copyWith({
     List<PostModel> posts,
     bool hasReachedMax,
     int currentPage,
+    String lastDocumentOrderFieldRef,
   }) {
     return HomeLoaded(
       posts: posts ?? this.posts,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
-      currentPage: currentPage ?? 0
+      currentPage: currentPage ?? 0,
+      lastDocumentOrderFieldRef: lastDocumentOrderFieldRef,
     );
   }
   @override
-  List<Object> get props => [posts, hasReachedMax, currentPage];
+  List<Object> get props => [posts, hasReachedMax, currentPage, lastDocumentOrderFieldRef];
   
   @override
   String toString() =>
-      'HomeLoaded { posts: ${posts.length}, hasReachedMax: $hasReachedMax , currentPage: $currentPage }';
+      '''HomeLoaded { 
+          posts: ${posts.length}, 
+          hasReachedMax: $hasReachedMax , 
+          currentPage: $currentPage, 
+          lastDocumentOrderFieldRef: $lastDocumentOrderFieldRef 
+        }''';
 }

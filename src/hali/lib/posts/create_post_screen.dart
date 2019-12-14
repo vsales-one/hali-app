@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/di/appModule.dart';
-import 'package:hali/home/home_event.dart';
 import 'package:hali/models/post_model.dart';
 import 'package:hali/posts/post_widgets/photo_cover.dart';
 import 'package:hali/posts/post_widgets/post_form.dart';
@@ -118,7 +117,6 @@ class CreatePostScreenState extends State<CreatePostScreen> {
         if (state.error != null) {
           dispatchFailure(context, state.error);
         } else if (state.postModel != null && state.isPostCreatedSuccess) {
-          _createPostBloc.homeBloc.add(HomeFetchEvent(categoryId: state.postModel.categoryId));
           Navigator.of(context).pop();
         } else if (state.postModel != null &&
             state.isPostImageUploadedSuccess &&

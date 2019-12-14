@@ -49,10 +49,8 @@ var showFeedDetailHandler = Handler(
 var showCreatePostScreenHandler = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   final _postRepository = RepositoryProvider.of<AbstractPostRepository>(context);
-  final _homeBloc = BlocProvider.of<HomeBloc>(context);
   return CreatePostPage(
     postRepository: _postRepository,
-    homeBloc: _homeBloc,
   );
 });
 

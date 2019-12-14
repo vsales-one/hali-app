@@ -10,7 +10,7 @@ import 'package:hali/models/create_post_command.dart';
 import 'package:hali/models/post_model.dart';
 
 abstract class AbstractPostRepository {
-  Future<ApiResponse<List<PostModel>>> fetchPosts(Map<String, dynamic> params, int pageNumber, int pageSize);
+  Future<ApiResponse<List<PostModel>>> fetchPosts(Map<String, dynamic> params, int pageNumber, int pageSize, String lastDocRef);
 
   Future<ApiResponse<PostModel>> addNewPost(CreatePostCommand postModel);
 
@@ -25,7 +25,7 @@ abstract class AbstractPostRepository {
 class PostRepository implements AbstractPostRepository {
 
   @override
-  Future<ApiResponse<List<PostModel>>> fetchPosts(Map<String, dynamic> params, int pageNumber, int pageSize) async {
+  Future<ApiResponse<List<PostModel>>> fetchPosts(Map<String, dynamic> params, int pageNumber, int pageSize, String lastDocRef) async {
     try {
       var query = "";
       params.forEach((key, value) {

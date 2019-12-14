@@ -1,8 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 abstract class HomeEvent extends Equatable {
   @override
   List<Object> get props => [];
+
+  @override
+  String toString() => 'HomeEvent';
 }
 
 class LoadHomeEvent extends HomeEvent {
@@ -12,11 +16,13 @@ class LoadHomeEvent extends HomeEvent {
 
 class HomeFetchEvent extends HomeEvent {
   final int categoryId;
+  final String lastDocumentOrderFieldRef;
 
-  HomeFetchEvent({this.categoryId});
+  HomeFetchEvent({@required this.categoryId, @required this.lastDocumentOrderFieldRef});
 
   @override
-  List<Object> get props => [categoryId];
+  List<Object> get props => [categoryId, lastDocumentOrderFieldRef];
 
-  String toString() => 'HomeFetch';
+  @override
+  String toString() => 'HomeFetchEvent-$categoryId-$lastDocumentOrderFieldRef';
 }

@@ -122,7 +122,7 @@ class LoadingDialog extends CupertinoAlertDialog {
   }
 }
 
-displayAlertError(BuildContext context, String title, DioError error, String message) {
+displayAlertError(BuildContext context, String title, dynamic error, String message) {
   Alert(
       context: context,
       type: AlertType.error,
@@ -135,9 +135,8 @@ displayAlertError(BuildContext context, String title, DioError error, String mes
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: (){
-            Navigator.pop(context);
-            
-            if (error.response == null || error.response.statusCode == 401) {
+            Navigator.pop(context);            
+            if (error is DioError && (error.response == null || error.response.statusCode == 401)) {
               BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
             }
           },

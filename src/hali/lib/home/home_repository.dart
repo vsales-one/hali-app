@@ -13,7 +13,8 @@ class HomeRepository {
     Map<String, dynamic> params,
     int pageNumber,
     int pageSize,
+    String lastDocRef
   ) async {
-    return await postRepository.fetchPosts(params, pageNumber, pageSize);
+    return await postRepository.fetchPosts(params, pageNumber, pageSize, lastDocRef);
   }
 }

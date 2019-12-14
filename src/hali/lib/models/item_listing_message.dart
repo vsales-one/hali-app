@@ -20,6 +20,7 @@ class ItemListingMessage extends ChatMessage {
   bool isSeen;
   DateTime publishedAt;
   ItemRequestMessageStatus status;
+  String groupId;
 
   ItemListingMessage(
     this.itemType, 
@@ -30,8 +31,13 @@ class ItemListingMessage extends ChatMessage {
     this.to, 
     this.isSeen, 
     this.publishedAt,
-    this.status
-  ) : super(itemTitle, from, to, isSeen, publishedAt, itemType, itemId);
+    this.status,
+    this.groupId,
+  ) : super(itemTitle, from, to, isSeen, publishedAt, itemType, groupId);
+
+  bool get isClosed => status == ItemRequestMessageStatus.Closed;
+
+  bool get isOpen => status == ItemRequestMessageStatus.Open;
 
   factory ItemListingMessage.fromJson(Map<String, dynamic> json) =>
       _$ItemListingMessageFromJson(json);
@@ -45,8 +51,9 @@ class ItemListingMessage extends ChatMessage {
           UserProfile to,
           bool isSeen,
           DateTime publishedAt,
-          ItemRequestMessageStatus status}) =>
-      ItemListingMessage(itemType, itemId, itemTitle, itemImageUrl, from, to, isSeen, publishedAt, status);
+          ItemRequestMessageStatus status,
+          String groupId}) =>
+      ItemListingMessage(itemType, itemId, itemTitle, itemImageUrl, from, to, isSeen, publishedAt, status, groupId);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated

@@ -138,9 +138,11 @@ class _LoginFormState extends State<LoginForm> {
                         GoogleLoginButton(),
                         FacebookLoginButton(),
                         CreateAccountButton(userRepository: _userRepository),
-                        Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Text("Phiên bản $kAppVersion"),
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Text("Phiên bản $kAppVersion"),
+                          ),
                         ),
                       ],
                     ),

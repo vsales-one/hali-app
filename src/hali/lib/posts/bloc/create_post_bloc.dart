@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:hali/di/appModule.dart';
-import 'package:hali/home/home_bloc.dart';
 import 'package:hali/models/address_dto.dart';
 import 'package:hali/posts/bloc/index.dart';
 import 'package:hali/repositories/post_repository.dart';
@@ -10,9 +9,8 @@ import 'package:uuid/uuid.dart';
 
 class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   final AbstractPostRepository postRepository;
-  final HomeBloc homeBloc;
 
-  CreatePostBloc({@required this.postRepository, @required this.homeBloc});
+  CreatePostBloc({@required this.postRepository});
 
   @override
   Future<void> close() async {

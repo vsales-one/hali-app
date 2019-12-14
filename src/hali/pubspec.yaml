@@ -64,6 +64,8 @@ dependencies:
   timeago: ^2.0.22
   connectivity: ^0.4.6
   flutter_launcher_icons: ^0.7.4
+  maps_toolkit: ^1.0.1+3
+  enum_to_string: ^1.0.8
   
 dev_dependencies:
   flutter_test:

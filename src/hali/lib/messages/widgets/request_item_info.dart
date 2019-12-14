@@ -37,7 +37,7 @@ class RequestItemInfo extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("Hali Assistant", style: TextStyle(fontWeight: FontWeight.bold),),
+                    child: Text("Trợ lý Hali", style: TextStyle(fontWeight: FontWeight.bold),),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),

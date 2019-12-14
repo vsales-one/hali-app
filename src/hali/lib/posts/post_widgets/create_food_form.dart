@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -346,7 +347,7 @@ class CreateFoodFormState extends State<CreateFoodForm> {
         userProfileDisplayName:
             profile.displayName ?? profile.email ?? profile.userId,
         userProfileImageUrl: profile.imageUrl ?? kDefaultUserPhotoUrl,
-        status: ItemRequestMessageStatus.Open.toString(),
+        status: EnumToString.parse(ItemRequestMessageStatus.Open),
       );
       BlocProvider.of<CreatePostBloc>(context).add(
           AddPostStartEvent(postModel: postModel, image: widget.imageCover));

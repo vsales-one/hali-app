@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:hali/commons/styles.dart';
 import 'package:hali/utils/color_utils.dart';
@@ -20,32 +19,33 @@ class FeedDetailRequestButton extends StatelessWidget {
         child: Column(
           children: <Widget>[
             FlatButton(
-                color: Colors.transparent,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      "Gửi yêu cầu nhận quà",
-                      style: Styles.getRegularStyle(14, Colors.white),
+              color: Colors.transparent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    "Gửi yêu cầu nhận quà",
+                    style: Styles.getRegularStyle(14, Colors.white),
+                  ),
+                  Container(
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.location_on,
+                          size: 16,
+                          color: Colors.white,
+                        ),
+                        Text(
+                          "$distance km",
+                          style: Styles.getRegularStyle(14, Colors.white),
+                        ),
+                      ],
                     ),
-                    Container(
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.location_on,
-                            size: 16,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            "$distance km",
-                            style: Styles.getRegularStyle(14, Colors.white),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                onPressed: onSendItemRequest),
+                  )
+                ],
+              ),
+              onPressed: onSendItemRequest,
+            ),
           ],
         ),
       ),

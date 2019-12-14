@@ -1,6 +1,7 @@
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hali/authentication_bloc/bloc.dart';
 
 class AppStartupCheckResultPage extends StatelessWidget {
   static const String routeName = "/app_startup_check_result";
@@ -32,9 +33,11 @@ class AppStartupCheckResultPage extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 8, right: 8),
                     child: RaisedButton(
-                      child: Text('Thoát', style: TextStyle(color: Colors.white),),
+                      child: Text("Thử lại", style: TextStyle(color: Colors.white),),
                       color: Colors.redAccent,
-                      onPressed: _exitApp,
+                      onPressed: () {
+                        BlocProvider.of<AuthenticationBloc>(context).add(AppStarted());
+                      },
                     ),
                   ),
                 ],
@@ -42,7 +45,5 @@ class AppStartupCheckResultPage extends StatelessWidget {
             ],
           ),
         ));
-  }  
-
-  _exitApp() => exit(0);
+  }
 }

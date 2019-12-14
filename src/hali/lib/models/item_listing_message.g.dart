@@ -27,17 +27,16 @@ ItemListingMessage _$ItemListingMessageFromJson(Map json) {
         ? null
         : DateTime.parse(json['publishedAt'] as String),
     _$enumDecodeNullable(_$ItemRequestMessageStatusEnumMap, json['status']),
+    json['groupId'] as String,
   )
     ..type = json['type'] as String
-    ..content = json['content']
-    ..groupId = json['groupId'] as String;
+    ..content = json['content'];
 }
 
 Map<String, dynamic> _$ItemListingMessageToJson(ItemListingMessage instance) =>
     <String, dynamic>{
       'type': instance.type,
       'content': instance.content,
-      'groupId': instance.groupId,
       'itemType': instance.itemType,
       'itemId': instance.itemId,
       'itemTitle': instance.itemTitle,
@@ -47,6 +46,7 @@ Map<String, dynamic> _$ItemListingMessageToJson(ItemListingMessage instance) =>
       'isSeen': instance.isSeen,
       'publishedAt': instance.publishedAt?.toIso8601String(),
       'status': _$ItemRequestMessageStatusEnumMap[instance.status],
+      'groupId': instance.groupId,
     };
 
 T _$enumDecode<T>(

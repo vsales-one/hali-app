@@ -24,6 +24,7 @@ class FeedCardContainerTop extends StatelessWidget {
                   padding: EdgeInsets.only(left: 8.0),
                   child: CircleAvatar(
                     backgroundColor: Colors.grey[300],
+                    backgroundImage: NetworkImage(userProfile.imageUrl),
                   ),
                 ),
                 // name
@@ -33,7 +34,7 @@ class FeedCardContainerTop extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        userProfile.email ?? "",
+                        userProfile.displayName ?? "",
                         style: Styles.getSemiboldStyle(14, Colors.black87),
                         textAlign: TextAlign.left,
                       ),

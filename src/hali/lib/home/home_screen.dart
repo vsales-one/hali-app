@@ -31,20 +31,19 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   bool isHiddenBannerInvite = false;
-
   List<PostModel> _posts = [];
-
   final _scrollController = ScrollController();
   final _scrollThreshold = 200.0;
   HomeBloc _homeBloc;
   bool _isReachMax = false;
+  String _lastDocRef = "";
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
     _homeBloc = BlocProvider.of<HomeBloc>(context);
-    _homeBloc.add(HomeFetchEvent(categoryId: widget.categoryId));
+    _homeBloc.add(HomeFetchEvent(categoryId: widget.categoryId, lastDocumentOrderFieldRef: ""));
   }
 
   @override
@@ -61,9 +60,10 @@ class HomeScreenState extends State<HomeScreen> {
             return dispatchFailure(context, state.error);
           }
 
-          if (state is HomeLoaded) {
-            _isReachMax = state.hasReachedMax;
+          if (state is HomeLoaded) {            
             setState(() {
+              _isReachMax = state.hasReachedMax;
+              _lastDocRef = state.lastDocumentOrderFieldRef;
               _posts = state.posts;
             });
           }
@@ -118,7 +118,7 @@ class HomeScreenState extends State<HomeScreen> {
         transition: TransitionType.fadeIn)
     .then((_) {
       logger.d(">>>>>>> return from create post");
-      _homeBloc.add(HomeFetchEvent(categoryId: widget.categoryId));
+      _homeBloc.add(HomeFetchEvent(categoryId: widget.categoryId, lastDocumentOrderFieldRef: ""));
     });
   }
 
@@ -139,7 +139,7 @@ class HomeScreenState extends State<HomeScreen> {
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= _scrollThreshold) {
       if (!_isReachMax) {
-        _homeBloc.add(HomeFetchEvent(categoryId: widget.categoryId));
+        _homeBloc.add(HomeFetchEvent(categoryId: widget.categoryId, lastDocumentOrderFieldRef: _lastDocRef));
       }
     }
   }

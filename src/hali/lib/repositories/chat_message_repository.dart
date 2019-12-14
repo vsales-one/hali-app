@@ -1,5 +1,7 @@
 import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enum_to_string/enum_to_string.dart';
+import 'package:hali/config/application.dart';
 import 'package:hali/di/appModule.dart';
 import 'package:hali/models/chat_message.dart';
 import 'package:hali/models/item_listing_message.dart';
@@ -10,39 +12,24 @@ class ChatMessageRepository {
   static const String CHATS = "chats",
       RECENT = "recentChats",
       MESSAGES = "messages",
-      ITEM_REQUEST_MESSAGES = "itemRequestMessages";
+      ITEM_REQUEST_MESSAGES = "itemRequestMessages",
+      HISTORY = "history";
 
   final UserRepository userRepository;
   final Firestore fireStore;
 
-  ChatMessageRepository(
-      {@required this.userRepository, @required this.fireStore});
+  ChatMessageRepository({
+    @required this.userRepository,
+    @required this.fireStore,
+  });
 
   Stream<List<ItemListingMessage>> getItemRequestMessages() async* {
     final user = await userRepository.getCurrentUserProfileFull();
 
-    // query request messages belong to item owner
     await for (QuerySnapshot snap in fireStore
         .collection(ITEM_REQUEST_MESSAGES)
-        .where("to.userId", isEqualTo: user.email)
-        .where("status", isEqualTo: "Open")
-        .orderBy("publishedAt")
-        .snapshots()) {
-      try {
-        final chats = snap.documents
-            .map((doc) => ItemListingMessage.fromJson(doc.data))
-            .toList();
-        yield chats;
-      } catch (e) {
-        logger.e(e);
-      }
-    }
-
-    // query request messages belong to requestor
-    await for (QuerySnapshot snap in fireStore
-        .collection(ITEM_REQUEST_MESSAGES)
-        .where("from.userId", isEqualTo: user.email)
-        .where("status", isEqualTo: "Open")
+        .document(user.email)
+        .collection(HISTORY)        
         .orderBy("publishedAt")
         .snapshots()) {
       try {
@@ -59,7 +46,6 @@ class ChatMessageRepository {
   Future<bool> sendMessage(ChatMessage chat) async {
     try {
       fireStore.collection(MESSAGES).add(chat.toJson());
-      await saveRecentChat(chat);
       return true;
     } catch (e) {
       logger.e("Exception $e");
@@ -67,36 +53,39 @@ class ChatMessageRepository {
     }
   }
 
-  Future saveRecentChat(ChatMessage chat) async {
-    List<String> ids = [chat.from.email, chat.to.email];
-    for (String id in ids) {
-      Query query = fireStore
-          .collection(RECENT)
-          .document(id)
-          .collection("history")
-          .where("groupId", isEqualTo: chat.groupId);
-      QuerySnapshot documents = await query.getDocuments();
-      if (documents.documents.length != 0) {
-        DocumentSnapshot documentSnapshot = documents.documents[0];
-        documentSnapshot.reference.setData(chat.toJson());
-      } else {
-        fireStore
-            .collection(RECENT)
-            .document(id)
-            .collection("history")
-            .add(chat.toJson());
-      }
-    }
-  }
-
   Future<bool> sendItemRequestMessage(
       String messageContent, ItemListingMessage itemRequestMessage) async {
     print(
         "Sending message to request item ${itemRequestMessage.itemId}-${itemRequestMessage.itemTitle}");
+    assert(itemRequestMessage.from.email.isNotEmpty);
+    assert(itemRequestMessage.to.email.isNotEmpty);
+
     try {
-      await fireStore
-          .collection(ITEM_REQUEST_MESSAGES)
-          .add(itemRequestMessage.toJson());
+      // Add link message between requestor and item owner
+      List<String> ids = [
+        itemRequestMessage.from.email,
+        itemRequestMessage.to.email
+      ];
+      for (String id in ids) {
+        Query query = fireStore
+            .collection(ITEM_REQUEST_MESSAGES)
+            .document(id)
+            .collection(HISTORY)
+            .where("groupId", isEqualTo: itemRequestMessage.groupId);
+        QuerySnapshot documents = await query.getDocuments();
+        if (documents.documents.length != 0) {
+          DocumentSnapshot documentSnapshot = documents.documents[0];
+          documentSnapshot.reference.setData(itemRequestMessage.toJson());
+        } else {
+          fireStore
+              .collection(ITEM_REQUEST_MESSAGES)
+              .document(id)
+              .collection(HISTORY)
+              .add(itemRequestMessage.toJson());
+        }
+      }
+
+      // add first hint message
       itemRequestMessage.content = messageContent;
       await fireStore.collection(MESSAGES).add(itemRequestMessage.toJson());
       return true;
@@ -127,17 +116,21 @@ class ChatMessageRepository {
   /// confirm item pick up and close the post
   Future<bool> confirmItemPickupAndClosePost(
       ItemListingMessage itemRequestMessage) async {
+    final currentUserEmail = Application.currentUser.email;
     final snapShot = await fireStore
         .collection(ITEM_REQUEST_MESSAGES)
+        .document(currentUserEmail)
+        .collection(HISTORY)
         .where("itemId", isEqualTo: itemRequestMessage.itemId)
-        .snapshots()
-        .first;
+        .getDocuments();
 
     if (snapShot.documents.first != null) {
-      final data = {"status": ItemRequestMessageStatus.Closed.toString()};
+      final data = {"status": EnumToString.parse(ItemRequestMessageStatus.Closed)};
 
       await fireStore
           .collection(ITEM_REQUEST_MESSAGES)
+          .document(currentUserEmail)
+          .collection(HISTORY)
           .document(snapShot.documents.first.documentID)
           .setData(data, merge: true);
 
@@ -153,7 +146,8 @@ class ChatMessageRepository {
 
       await fireStore.collection(MESSAGES).add(toRequestorMessage.toJson());
 
-      await updatePostStatus(itemRequestMessage.itemId, ItemRequestMessageStatus.Closed.toString());
+      await updatePostStatus(itemRequestMessage.itemId,
+          EnumToString.parse(ItemRequestMessageStatus.Closed));
 
       return true;
     }
@@ -162,7 +156,7 @@ class ChatMessageRepository {
   }
 
   Future<bool> updatePostStatus(String id, String status) async {
-    try {
+    try {      
       final docRef = fireStore.collection("itemposts").document(id);
       final data = {"status": status};
       await docRef.updateData(data);
@@ -182,7 +176,7 @@ class ChatMessageRepository {
         .first;
 
     if (snapShot.documents.first != null) {
-      final data = {"status": ItemRequestMessageStatus.Open.toString()};
+      final data = {"status": EnumToString.parse(ItemRequestMessageStatus.Open)};
 
       await fireStore
           .collection(ITEM_REQUEST_MESSAGES)
@@ -201,7 +195,8 @@ class ChatMessageRepository {
 
       await fireStore.collection(MESSAGES).add(toRequestorMessage.toJson());
 
-      await updatePostStatus(itemRequestMessage.itemId, ItemRequestMessageStatus.Open.toString());
+      await updatePostStatus(
+          itemRequestMessage.itemId, EnumToString.parse(ItemRequestMessageStatus.Open));
 
       return true;
     }
