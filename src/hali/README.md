@@ -5,7 +5,7 @@ mà bạn không dùng nữa hoặc là thực phẩm mà bạn dư ra.
 
 ## Getting Started
 
-- Ứng dụng published trên Google Play Store tại link
+- Ứng dụng published trên [Google Play Store tại link](https://play.google.com/store/apps/details?id=vn.happylife.hali)
 
 - Bạn có thể chạy ứng dụng từ source code. 
 
