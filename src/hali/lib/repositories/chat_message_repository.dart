@@ -74,9 +74,16 @@ class ChatMessageRepository {
             .add(itemRequestMessage.toJson());
       }
 
-      // add first hint message
-      itemRequestMessage.content = messageContent;
-      await fireStore.collection(MESSAGES).add(itemRequestMessage.toJson());
+      // add first hint message      
+      final chatMessage = ChatMessage.fromNamed(
+        content: messageContent,
+        from: itemRequestMessage.from,
+        to: itemRequestMessage.to,
+        isSeen: false,
+        publishedAt: DateTime.now(),
+        groupId: itemRequestMessage.itemId
+      );
+      await fireStore.collection(MESSAGES).add(chatMessage.toJson());
       return true;
     } catch (e) {
       logger.e("Exception $e");
@@ -86,7 +93,7 @@ class ChatMessageRepository {
 
   Stream<List<ChatMessage>> listenChat(String chatGroupId) async* {
     await for (QuerySnapshot snap in fireStore
-        .collection("messages")
+        .collection(MESSAGES)
         .where("groupId", isEqualTo: chatGroupId)
         .orderBy("publishedAt")
         .snapshots()) {

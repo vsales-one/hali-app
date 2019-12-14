@@ -224,13 +224,13 @@ class _MessageScreenState extends State<MessageScreen> {
                             Text("Bạn không thể gửi tin nhắn cho chính mình")));
                     return;
                   }                  
-                  ChatMessage chat = ChatMessage.fromNamed(
+                  final chat = ChatMessage.fromNamed(
                       from: currentUser,
                       to: widget.friend,
                       content: message,
                       isSeen: false,
                       publishedAt: DateTime.now(),
-                      groupId: widget.itemRequestMessage.groupId,
+                      groupId: widget.itemRequestMessage.itemId,
                       type: type);
                   _chatMessageRepository.sendMessage(chat);
                   scrollController.animateTo(
@@ -350,7 +350,7 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget _buildChatMessages() {
     return StreamBuilder(
         stream: _chatMessageRepository
-            .listenChat(widget.itemRequestMessage.groupId),
+            .listenChat(widget.itemRequestMessage.itemId),
         builder: (context, snapshot) {
           if (!snapshot.hasData || snapshot.data == null) {
             return Center(
