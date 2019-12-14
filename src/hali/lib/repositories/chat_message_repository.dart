@@ -29,7 +29,7 @@ class ChatMessageRepository {
     await for (QuerySnapshot snap in fireStore
         .collection(ITEM_REQUEST_MESSAGES)
         .document(user.email)
-        .collection(HISTORY)        
+        .collection(HISTORY)
         .orderBy("publishedAt")
         .snapshots()) {
       try {
@@ -67,22 +67,11 @@ class ChatMessageRepository {
         itemRequestMessage.to.email
       ];
       for (String id in ids) {
-        Query query = fireStore
+        await fireStore
             .collection(ITEM_REQUEST_MESSAGES)
             .document(id)
             .collection(HISTORY)
-            .where("groupId", isEqualTo: itemRequestMessage.groupId);
-        QuerySnapshot documents = await query.getDocuments();
-        if (documents.documents.length != 0) {
-          DocumentSnapshot documentSnapshot = documents.documents[0];
-          documentSnapshot.reference.setData(itemRequestMessage.toJson());
-        } else {
-          fireStore
-              .collection(ITEM_REQUEST_MESSAGES)
-              .document(id)
-              .collection(HISTORY)
-              .add(itemRequestMessage.toJson());
-        }
+            .add(itemRequestMessage.toJson());
       }
 
       // add first hint message
@@ -125,7 +114,9 @@ class ChatMessageRepository {
         .getDocuments();
 
     if (snapShot.documents.first != null) {
-      final data = {"status": EnumToString.parse(ItemRequestMessageStatus.Closed)};
+      final data = {
+        "status": EnumToString.parse(ItemRequestMessageStatus.Closed)
+      };
 
       await fireStore
           .collection(ITEM_REQUEST_MESSAGES)
@@ -156,7 +147,7 @@ class ChatMessageRepository {
   }
 
   Future<bool> updatePostStatus(String id, String status) async {
-    try {      
+    try {
       final docRef = fireStore.collection("itemposts").document(id);
       final data = {"status": status};
       await docRef.updateData(data);
@@ -176,7 +167,9 @@ class ChatMessageRepository {
         .first;
 
     if (snapShot.documents.first != null) {
-      final data = {"status": EnumToString.parse(ItemRequestMessageStatus.Open)};
+      final data = {
+        "status": EnumToString.parse(ItemRequestMessageStatus.Open)
+      };
 
       await fireStore
           .collection(ITEM_REQUEST_MESSAGES)
@@ -195,8 +188,8 @@ class ChatMessageRepository {
 
       await fireStore.collection(MESSAGES).add(toRequestorMessage.toJson());
 
-      await updatePostStatus(
-          itemRequestMessage.itemId, EnumToString.parse(ItemRequestMessageStatus.Open));
+      await updatePostStatus(itemRequestMessage.itemId,
+          EnumToString.parse(ItemRequestMessageStatus.Open));
 
       return true;
     }
