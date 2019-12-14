@@ -51,8 +51,8 @@ class _MainScreenState extends State<MainScreen> {
       if (index == 3) {
         _showAppInfo();
       } else {
-        // controller.jumpToPage(index);
-        controller.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+        controller.jumpToPage(index);
+        // controller.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
       }
     });
   }

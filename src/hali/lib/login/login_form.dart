@@ -22,7 +22,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  bool _showPassword = false;
   LoginBloc _loginBloc;
 
   UserRepository get _userRepository => widget._userRepository;
@@ -115,8 +115,18 @@ class _LoginFormState extends State<LoginForm> {
                     decoration: InputDecoration(
                       icon: Icon(Icons.lock),
                       labelText: 'Mật khẩu',
+                      suffix: IconButton(
+                        icon: _showPassword
+                            ? Icon(Icons.visibility_off)
+                            : Icon(Icons.visibility),
+                        onPressed: () {
+                          setState(() {
+                            _showPassword = !_showPassword;
+                          });
+                        },
+                      ),
                     ),
-                    obscureText: true,
+                    obscureText: !_showPassword,
                     autovalidate: true,
                     autocorrect: false,
                     validator: (_) {

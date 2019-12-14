@@ -1,16 +1,19 @@
 # hali
 
-An app for community to share and reduce waste
+Hali là ứng dụng hướng tới giảm sự lãng phí trong cộng đồng bằng cách kết nối mỗi người và khuyến khích chia sẽ. Bạn cho đi các món đồ
+mà bạn không dùng nữa hoặc là thực phẩm mà bạn dư ra.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+- Ứng dụng published trên Google Play Store tại link
 
-A few resources to get you started if this is your first Flutter project:
+- Bạn có thể chạy ứng dụng từ source code. 
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+- Ứng dụng này có thể sử dụng với backend tự host, [mã nguồn của backend api ở đây](https://github.com/vsales-one/hali-api)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Ứng dụng cũng có thể chạy ở chế độ không cần backend api, dữ liệu lưu trữ vào firestore
+
+- Để chạy ứng dụng từ mã nguồn đầu tiên bạn cần tạo app trên firebase và tải về 2 file GoogleService-Info.plist cho iOS và google-services.json. Trên iOS file GoogleService-Info.plist đặt vào thư mục **/ios/GoogleService-Info.plist còn trên Android file google-services.json đặt vào thư mục **/android/app/google-services.json
+
+- Nếu dữ liệu lưư trữ trên filestore thì bạn cần tạo 1 số composite index [theo như hình này](https://firebasestorage.googleapis.com/v0/b/hali-ca190.appspot.com/o/public_images%2FScreen%20Shot%202019-12-14%20at%2011.39.40%20PM.png?alt=media&token=953cfe02-42cd-4946-bd80-beb01978a071)
+
