@@ -41,7 +41,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     } else if (event is PasswordChanged) {
       yield* _mapPasswordChangedToState(event.password);
     } else if (event is Submitted) {
-      yield* _mapFormSubmittedToState(event.email, event.password, event.fullName);
+      yield* _mapFormSubmittedToState(
+          event.email, event.password, event.fullName);
+    } else if (event is ResetPasswordSubmitted) {
+      yield* _mapFormResetPasswordSubmittedToState(event.email);
     }
   }
 
@@ -58,22 +61,30 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   }
 
   Stream<RegisterState> _mapFormSubmittedToState(
-    String email,
-    String password,
-    String fullName
-  ) async* {
+      String email, String password, String fullName) async* {
     yield RegisterState.loading();
     try {
       await _userRepository.signUp(
-        email: email,
-        password: password,
-        fullName: fullName
-      );      
+          email: email, password: password, fullName: fullName);
       yield RegisterState.success();
     } catch (e) {
       print('>>>>>>> user registration failed');
       print(e);
       yield RegisterState.failure();
+    }
+  }
+
+  Stream<RegisterState> _mapFormResetPasswordSubmittedToState(
+      String email) async* {
+    print("begin reset password request for $email");
+    yield ResetPasswordState.loading();
+    try {
+      await _userRepository.sendPasswordResetEmail(email);
+      yield ResetPasswordState.success();
+    } catch (e) {
+      print('>>>>>>> send user reset password failed');
+      print(e);
+      yield ResetPasswordState.failure();
     }
   }
 }

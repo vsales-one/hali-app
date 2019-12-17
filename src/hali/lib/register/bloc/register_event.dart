@@ -63,3 +63,19 @@ class Submitted extends RegisterEvent {
     return 'Submitted { email: $email, password: $password, fullName: $fullName }';
   }
 }
+
+class ResetPasswordSubmitted extends RegisterEvent {
+  final String email;
+
+  const ResetPasswordSubmitted({
+    @required this.email,
+  });
+
+  @override
+  List<Object> get props => [email];
+
+  @override
+  String toString() {
+    return 'Submitted { email: $email }';
+  }
+}

@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hali/app_widgets/user_widget.dart';
 import 'package:hali/config/application.dart';
 import 'package:hali/constants/constants.dart';
 import 'package:hali/messages/message_screen.dart';
@@ -63,7 +62,7 @@ class _MessageCardItemWidgetState extends State<MessageCardItemWidget> {
                       Padding(
                         padding: EdgeInsets.all(4),
                         child: Text(
-                          friend.displayName,
+                          friend.displayName ?? friend.email,
                           style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ),

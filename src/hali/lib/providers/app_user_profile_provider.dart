@@ -66,7 +66,7 @@ class AppUserProfileProvider implements IAppUserProfileProvider {
   Future<UserProfile> createAppUser(FirebaseUser fbUser) async {
     final appUser = UserProfile.fromNamed(
         userId: fbUser.email,
-        displayName: fbUser.displayName,
+        displayName: fbUser.displayName ?? fbUser.email,
         phoneNumber: fbUser.phoneNumber,
         email: fbUser.email,
         imageUrl: fbUser.photoUrl);

@@ -99,3 +99,60 @@ class RegisterState {
     }''';
   }
 }
+
+class ResetPasswordState extends RegisterState {
+  ResetPasswordState({
+    @required bool isEmailValid,
+    @required bool isPasswordValid,
+    @required bool isSubmitting,
+    @required bool isSuccess,
+    @required bool isFailure,
+  }) : super(
+          isEmailValid: isEmailValid,
+          isPasswordValid: isPasswordValid,
+          isSubmitting: isSubmitting,
+          isSuccess: isSuccess,
+          isFailure: isFailure,
+        );
+
+  factory ResetPasswordState.loading() {
+    return ResetPasswordState(
+      isEmailValid: true,
+      isPasswordValid: true,
+      isSubmitting: true,
+      isSuccess: false,
+      isFailure: false,
+    );
+  }
+
+  factory ResetPasswordState.failure() {
+    return ResetPasswordState(
+      isEmailValid: true,
+      isPasswordValid: true,
+      isSubmitting: false,
+      isSuccess: false,
+      isFailure: true,
+    );
+  }
+
+  factory ResetPasswordState.success() {
+    return ResetPasswordState(
+      isEmailValid: true,
+      isPasswordValid: true,
+      isSubmitting: false,
+      isSuccess: true,
+      isFailure: false,
+    );
+  }
+
+  @override
+  String toString() {
+    return '''ResetPasswordState {
+      isEmailValid: $isEmailValid,
+      isPasswordValid: $isPasswordValid,      
+      isSubmitting: $isSubmitting,
+      isSuccess: $isSuccess,
+      isFailure: $isFailure,
+    }''';
+  }
+}

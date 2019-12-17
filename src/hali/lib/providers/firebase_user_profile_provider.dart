@@ -18,7 +18,7 @@ class FirebaseUserProfileProvider implements IAppUserProfileProvider {
     final appUser = UserProfile.fromNamed(
         id: fbUser.email,
         userId: fbUser.email,
-        displayName: fbUser.displayName,
+        displayName: fbUser.displayName ?? fbUser.email,
         phoneNumber: fbUser.phoneNumber,
         email: fbUser.email,
         imageUrl: fbUser.photoUrl,

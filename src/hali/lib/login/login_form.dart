@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/constants/constants.dart';
 import 'package:hali/di/appModule.dart';
 import 'package:hali/login/facebook_login_button.dart';
+import 'package:hali/register/reset_password_screen.dart';
 import 'package:hali/repositories/user_repository.dart';
 import 'package:hali/authentication_bloc/bloc.dart';
 import 'package:hali/login/login.dart';
@@ -147,7 +148,13 @@ class _LoginFormState extends State<LoginForm> {
                         ),
                         GoogleLoginButton(),
                         FacebookLoginButton(),
-                        CreateAccountButton(userRepository: _userRepository),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            CreateAccountButton(userRepository: _userRepository),
+                            _buildForgetPasswordButton(context),
+                          ],
+                        ),
                         Center(
                           child: Padding(
                             padding: EdgeInsets.all(8),
@@ -163,6 +170,21 @@ class _LoginFormState extends State<LoginForm> {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildForgetPasswordButton(BuildContext context) {
+    return FlatButton(
+      child: Text(
+        'Quên mật khẩu?',
+      ),
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) {
+            return ResetPasswordScreen(userRepository: _userRepository);
+          }),
+        );
+      },
     );
   }
 

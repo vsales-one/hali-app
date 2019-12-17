@@ -131,6 +131,7 @@ class UserRepository {
       password: password,
     );
     final user = await _firebaseAuth.currentUser();
+    assert(user != null);    
     final updateInfo = UserUpdateInfo();
     updateInfo.displayName = fullName;
     await user.updateProfile(updateInfo);
@@ -144,6 +145,11 @@ class UserRepository {
       _googleSignIn.signOut(),
       _facebookLogin.logOut()
     ]);
+  }
+
+  Future<bool> sendPasswordResetEmail(String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
+    return true;
   }
 
   Future<bool> isSignedIn() async {

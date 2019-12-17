@@ -39,7 +39,7 @@ class UserProfile {
 
   Map<String, dynamic> toJson() => _$UserProfileToJson(this);
 
-  String get firstName => displayName.split(" ")[0];
+  String get firstName => displayName != null && displayName.isNotEmpty ? displayName.split(" ")[0] : email;
 
   String get id => userId;
 
