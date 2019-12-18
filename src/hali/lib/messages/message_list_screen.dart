@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hali/app_widgets/empty_listing.dart';
-import 'package:hali/app_widgets/recent_chat_widget.dart';
 import 'package:hali/messages/widgets/message_card_item_widget.dart';
 import 'package:hali/models/item_listing_message.dart';
 import 'package:hali/repositories/chat_message_repository.dart';
